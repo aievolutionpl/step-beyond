@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step Beyond — Proactive Enhancement Layer for AI Agents</title>
+<meta name="description" content="A behavioral module that transforms any AI agent from a literal executor into a proactive collaborator. Framework-agnostic. Self-improving. Created by AI Evolution Labs.">
+<meta property="og:title" content="Step Beyond — Proactive Agent Skill">
+<meta property="og:description" content="Don't just do what's asked. Be an extension of the user's thinking.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080c14;--bg2:#0d1220;--ink:#e8ecf4;--muted:#8892a8;
+  --accent:#6c5ce7;--a2:#a29bfe;--gold:#f9ca24;--card:rgba(255,255,255,.03);
+  --border:rgba(255,255,255,.06);--radius:16px;
+}
+body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,sans-serif;line-height:1.6}
+.container{max-width:900px;margin:0 auto;padding:0 24px}
+
+/* Hero */
+.hero{padding:100px 0 60px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(108,92,231,.15),transparent 70%);pointer-events:none}
+.hero h1{font-size:clamp(36px,6vw,64px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-bottom:20px;position:relative}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--a2),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:20px;color:var(--muted);max-width:600px;margin:0 auto 32px}
+.hero .badge{display:inline-block;padding:6px 16px;border-radius:20px;background:var(--card);border:1px solid var(--border);font-size:14px;color:var(--muted);margin-bottom:24px}
+.hero .badge b{color:var(--a2)}
+.cta-group{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{padding:14px 28px;border-radius:12px;font-weight:600;font-size:16px;text-decoration:none;transition:all .15s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--a2));color:#fff}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-secondary{background:var(--card);border:1px solid var(--border);color:var(--ink)}
+.btn-secondary:hover{background:rgba(255,255,255,.06)}
+
+/* Stats */
+.stats{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;padding:40px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.stat{text-align:center}
+.stat-num{font-size:36px;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:14px;color:var(--muted);margin-top:4px}
+
+/* Sections */
+section{padding:80px 0}
+h2{font-size:32px;font-weight:700;letter-spacing:-.01em;margin-bottom:16px}
+h2 span{color:var(--a2)}
+.sub{font-size:18px;color:var(--muted);margin-bottom:40px;max-width:600px}
+
+/* Problem/Solution */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px}
+@media(max-width:640px){.compare{grid-template-columns:1fr}}
+.card{border-radius:var(--radius);padding:28px;border:1px solid var(--border)}
+.card-bad{background:rgba(255,71,87,.05);border-color:rgba(255,71,87,.15)}
+.card-good{background:rgba(0,184,148,.05);border-color:rgba(0,184,148,.15)}
+.card h3{font-size:18px;margin-bottom:12px}
+.card-bad h3{color:#ff4757}.card-good h3{color:#00b894}
+.card ul{list-style:none}.card li{padding:4px 0;color:var(--muted);font-size:15px}
+.card li::before{content:'• ';margin-right:6px}
+.card-good li::before{content:'✓ ';color:#00b894}
+.card-bad li::before{content:'✗ ';color:#ff4757}
+
+/* Pipeline */
+.pipeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:24px}
+.pipe-step{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center}
+.pipe-step .icon{font-size:28px;margin-bottom:8px}
+.pipe-step h4{font-size:15px;font-weight:700;margin-bottom:4px}
+.pipe-step p{font-size:13px;color:var(--muted)}
+
+/* Levels */
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:24px}
+.level{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+.level h4{font-size:18px;margin-bottom:8px}
+.level .lvl{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:8px}
+.level p{font-size:14px;color:var(--muted);line-height:1.5}
+
+/* Compat */
+.compat{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:24px}
+.tag{padding:8px 18px;border-radius:20px;background:var(--card);border:1px solid var(--border);font-size:14px;color:var(--muted);font-weight:500}
+
+/* Footer */
+footer{padding:40px 0;text-align:center;border-top:1px solid var(--border);margin-top:40px}
+footer p{color:var(--muted);font-size:14px}
+footer a{color:var(--a2);text-decoration:none}
+footer a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <div class="badge">🧠 <b>v3.0.0</b> · MIT License · AI Evolution Labs</div>
+    <h1>Your Agent Should <span>Think Ahead</span></h1>
+    <p>The behavioral module that transforms any AI agent from a literal executor into a proactive collaborator. It recalls your patterns, expands your intent, builds, extends, verifies, and learns.</p>
+    <div class="cta-group">
+      <a href="https://github.com/aievolutionpl/step-beyond" class="btn btn-primary">⭐ GitHub</a>
+      <a href="#how" class="btn btn-secondary">See how it works ↓</a>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="stats">
+    <div class="stat"><div class="stat-num">7-step</div><div class="stat-label">Pipeline</div></div>
+    <div class="stat"><div class="stat-num">10</div><div class="stat-label">Domain Trees</div></div>
+    <div class="stat"><div class="stat-num">15</div><div class="stat-label">Eval Cases</div></div>
+    <div class="stat"><div class="stat-num">6+</div><div class="stat-label">Frameworks</div></div>
+    <div class="stat"><div class="stat-num">~350</div><div class="stat-label">Core Tokens</div></div>
+  </div>
+</div>
+
+<section id="how">
+  <div class="container">
+    <h2>The <span>Problem</span></h2>
+    <p class="sub">Every AI agent is literal. They do exactly what you say — and nothing more. That's the problem.</p>
+    <div class="compare">
+      <div class="card card-bad">
+        <h3>❌ Without Step Beyond</h3>
+        <ul>
+          <li>"Build a page" → single HTML file</li>
+          <li>No favicon, no meta, no mobile</li>
+          <li>"Oh, I also need contact page..."</li>
+          <li>"And privacy policy..."</li>
+          <li>"And OG image..."</li>
+          <li>12 turns · 8 minutes · Frustration</li>
+        </ul>
+      </div>
+      <div class="card card-good">
+        <h3>✅ With Step Beyond</h3>
+        <ul>
+          <li>"Build a page" → complete ecosystem</li>
+          <li>Favicon, OG, meta, mobile included</li>
+          <li>+contact page added silently</li>
+          <li>+privacy policy as logical next step</li>
+          <li>+dark mode anticipated</li>
+          <li>4 turns · 3 minutes · "Exactly what I needed"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>The <span>Pipeline</span></h2>
+    <p class="sub">Every request flows through 7 stages. Nothing ships unverified.</p>
+    <div class="pipeline">
+      <div class="pipe-step"><div class="icon">🧠</div><h4>RECALL</h4><p>Load user patterns from any memory store</p></div>
+      <div class="pipe-step"><div class="icon">🔍</div><h4>EXPAND</h4><p>Upgrade prompt into full intent brief</p></div>
+      <div class="pipe-step"><div class="icon">🏗️</div><h4>BUILD</h4><p>Base + L1 Polish quality</p></div>
+      <div class="pipe-step"><div class="icon">➕</div><h4>EXTEND</h4><p>Add what's missing (L2/L3)</p></div>
+      <div class="pipe-step"><div class="icon">✅</div><h4>VERIFY</h4><p>Run it. Click it. Slop scan. Claim audit.</p></div>
+      <div class="pipe-step"><div class="icon">📦</div><h4>DELIVER</h4><p>Base first. Additions declared in ≤4 words.</p></div>
+      <div class="pipe-step"><div class="icon">📈</div><h4>LEARN</h4><p>Write patterns back. 2 accepts → default.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>Three <span>Levels</span></h2>
+    <p class="sub">Not all proactivity is equal. Three escalation levels with hard ceilings.</p>
+    <div class="levels">
+      <div class="level">
+        <div class="lvl">Level 1 · ALWAYS · SILENT</div>
+        <h4>Polish</h4>
+        <p>Fix incompleteness. No voids. No slop. Baseline quality. This is not "extra" — it's the job. Never declared. Zero cost.</p>
+      </div>
+      <div class="level">
+        <div class="lvl">Level 2 · MAX 3/SESSION</div>
+        <h4>Extend</h4>
+        <p>One logical missing piece. Saves a follow-up. Declared in 4 words or less: "+contact, OG, mobile". Under 15% extra time.</p>
+      </div>
+      <div class="level">
+        <div class="lvl">Level 3 · MAX 1/SESSION</div>
+        <h4>Anticipate</h4>
+        <p>Predict the next request. Build it now. Declared with cost: "+dashboard (~15s)". Under 30% extra time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2>Works <span>Everywhere</span></h2>
+    <p class="sub">Framework-agnostic. One behavioral spec. Six platforms. Zero lock-in.</p>
+    <div class="compat">
+      <span class="tag">Claude Code</span>
+      <span class="tag">Codex CLI</span>
+      <span class="tag">Hermes Agent</span>
+      <span class="tag">Cursor</span>
+      <span class="tag">Windsurf</span>
+      <span class="tag">GitHub Copilot</span>
+      <span class="tag">Custom ReAct Loops</span>
+      <span class="tag">OpenAI Agents SDK</span>
+      <span class="tag">CrewAI</span>
+      <span class="tag">LangGraph</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="text-align:center">
+    <h2>Proven with <span>Evals</span></h2>
+    <p class="sub" style="margin:0 auto 32px">15 behavioral test cases. With-skill agents consistently outperform controls.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <div class="card card-good" style="min-width:200px">
+        <h3>With Skill</h3>
+        <ul>
+          <li>OG + favicon + schema</li>
+          <li>Verified in headless browser</li>
+          <li>Memory written back</li>
+          <li>Zero unbacked claims</li>
+        </ul>
+      </div>
+      <div class="card card-bad" style="min-width:200px">
+        <h3>Without Skill</h3>
+        <ul>
+          <li>Single HTML file</li>
+          <li>No verification</li>
+          <li>Fake "responsive" claim</li>
+          <li>No memory of preferences</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="text-align:center">
+    <h2>60-Second <span>Setup</span></h2>
+    <p class="sub" style="margin:0 auto 32px">Inject the core instruction as your agent's first system message.</p>
+    <a href="https://github.com/aievolutionpl/step-beyond" class="btn btn-primary" style="font-size:18px;padding:18px 40px">📦 Get it on GitHub</a>
+    <p style="margin-top:16px;color:var(--muted);font-size:14px">MIT License · ~350 tokens · Created by AI Evolution Labs</p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p><a href="https://github.com/aievolutionpl/step-beyond">github.com/aievolutionpl/step-beyond</a></p>
+    <p>Created by <a href="https://aievolutionlabs.io">AI Evolution Labs</a> · Jersey, Channel Islands</p>
+  </div>
+</footer>
+
+</body>
+</html>
