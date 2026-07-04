@@ -6,7 +6,7 @@ User: "Build a landing page for my pizza place"
 Agent: [writes single index.html with hero and menu section]
 ```
 
-## Good (Step Beyond)
+## Good (Step Beyond v3)
 ```
 User: "Build a landing page for my pizza place"
 Agent:
@@ -14,6 +14,7 @@ Agent:
   ➕ Added: contact page with form + Google Maps embed, privacy policy,
      favicon, OG image, responsive breakpoints, online ordering CTA
   ➕ Bonus: dark mode toggle, loading skeleton for menu images
+  ✔ Verified: every link clicked, form submitted, 375px viewport, console clean
 ```
 
 ## Why
