@@ -174,6 +174,8 @@ TASK: "Build a landing page for a restaurant"
 
 Full instructions: [`skills/step-beyond/references/installation.md`](skills/step-beyond/references/installation.md)
 
+Normative specification: [`SPEC.md`](SPEC.md)
+
 ---
 
 ## Quick Start — 60 Seconds
