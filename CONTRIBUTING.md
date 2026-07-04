@@ -2,6 +2,8 @@
 
 Thanks for wanting to make agents less literal. Ground rules:
 
+Before changing behavior, read the normative specification in [`SPEC.md`](SPEC.md).
+
 ## What we accept
 
 - **New domain trees** (`skills/step-beyond/references/domains.md`) — must include all six lines: TRIGGER, RECALL, L1, L2, L3, VERIFY, NEVER, and be backed by real usage, not speculation.

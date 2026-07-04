@@ -174,6 +174,8 @@ ZADANIE: "Zbuduj landing page dla restauracji"
 
 Pełne instrukcje: [`skills/step-beyond/references/installation.md`](skills/step-beyond/references/installation.md)
 
+Specyfikacja normatywna: [`SPEC.md`](SPEC.md)
+
 ---
 
 ## Quick Start — 60 sekund

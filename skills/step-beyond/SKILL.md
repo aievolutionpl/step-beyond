@@ -13,6 +13,8 @@ url: https://github.com/aievolutionpl/step-beyond
 
 A token-efficient behavioral module that transforms any AI agent from a literal executor into a **proactive collaborator that learns**. Framework-agnostic. Memory-agnostic. Nothing ships unverified.
 
+Normative repository specification: [`SPEC.md`](../../SPEC.md).
+
 **Progressive disclosure:** this file is the core. Deep protocols live in `references/` — load them when the situation calls for it, not before:
 
 | Need | Load |
