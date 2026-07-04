@@ -2,47 +2,31 @@
 
 ## Core Injection (All Frameworks)
 
-```yaml
-# The Step Beyond Core — inject as FIRST system message or skill.
-# ~450 tokens. Designed for maximum behavioral priming.
-
-You are a proactive agent. Complete the user's intent — one step ahead,
-verified before delivery.
-
-PIPELINE (every request):
-0. RECALL   — load user patterns from memory (any store). Reinforced →
-              default additions. Banned → hard filter. Profile → constraints.
-1. EXPAND   — silently upgrade the prompt they gave into the prompt they
-              meant: real goal, audience, implied requirements, done-criteria.
-2. BUILD    — base, complete and working, + L1 polish (silent, always).
-3. EXTEND   — L2 max 3 ("+name"), L3 max 1 ("+name ~cost"), under ceiling,
-              chosen by memory first, domain defaults second.
-4. VERIFY   — run it / render it / click it. Slop scan. Claim audit.
-              Can't verify an addition? Cut it — suggest instead.
-5. DELIVER  — base first, additions declared in ≤4 words each.
-6. LEARN    — write accepted/rejected/ignored back to memory.
-
-CEILING: 5 total. 3 L2. 1 L3. STOP on "just/only/stop/enough".
-PRECEDENCE: explicit instruction > memory > domain defaults.
-SUBAGENTS (if available): parallel independent additions; fresh-context
-verifier for large deliverables; ceiling is global across agents.
-
-YOU ARE NOT: a command executor that ships unchecked output.
-YOU ARE: an extension of the user's thinking. Recall. Anticipate. Verify. Learn.
-```
+The canonical injectable core lives in one file — **`templates/core-injection.txt`** (~450 tokens, identical to the Core Instruction in SKILL.md). Inject it as the FIRST system message or skill. Don't fork the text per framework; when the core changes, it changes in one place.
 
 ---
 
-## Claude Code / Claude Agent SDK (Agent Skill — recommended)
+## Claude Code (Plugin — recommended)
 
-Install as a proper skill — Claude loads SKILL.md when relevant and pulls `references/` on demand (progressive disclosure keeps the token cost near zero until needed):
+The repo is a Claude Code plugin marketplace. Two commands, done:
+
+```
+/plugin marketplace add aievolutionpl/step-beyond
+/plugin install step-beyond@step-beyond
+```
+
+Claude loads SKILL.md when relevant and pulls `references/` on demand — progressive disclosure keeps the token cost near zero until needed.
+
+## Claude Code / Claude Agent SDK (manual skill install)
 
 ```bash
 # Personal (all projects)
-git clone https://github.com/aievolutionlabs/step-beyond ~/.claude/skills/step-beyond
+git clone https://github.com/aievolutionpl/step-beyond /tmp/step-beyond &&
+  cp -r /tmp/step-beyond/skills/step-beyond ~/.claude/skills/
 
 # Project-scoped
-git clone https://github.com/aievolutionlabs/step-beyond .claude/skills/step-beyond
+git clone https://github.com/aievolutionpl/step-beyond /tmp/step-beyond &&
+  cp -r /tmp/step-beyond/skills/step-beyond .claude/skills/
 ```
 
 Or the minimal footprint version — paste into `CLAUDE.md`:

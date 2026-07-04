@@ -163,7 +163,8 @@ ZADANIE: "Zbuduj landing page dla restauracji"
 
 | Framework | Jak dodać |
 |-----------|----------|
-| **Claude Code / Agent SDK** | Sklonuj do `~/.claude/skills/step-beyond` (pełny skill, progressive disclosure) lub wklej blok do `CLAUDE.md` |
+| **Claude Code** | `/plugin marketplace add aievolutionpl/step-beyond` → `/plugin install step-beyond@step-beyond` |
+| **Claude Agent SDK / ręcznie** | Skopiuj `skills/step-beyond/` do `~/.claude/skills/` lub wklej blok do `CLAUDE.md` |
 | **Codex CLI** | `--custom-instructions` lub `config.toml` |
 | **Hermes Agent** | `skills: [step-beyond]` w `config.yaml` |
 | **Cursor / Windsurf** | `.cursorrules` / `.windsurfrules` |
@@ -171,7 +172,7 @@ ZADANIE: "Zbuduj landing page dla restauracji"
 | **OpenAI Agents SDK / CrewAI / LangGraph** | Wstrzyknij rdzeń do orkiestratora; role wg `references/subagents.md` |
 | **Własny ReAct Loop** | Wstrzyknij jako pierwszą wiadomość systemową |
 
-Pełne instrukcje: [`references/installation.md`](references/installation.md)
+Pełne instrukcje: [`skills/step-beyond/references/installation.md`](skills/step-beyond/references/installation.md)
 
 ---
 
@@ -241,25 +242,24 @@ Czysta specyfikacja behawioralna. System prompt, plik skilla lub blok konfigurac
 
 ```
 step-beyond/
-├── SKILL.md                    ← Rdzeń specyfikacji (sam skill)
+├── .claude-plugin/             ← Manifesty pluginu + marketplace Claude Code
+├── skills/step-beyond/         ← Skill (layout pluginu)
+│   ├── SKILL.md                ← Rdzeń specyfikacji behawioralnej
+│   ├── references/             ← Progressive disclosure — ładowane na żądanie
+│   │   ├── memory.md           ← Protokół pamięci (Obsidian/MCP/mem0/pliki)
+│   │   ├── verification.md     ← Pętla weryfikacji + protokół świeżych oczu
+│   │   ├── slop.md             ← Indeks AI slopu (tekst/kod/design/obraz/dane)
+│   │   ├── subagents.md        ← Orkiestracja: role, firewall, szablony
+│   │   ├── domains.md          ← 10 drzew decyzyjnych domen
+│   │   └── installation.md     ← Instalacja per framework
+│   └── templates/
+│       ├── user-patterns.md    ← Startowy plik pamięci
+│       └── core-injection.txt  ← Rdzeń do wstrzyknięcia (gotowy plik)
+├── evals/                      ← Testy behawioralne + wyniki bazowe
+├── examples/                   ← Przykłady before/after, w tym memory-learning
+├── CHANGELOG.md · CONTRIBUTING.md · LICENSE (MIT)
 ├── README.md                   ← Wersja angielska
-├── README_PL.md                ← Jesteś tutaj
-├── LICENSE                     ← MIT
-├── references/                 ← Progressive disclosure — ładowane na żądanie
-│   ├── memory.md               ← Protokół pamięci (Obsidian/MCP/mem0/pliki)
-│   ├── verification.md         ← Pętla weryfikacji + protokół świeżych oczu
-│   ├── slop.md                 ← Indeks AI slopu (tekst/kod/design/obraz/dane)
-│   ├── subagents.md            ← Orkiestracja: role, firewall, szablony
-│   ├── domains.md              ← 10 drzew decyzyjnych domen
-│   └── installation.md         ← Instalacja per framework
-├── templates/
-│   ├── user-patterns.md        ← Startowy plik pamięci
-│   └── core-injection.txt      ← Rdzeń do wstrzyknięcia (gotowy plik)
-└── examples/
-    ├── web-development.md
-    ├── image-generation.md
-    ├── content-creation.md
-    └── memory-learning.md      ← 3 sesje: od zimnego startu do predykcji
+└── README_PL.md                ← Jesteś tutaj
 ```
 
 ---

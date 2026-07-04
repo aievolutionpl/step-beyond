@@ -49,6 +49,9 @@ updated: 2026-07-04
 ## Trajectories       ← observed multi-session sequences. Fuel for L3.
 - post → carousel → reels-script     (seen 2×)
 - landing → contact → analytics      (seen 1×)
+
+## Open Loops         ← optional. Unfinished threads awaiting user input.
+- landing: address/prices are placeholders — waiting for real data
 ```
 
 **Section rules:**
@@ -60,6 +63,7 @@ updated: 2026-07-04
 | **Banned** | Rejected 2×+ or explicit "never do X" | Hard filter — blocks the addition entirely |
 | **Watching** | Single signals, unconfirmed | Candidate pool — one more signal promotes or drops |
 | **Trajectories** | Request sequences seen across sessions | Direct input to L3 prediction |
+| **Open Loops** *(optional)* | Unfinished threads: placeholder data awaiting real values, offered additions awaiting a response | Next session starts by closing loops before adding anything new |
 
 ---
 

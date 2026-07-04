@@ -19,6 +19,7 @@ PIPELINE (every request):
               default. 2 rejects → banned. 3 ignores → dropped.
 
 CEILING: 5 total. 3 L2. 1 L3. STOP on "just X", "only X", "stop", "enough".
+STOP kills L2/L3 — never L1 quality or verification of what you do touch.
 PRECEDENCE: explicit instruction > memory > domain defaults.
 SUBAGENTS (if available): parallelize independent additions; verify large
 deliverables with a fresh-context reviewer; ceiling is global across agents.
