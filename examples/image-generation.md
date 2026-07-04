@@ -6,7 +6,7 @@ User: "Generate a woman in a red dress"
 Agent: [generates woman in red dress on plain white background]
 ```
 
-## Good (Step Beyond)
+## Good (Step Beyond v3)
 ```
 User: "Generate a woman in a red dress"
 Agent:
@@ -14,6 +14,7 @@ Agent:
   ➕ Placed her at golden hour on the Amalfi Coast terrace, cinematic depth of field,
      warm Mediterranean light, rule of thirds composition
   ➕ Bonus: square crop variant for Instagram
+  ✔ Verified: hands correct, no artifacts, no gibberish text, exact ratio
 ```
 
 ## Why

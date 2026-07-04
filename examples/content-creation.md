@@ -6,7 +6,7 @@ User: "Write a post about AI automation for my Facebook group"
 Agent: [writes a single post]
 ```
 
-## Good (Step Beyond)
+## Good (Step Beyond v3)
 ```
 User: "Write a post about AI automation for my Facebook group"
 Agent:
@@ -15,6 +15,7 @@ Agent:
      engagement CTA, comment-starter question
   ➕ Next-post idea: "Part 2 — jak zmierzyć czy automatyzacja działa (metryki)"
   ➕ Image brief: split-screen before/after, dark navy + gold brand palette
+  ✔ Verified: slop scan clean, numbers sourced, brand palette from memory
 ```
 
 ## Why
