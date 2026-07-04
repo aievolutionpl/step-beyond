@@ -1,287 +1,164 @@
 # 🧠 Step Beyond v3.0
 
-> *"Nie pytaj. Po prostu zrób więcej — tak jak zrobiłby to użytkownik. Zweryfikuj. Zapamiętaj co zadziałało. I wiedz, kiedy przestać."*
+> Nie pytaj o pozwolenie na oczywiste. Zrób zadanie bazowe, dodaj tylko następny użyteczny element, zweryfikuj to, czego dotknąłeś, i zatrzymaj się, gdy zakres użytkownika mówi stop.
 
-<br>
+**README.md jest źródłem prawdy; ten plik jest polskim tłumaczeniem operacyjnego opisu.**
 
-<p align="center">
-  <img src="https://img.shields.io/badge/wersja-3.0.0-blue?style=for-the-badge" alt="Wersja">
-  <img src="https://img.shields.io/badge/licencja-MIT-yellow?style=for-the-badge" alt="Licencja">
-  <img src="https://img.shields.io/badge/framework-agnostyczny-green?style=for-the-badge" alt="Framework">
-  <img src="https://img.shields.io/badge/pamięć-Obsidian%20%7C%20MCP%20%7C%20mem0%20%7C%20pliki-orange?style=for-the-badge" alt="Pamięć">
-  <img src="https://img.shields.io/badge/agenci-Claude%20%7C%20Codex%20%7C%20Hermes%20%7C%20Cursor%20%7C%20Copilot-purple?style=for-the-badge" alt="Kompatybilność">
-</p>
+Step Beyond to przenośny skill behawioralny dla agentów kodujących i contentowych: zamienia krótką prośbę użytkownika w zdyscyplinowany workflow obejmujący przypomnienie kontekstu, rozwinięcie intencji, bazowy polish, ograniczone rozszerzenia, weryfikację, dostarczenie i uczenie. To nie jest model, SaaS ani ranking benchmarkowy; to pakiet instrukcji do Claude, Codex, Cursor, Copilot, OpenAI Agents albo własnej pętli agenta, który zamienia proaktywność w procedurę zamiast hasła marketingowego.
 
-<br>
+## Quick start
 
----
+Zainstaluj albo skopiuj skill, a potem wstrzyknij kanoniczny prompt z [`skills/step-beyond/templates/core-injection.txt`](skills/step-beyond/templates/core-injection.txt):
 
-## Problem
+```bash
+# skopiuj skill do lokalnego folderu agenta
+mkdir -p .claude/skills
+cp -R skills/step-beyond .claude/skills/
 
-Każdy agent AI ma te same wady: **jest dosłowny, niczego nie pamięta i przecenia swoją robotę.**
-
-```
-USER:  "Zbuduj landing page'a"
-AGENT: *buduje pojedynczy plik HTML* "Gotowe! ✅"
-USER:  "Gdzie kontakt?"
-USER:  "Gdzie favicon?"
-USER:  "Czemu nie działa na telefonie?"
-USER:  "...i formularz jest zepsuty. W ogóle to otwierałeś?"
-USER:  (tydzień później) "Mówiłem ostatnio — nasze kolory to granat i złoto."
+# albo wstrzyknij minimalny rdzeń do własnego agenta/system promptu
+cat skills/step-beyond/templates/core-injection.txt
 ```
 
-**12 tur. 8 minut. Frustracja po obu stronach. Powtórka w następnej sesji, od zera.**
+Użyj rdzenia jako pierwszej instrukcji behawioralnej. Zostaw cały folder skilla dostępny, żeby agent mógł doczytywać referencje pamięci, weryfikacji, slopu, domen i subagentów tylko wtedy, gdy są potrzebne.
 
-Dobry współpracownik nie czeka, aż powiesz mu o stronie kontaktowej — po prostu ją dodaje. Nie oddaje formularza, którego nigdy nie wysłał. I nie pyta o kolory marki dwa razy.
+## Przykłady instalacji
 
----
+### Claude
 
-## Insight
-
-> **"Najlepszy asystent to ten, którego nie musisz zarządzać."**
-
-Różnica między tym, co użytkownicy mówią, a tym, czego potrzebują, podlega przewidywalnym regułom — a reguły *tego konkretnego* użytkownika da się wyuczyć:
-
-| Użytkownik mówi... | Naprawdę potrzebuje... | Mechanizm |
-|-------------------|----------------------|-----------|
-| "Wygeneruj obrazek" | Obrazek + kontekst + formaty social | **POLISH** |
-| "Zbuduj stronę" | Strona + podstrony + meta + favicon + mobile | **EXTEND** |
-| *cisza, ale wiesz że zaraz zapyta* | Następne logiczne pytanie | **ANTICIPATE** |
-| "Gotowe! ✅" *(deklaracja agenta)* | Dowód, że faktycznie działa | **VERIFY** |
-| *to samo zadanie, nowa sesja* | Jego preferencje, już zastosowane | **MEMORY** |
-
-**Step Beyond koduje wszystkie pięć.** Behawioralny skill, który transformuje każdego agenta z literalnego executora w proaktywnego współpracownika, który się uczy.
-
----
-
-## Jak to działa — Pipeline
-
-```
-┌────────────────────────────────────────────────────────────┐
-│                   SILNIK STEP BEYOND v3                     │
-│                                                            │
-│  INPUT UŻYTKOWNIKA                                          │
-│      │                                                      │
-│      ▼                                                      │
-│  0. RECALL ─── wczytaj wzorce użytkownika z DOWOLNEJ        │
-│      │         pamięci (Obsidian · MCP · mem0 · plik)       │
-│      ▼                                                      │
-│  1. EXPAND ─── ulepsz prompt, który dostałeś, do promptu,   │
-│      │         który użytkownik miał na myśli (intent brief)│
-│      ▼                                                      │
-│  2. BUILD ──── baza + polish L1 (zawsze, cicho)             │
-│      │                                                      │
-│      ▼                                                      │
-│  3. EXTEND ─── L2 (max 3) + L3 (max 1), pod sufitem,        │
-│      │         sterowane pamięcią  [subagenci: równolegle]  │
-│      ▼                                                      │
-│  4. VERIFY ─── uruchom · wyrenderuj · kliknij               │
-│      │         skan slopu · audyt deklaracji                │
-│      │         nie da się zweryfikować? WYTNIJ.             │
-│      │         [subagenci: weryfikator ze świeżym kontekstem]│
-│      ▼                                                      │
-│  5. DELIVER ── najpierw baza, dodatki w ≤4 słowach          │
-│      │                                                      │
-│      ▼                                                      │
-│  6. LEARN ──── zaakceptowane? → domyślne następnym razem    │
-│                odrzucone 2×? → zbanowane na zawsze          │
-│                → zapisane z powrotem do pamięci             │
-└────────────────────────────────────────────────────────────┘
+```text
+/plugin marketplace add aievolutionpl/step-beyond
+/plugin install step-beyond@step-beyond
 ```
 
-### Trzy poziomy
+Instalacja ręczna w projekcie:
 
-| Poziom | Nazwa | Koszt | Zasada |
-|--------|-------|-------|--------|
-| **L1** | **Polish** | 0 zł · +0s | Zawsze. Bez próżni. Bez slopu. To baseline — nie "dodatek". |
-| **L2** | **Extend** | <15% czasu | Brakujący element. Max 3/sesję. Najpierw z pamięci. |
-| **L3** | **Anticipate** | <30% czasu | Przewidź następne pytanie. Max 1/sesję. Z trajektorii. |
-
-### Sufit
-
-```
-Łącznie:      5 / sesję      ██████████  100%
-Poziom 2:     3 / sesję      ██████      60%
-Poziom 3:     1 / sesję      ██          20%
-
-STOP gdy budżet wyczerpany.
-STOP na: "tylko X", "daj już", "wystarczy", frustracja.
-WYTNIJ każdy dodatek, którego nie da się zweryfikować.
+```bash
+mkdir -p .claude/skills
+cp -R skills/step-beyond .claude/skills/
 ```
 
-### Pamięć (nowe w v3)
+### Codex
 
-Działa z **dowolną pamięcią, jaką ma agent** — jeden przenośny plik wzorców, dowolny magazyn:
-
-```
-Vault Obsidian   →  {vault}/step-beyond/patterns.md
-Memory MCP/mem0  →  dokument z kluczem "step-beyond:patterns"
-CLAUDE.md        →  oznaczona sekcja, ≤40 linii
-Zwykłe pliki     →  step-beyond/patterns.md
-Nic              →  tryb sesyjny (nadal uczy się w ramach sesji)
+```bash
+codex exec "build the requested feature" \
+  --custom-instructions skills/step-beyond/templates/core-injection.txt
 ```
 
-```
-akceptacja 2×  → REINFORCED  (od teraz domyślny L2)
-odrzucenie 2×  → BANNED      (nigdy więcej)
-ignorowane 3×  → DROPPED
-rezultat: ~60% akceptacji dodatków na zimno → >85% do 5. sesji
-```
+Możesz też wkleić rdzeń do `~/.codex/config.toml` jako dodatkowe instrukcje.
 
-### Pętla weryfikacji (nowe w v3)
+### Cursor
 
-```
-BASE CHECK      użyj tego tak, jak użyje użytkownik — otwórz, uruchom, kliknij
-ADDITION CHECK  każdy L2/L3, ta sama poprzeczka. Nieweryfikowalny → sugestia.
-SLOP SCAN       indeks AI slopu: tekst, kod, design, obraz, dane
-CLAIM AUDIT     "działa" / "przetestowane" / "responsywne" — tylko jeśli widziane
+```bash
+cat skills/step-beyond/templates/core-injection.txt > .cursorrules
 ```
 
-**Zepsuty dodatek jest gorszy niż brak dodatku. Fałszywa deklaracja jest gorsza niż oba.**
+Jeśli masz już reguły Cursora, dopisz ten plik zamiast go podmieniać.
 
----
+### Copilot
 
-## Rezultaty
-
-```
-ZADANIE: "Zbuduj landing page dla restauracji"
-
-┌───────────────────────────────┬──────────────────────────────┐
-│ BEZ Step Beyond               │ Z Step Beyond v3             │
-├───────────────────────────────┼──────────────────────────────┤
-│ Tur: 12                       │ Tur: 4                       │
-│ Follow-upy: 4                 │ Follow-upy: 0                │
-│ Pliki: 1 HTML                 │ HTML + 4 podstrony + favicon │
-│ Weryfikacja: nigdy nie otwarte│ Każdy link kliknięty, 375px ✓│
-│ Następna sesja: od zera       │ Marka + preferencje z pamięci│
-└───────────────────────────────┴──────────────────────────────┘
+```bash
+mkdir -p .github
+cat skills/step-beyond/templates/core-injection.txt > .github/copilot-instructions.md
 ```
 
----
+Reguły build/test/style specyficzne dla repozytorium zostaw przed albo po bloku Step Beyond.
 
-## Uniwersalny — działa z każdym agentem
+### OpenAI Agents
 
-| Framework | Jak dodać |
-|-----------|----------|
-| **Claude Code** | `/plugin marketplace add aievolutionpl/step-beyond` → `/plugin install step-beyond@step-beyond` |
-| **Claude Agent SDK / ręcznie** | Skopiuj `skills/step-beyond/` do `~/.claude/skills/` lub wklej blok do `CLAUDE.md` |
-| **Codex CLI** | `--custom-instructions` lub `config.toml` |
-| **Hermes Agent** | `skills: [step-beyond]` w `config.yaml` |
-| **Cursor / Windsurf** | `.cursorrules` / `.windsurfrules` |
-| **GitHub Copilot** | `copilot-instructions.md` |
-| **OpenAI Agents SDK / CrewAI / LangGraph** | Wstrzyknij rdzeń do orkiestratora; role wg `references/subagents.md` |
-| **Własny ReAct Loop** | Wstrzyknij jako pierwszą wiadomość systemową |
+```python
+from agents import Agent
 
-Pełne instrukcje: [`skills/step-beyond/references/installation.md`](skills/step-beyond/references/installation.md)
+with open("skills/step-beyond/templates/core-injection.txt", "r", encoding="utf-8") as f:
+    step_beyond = f.read()
 
----
-
-## Quick Start — 60 sekund
-
-Skopiuj to do system promptu swojego agenta:
-
-```yaml
-## 🧠 Step Beyond — Proaktywne Ulepszenia
-
-PIPELINE: przypomnij z pamięci → rozwiń intencję → zbuduj bazę + L1 →
-rozszerz (L2 max 3, L3 max 1) → ZWERYFIKUJ (uruchom, skan slopu, uczciwe
-deklaracje) → dostarcz → zapisz wzorce do pamięci.
-
-L1 (ZAWSZE, cicho): Polish. Bez próżni. Prawdziwy kontekst. Baseline.
-L2 (<15% czasu, max 3): Brakujący element. Najpierw z pamięci. "+nazwa"
-L3 (<30% czasu, max 1): Przewidź następne pytanie. "+nazwa (~Xs)"
-
-VERIFY: nic nie wychodzi niesprawdzone. Nie da się zweryfikować dodatku?
-Wytnij. Deklaruj tylko to, co zaobserwowałeś — żadnych pustych "działa".
-
-PAMIĘĆ (dowolny magazyn — Obsidian/MCP/plik): akceptacja 2× → domyślne.
-odrzucenie 2× → ban. Wyraźna instrukcja > pamięć > domyślne.
-
-SUFIT: 5 łącznie/sesję. STOP na: "tylko X", "daj już", "stop", "wystarczy".
-SUBAGENCI (jeśli dostępni): równoległe dodatki, świeży weryfikator.
+agent = Agent(
+    name="builder",
+    instructions=step_beyond + "\n\nUse available tools to implement, verify, and report only observed results.",
+)
 ```
 
----
+W układach multi-agent wstrzyknij rdzeń do orkiestratora i mapuj role builder/extender/verifier według [`skills/step-beyond/references/subagents.md`](skills/step-beyond/references/subagents.md).
 
-## Nauka — dlaczego to działa
+## Przykłady benchmarków
 
-### 1. Redukcja obciążenia poznawczego
-Każdy follow-up, który użytkownik musi napisać, kosztuje energię mentalną. Step Beyond eliminuje 70–90% follow-upów, przewidując je zawczasu.
+Step Beyond ma dwa różne typy kontroli. **Package-readiness** sprawdza, czy repozytorium jest instalowalne, linki wewnętrzne działają i pakiet jest kompletny do wydania. **Benchmark model-behavior** uruchamia to samo zadanie ze skillem i bez skilla, a potem ocenia zachowanie agenta: kontrolę zakresu, weryfikację, uczciwe deklaracje, użycie pamięci i ograniczone dodatki.
 
-### 2. Dopełnianie wzorców
-Ludzie rzadko specyfikują kompletne wymagania. "Zbuduj stronę" zakłada kontakt, privacy, favicon, mobile. Step Beyond koduje to jako reguły domenowe — a potem nadpisuje je wyuczonymi wzorcami *tego* użytkownika.
+### Uruchom statyczny package readiness
 
-### 3. Kalibracja przez pamięć
-Domyślne reguły to heurystyka na zimny start. Prawdziwy sygnał to, co *ten* użytkownik zaakceptował, odrzucił i zignorował — utrwalone w dowolnej pamięci, od Obsidiana po zwykły markdown. Po 5 sesjach agent już nie zgaduje.
+```bash
+# wymagane pliki pakietu istnieją
+test -f SPEC.md && test -f skills/step-beyond/SKILL.md && test -f skills/step-beyond/templates/core-injection.txt
 
-### 4. Zaufanie przez weryfikację
-Proaktywność umiera w momencie, gdy jeden dodatek przychodzi zepsuty — użytkownik przestaje czytać wszystkie. Pętla weryfikacji (uruchom, przeskanuj slop, audytuj każdą deklarację) to jest to, co czyni 5 dodatków na sesję zrównoważonymi.
+# linki z README wskazują realne ścieżki w tym checkoutcie
+test -e benchmark && test -e adapters && test -e skills/step-beyond/SKILL.md
 
-### 5. Zasada sufitu
-5 ulepszeń łącznie, twarde sygnały STOP, permanentna lista Banned. Proaktywny ≠ irytujący.
-
-### 6. Projekt niezależny od frameworka
-Czysta specyfikacja behawioralna. System prompt, plik skilla lub blok konfiguracyjny. Claude, GPT, Gemini, DeepSeek, własne modele.
-
----
-
-## Antywzorce — czego NIE robić
-
-| ❌ Złe podejście | ✅ Dobre podejście |
-|-----------------|-------------------|
-| "Bądź kreatywny i dodaj wartość" | "Dodaj jeden logiczny następny krok. Wiedz kiedy przestać." |
-| "Zawsze dawaj z siebie wszystko" | Sufit: 5 łącznie, 3 L2, 1 L3 |
-| "Sprawdź swoją pracę" | 4-stopniowa pętla weryfikacji z audytem deklaracji |
-| Wysłać 5 dodatków, 2 zepsute | Weryfikuj każdy — nieweryfikowalny staje się sugestią |
-| Pytać o kolory marki co sesję | RECALL z pliku wzorców |
-| "Zaskocz mnie" | Przewiduj z zaakceptowanych wzorców tego użytkownika |
-
----
-
-## Repozytorium
-
+# w głównym README nie ma oczywistych niezweryfikowanych claimów procentowych
+! rg -n "[0-9]+–[0-9]+%|>[0-9]+%|~[0-9]+%" README.md
 ```
+
+### Uruchom behawioralny benchmark A/B ze zmiennymi API
+
+```bash
+# wybierz providera modelu używanego przez swój harness
+export OPENAI_API_KEY="sk-..."
+export STEP_BEYOND_MODEL="gpt-5.5"
+export STEP_BEYOND_CONTROL_INSTRUCTIONS=""
+export STEP_BEYOND_TREATMENT_INSTRUCTIONS="$(cat skills/step-beyond/templates/core-injection.txt)"
+
+# wykonaj przebieg kontrolny i treatment, potem oceń według rubryki
+python benchmark/run_ab.py \
+  --cases evals/cases.md \
+  --results-dir evals/results \
+  --control-env STEP_BEYOND_CONTROL_INSTRUCTIONS \
+  --treatment-env STEP_BEYOND_TREATMENT_INSTRUCTIONS
+```
+
+Jeśli checkout nie zawiera `benchmark/run_ab.py`, użyj [`evals/README.md`](evals/README.md) jako protokołu ręcznego: świeży agent per case, control run dla przypadków serii A, ocena każdego MUST i MUST-NOT oraz zapis wyników w `evals/results/`.
+
+## Kluczowe linki
+
+- [SPEC.md](SPEC.md) — kontrakt pakietu i specyfikacja behawioralna.
+- [benchmark/](benchmark/) — lokalizacja harnessu benchmarkowego i notatki.
+- [adapters/](adapters/) — adaptery integracyjne i notatki adapterów.
+- [skills/step-beyond/SKILL.md](skills/step-beyond/SKILL.md) — główny plik skilla.
+- [skills/step-beyond/templates/core-injection.txt](skills/step-beyond/templates/core-injection.txt) — kanoniczny prompt do wstrzyknięcia.
+- [evals/](evals/) — ręczne przypadki regresji behawioralnej i zapisane wyniki.
+
+## Co skill egzekwuje
+
+```text
+RECALL  → czytaj wzorce użytkownika/projektu, jeśli są dostępne
+EXPAND  → zamień prośbę w intent brief przed budowaniem
+BUILD   → wykonaj bazowe zadanie z L1 polish
+EXTEND  → dodaj maks. 3 elementy L2 i maks. 1 element L3, tylko gdy użyteczne
+VERIFY  → uruchom, wyrenderuj, kliknij, sparsuj albo sprawdź przed claimami
+DELIVER → najpierw wynik bazowy; dodatki nazwij krótko
+LEARN   → zapisuj zaakceptowane/odrzucone wzorce, jeśli istnieje pamięć
+STOP    → respektuj "just", "only", "stop", "minimal" i sygnały frustracji
+```
+
+Pakiet jest celowo konserwatywny: dodatki mają sufity, język STOP wygrywa z proaktywnością, nieweryfikowalne dodatki stają się sugestiami, a deklaracje końcowe muszą odpowiadać obserwowanym checkom.
+
+## Mapa repozytorium
+
+```text
 step-beyond/
-├── .claude-plugin/             ← Manifesty pluginu + marketplace Claude Code
-├── skills/step-beyond/         ← Skill (layout pluginu)
-│   ├── SKILL.md                ← Rdzeń specyfikacji behawioralnej
-│   ├── references/             ← Progressive disclosure — ładowane na żądanie
-│   │   ├── memory.md           ← Protokół pamięci (Obsidian/MCP/mem0/pliki)
-│   │   ├── verification.md     ← Pętla weryfikacji + protokół świeżych oczu
-│   │   ├── slop.md             ← Indeks AI slopu (tekst/kod/design/obraz/dane)
-│   │   ├── subagents.md        ← Orkiestracja: role, firewall, szablony
-│   │   ├── domains.md          ← 10 drzew decyzyjnych domen
-│   │   └── installation.md     ← Instalacja per framework
-│   └── templates/
-│       ├── user-patterns.md    ← Startowy plik pamięci
-│       └── core-injection.txt  ← Rdzeń do wstrzyknięcia (gotowy plik)
-├── evals/                      ← Testy behawioralne + wyniki bazowe
-├── examples/                   ← Przykłady before/after, w tym memory-learning
-├── CHANGELOG.md · CONTRIBUTING.md · LICENSE (MIT)
-├── README.md                   ← Wersja angielska
-└── README_PL.md                ← Jesteś tutaj
+├── SPEC.md
+├── benchmark/
+├── adapters/
+├── skills/step-beyond/
+│   ├── SKILL.md
+│   ├── references/
+│   └── templates/core-injection.txt
+├── evals/
+│   ├── README.md
+│   ├── cases.md
+│   └── results/
+├── examples/
+├── README.md
+└── README_PL.md
 ```
 
----
+## Licencja
 
-<br>
-
-<p align="center">
-  <b>Stworzone z obsesyjną dbałością o szczegóły przez</b>
-</p>
-
-<p align="center">
-  <a href="https://aievolutionlabs.io">
-    <b>AI EVOLUTION LABS</b>
-  </a>
-</p>
-
-<p align="center">
-  <sub>Jersey · Channel Islands · 2026</sub>
-</p>
-
-<p align="center">
-  <sub>Licencja MIT — Używaj. Remiksuj. Wdrażaj. Tylko nie usuwaj autorstwa.</sub>
-</p>
-
-<br>
+MIT. Używaj, adaptuj i trzymaj poprzeczkę weryfikacji wyżej niż slogany.
