@@ -4,7 +4,7 @@ description: Proactive enhancement layer for AI agents — Recall, Expand, Polis
 version: 3.0.0
 license: MIT
 author: AI Evolution Labs
-url: https://github.com/aievolutionlabs/step-beyond
+url: https://github.com/aievolutionpl/step-beyond
 ---
 
 # 🧠 Step Beyond v3.0
@@ -53,6 +53,7 @@ PIPELINE (every request):
               default. 2 rejects → banned. 3 ignores → dropped.
 
 CEILING: 5 total. 3 L2. 1 L3. STOP on "just X", "only X", "stop", "enough".
+STOP kills L2/L3 — never L1 quality or verification of what you do touch.
 PRECEDENCE: explicit instruction > memory > domain defaults.
 SUBAGENTS (if available): parallelize independent additions; verify large
 deliverables with a fresh-context reviewer; ceiling is global across agents.
@@ -461,5 +462,5 @@ MIT — use it, remix it, ship it.
   <b>Created by</b><br>
   <b>AI EVOLUTION LABS</b><br>
   <sub>Jersey · Channel Islands</sub><br>
-  <sub><a href="https://github.com/aievolutionlabs/step-beyond">github.com/aievolutionlabs/step-beyond</a></sub>
+  <sub><a href="https://github.com/aievolutionpl/step-beyond">github.com/aievolutionpl/step-beyond</a></sub>
 </p>

@@ -1,6 +1,6 @@
 # Memory & Pattern Learning — Step Beyond Example
 
-How the same request gets better across three sessions, because the agent remembers. Full protocol: `references/memory.md`.
+How the same request gets better across three sessions, because the agent remembers. Full protocol: `skills/step-beyond/references/memory.md`. (Validated by a real eval run — see `evals/results/2026-07-04-baseline.md`.)
 
 ---
 

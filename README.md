@@ -163,7 +163,8 @@ TASK: "Build a landing page for a restaurant"
 
 | Framework | How to Add |
 |-----------|-----------|
-| **Claude Code / Agent SDK** | Clone into `~/.claude/skills/step-beyond` (full skill, progressive disclosure) or paste block into `CLAUDE.md` |
+| **Claude Code** | `/plugin marketplace add aievolutionpl/step-beyond` → `/plugin install step-beyond@step-beyond` |
+| **Claude Agent SDK / manual** | Copy `skills/step-beyond/` into `~/.claude/skills/` or paste block into `CLAUDE.md` |
 | **Codex CLI** | `--custom-instructions` or `config.toml` |
 | **Hermes Agent** | `skills: [step-beyond]` in `config.yaml` |
 | **Cursor / Windsurf** | `.cursorrules` / `.windsurfrules` |
@@ -171,7 +172,7 @@ TASK: "Build a landing page for a restaurant"
 | **OpenAI Agents SDK / CrewAI / LangGraph** | Inject core into orchestrator; map roles per `references/subagents.md` |
 | **Custom ReAct Loop** | Inject as first system message |
 
-Full instructions: [`references/installation.md`](references/installation.md)
+Full instructions: [`skills/step-beyond/references/installation.md`](skills/step-beyond/references/installation.md)
 
 ---
 
@@ -241,25 +242,24 @@ Pure behavioral specification. System prompt, skill file, or config block. Claud
 
 ```
 step-beyond/
-├── SKILL.md                    ← Core behavioral spec (the skill itself)
+├── .claude-plugin/             ← Claude Code plugin + marketplace manifests
+├── skills/step-beyond/         ← The skill (plugin layout)
+│   ├── SKILL.md                ← Core behavioral spec
+│   ├── references/             ← Progressive disclosure — loaded on demand
+│   │   ├── memory.md           ← Memory Protocol (Obsidian/MCP/mem0/files)
+│   │   ├── verification.md     ← Verify Loop + Fresh-Eyes Protocol
+│   │   ├── slop.md             ← AI Slop Index (text/code/design/image/data)
+│   │   ├── subagents.md        ← Orchestration: roles, firewall, templates
+│   │   ├── domains.md          ← 10 domain decision trees
+│   │   └── installation.md     ← Per-framework setup
+│   └── templates/
+│       ├── user-patterns.md    ← Starter memory file
+│       └── core-injection.txt  ← Ready-to-inject core (custom loops)
+├── evals/                      ← Behavioral regression suite + baseline results
+├── examples/                   ← Before/after walkthroughs incl. memory-learning
+├── CHANGELOG.md · CONTRIBUTING.md · LICENSE (MIT)
 ├── README.md                   ← You are here
-├── README_PL.md                ← Polish version
-├── LICENSE                     ← MIT
-├── references/                 ← Progressive disclosure — loaded on demand
-│   ├── memory.md               ← Memory Protocol (Obsidian/MCP/mem0/files)
-│   ├── verification.md         ← Verify Loop + Fresh-Eyes Protocol
-│   ├── slop.md                 ← AI Slop Index (text/code/design/image/data)
-│   ├── subagents.md            ← Orchestration: roles, firewall, templates
-│   ├── domains.md              ← 10 domain decision trees
-│   └── installation.md         ← Per-framework setup
-├── templates/
-│   ├── user-patterns.md        ← Starter memory file
-│   └── core-injection.txt      ← Ready-to-inject core (custom loops)
-└── examples/
-    ├── web-development.md
-    ├── image-generation.md
-    ├── content-creation.md
-    └── memory-learning.md      ← 3 sessions, from cold start to prediction
+└── README_PL.md                ← Polish version
 ```
 
 ---

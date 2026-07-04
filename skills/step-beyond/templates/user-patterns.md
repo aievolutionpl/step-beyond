@@ -22,3 +22,7 @@ updated: YYYY-MM-DD
 
 ## Trajectories
 <!-- Multi-session request sequences. Fuel for L3 prediction. Format: A → B → C (seen N×) -->
+
+## Open Loops
+<!-- Optional. Unfinished threads awaiting user input (placeholder data, offered additions).
+     Next session: close these before adding anything new. Delete when closed. -->
