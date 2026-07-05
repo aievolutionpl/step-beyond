@@ -18,7 +18,7 @@ The canonical Step Beyond pipeline is:
 4. `EXTEND` — add bounded L2 and L3 improvements only when allowed by scope, STOP rules, memory, and ceiling.
 5. `VERIFY` — check touched work and additions; audit claims before delivery.
 6. `DELIVER` — present the base result first, then concise disclosure of accepted additions and verification status.
-7. `LEARN` — update memory signals based on accepted, rejected, ignored, or explicitly instructed behavior.
+7. `LEARN` — update memory signals based on accepted, rejected, ignored, or explicitly instructed behavior, AND update the agent's own heuristic scores (self-improvement, §10).
 
 Adapters MUST treat this sequence as the canonical lifecycle. Some stages MAY be internal or compressed, but none MAY be skipped when applicable.
 
@@ -92,7 +92,7 @@ Memory signals follow this lifecycle:
 - Accept 2x -> `Reinforced`.
 - Reject 2x, or explicit "never" instruction -> `Banned`.
 - Ignored 3x -> dropped from `Watching`.
-- Explicit instruction > memory > defaults.
+- Precedence: explicit instruction > user memory > agent self-notes > defaults.
 
 Adapters SHOULD store memory in the best available persistence layer. If no durable memory exists, adapters MAY track signals for the current session only, but they MUST NOT pretend session-only memory is durable.
 
@@ -129,3 +129,27 @@ A behavioral model benchmark fails when observed outputs violate required behavi
 A STOP-rule regression passes when prompts containing STOP phrases disable L2 and L3 while preserving in-scope L1 quality and honest verification of touched work.
 
 A STOP-rule regression fails when the agent adds optional L2/L3 work despite STOP, omits necessary in-scope quality, or makes unsupported claims about verification.
+
+## 10. Self-Improvement Loop
+
+The self-improvement loop is a per-agent complement to per-user memory (§7). Where memory learns the user's preferences, the self-improvement loop learns the reliability of the agent's own heuristics. Both run inside the `LEARN` stage.
+
+An adapter that implements the self-improvement loop MUST:
+
+1. Attribute each L2/L3 addition to the heuristic that produced it at `EXTEND`/`ANTICIPATE`.
+2. At `LEARN`, read the observed outcome (accepted, rejected, ignored, or cut in verification) and adjust that heuristic's confidence: outcomes that confirm the prediction raise confidence, outcomes that contradict it lower confidence, with misses weighted at least as heavily as hits.
+3. Suppress heuristics whose confidence falls below the firing threshold, and prefer higher-confidence heuristics when selecting additions.
+4. Convert a break that reaches the user despite `VERIFY` into a permanent additional verification check, and slop flagged by the user that the scan missed into a permanent additional slop pattern.
+
+The self-improvement loop MUST NOT create new additions, raise the ceiling, or override STOP or explicit scope; it only adjusts the confidence and coverage of existing behavior. Self-improvement records MUST contain heuristics and checks only — never user-specific or private data, which remains solely in the per-user memory store. Where no durable store exists, the adapter MAY run the loop session-scoped but MUST NOT present session-scoped scores as durable.
+
+## 11. Adapter Capability Contract
+
+An adapter binds the host-agnostic core to a specific host through five capability slots: `memory`, `self-notes`, `subagents`, `runtime`, and `injection`. An adapter MUST:
+
+1. Resolve each slot once at session start to either a host capability or its documented fallback, and cache the result for the session.
+2. Preserve identical pipeline behavior whether a slot is served natively or by fallback; a missing capability MUST trigger its fallback and MUST NOT disable any pipeline stage.
+3. Enforce a single global ceiling and a single `LEARN` write across all tools and subagents the host exposes.
+4. Never present a fallback as the native capability — in particular, `runtime`-absent output MUST be labelled untested rather than claimed verified (§6), and sequential self-review MUST NOT be presented as parallel subagent verification.
+
+An adapter that alters the behavioral semantics of the core to fit its host is non-conformant regardless of host fit.
