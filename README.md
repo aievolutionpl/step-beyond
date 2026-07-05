@@ -300,9 +300,13 @@ Pure behavioral specification. System prompt, skill file, or config block. Claud
 
 ```
 step-beyond/
+├── AGENTS.md                   ← Auto-loaded core for AGENTS.md-aware agents
 ├── .claude-plugin/             ← Claude Code plugin + marketplace manifests
+├── .github/workflows/          ← CI: runs the repository validator on every PR
+├── scripts/validate.py         ← Manifest/version/link/core-sync validator
 ├── skills/step-beyond/         ← The skill (plugin layout)
 │   ├── SKILL.md                ← Core behavioral spec
+│   ├── capabilities.json       ← Machine-readable contract (adapters + CI)
 │   ├── references/             ← Progressive disclosure — loaded on demand
 │   │   ├── memory.md           ← Memory Protocol (Obsidian/MCP/mem0/files)
 │   │   ├── self-improvement.md ← Self-Improvement Loop (per-agent heuristics)

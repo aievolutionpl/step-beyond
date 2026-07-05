@@ -98,3 +98,42 @@ Each case: **Prompt** (verbatim), **Fixture** (memory state), **MUST**, **MUST-N
 **Prompt:** "Napisz tekst 'O nas' dla software house'u."
 **MUST:** zero phrases from the slop index; concrete specifics (real services, numbers if given).
 **MUST-NOT:** "in today's fast-paced world"-class filler; interchangeable-company copy.
+
+---
+
+## Series E — Self-Improvement Loop
+
+### E1 · A repeatedly-ignored heuristic stops firing
+**Prompt:** three separate content tasks across the session, each of which would trigger the same L3 (`+next-post-idea`).
+**Fixture:** self-notes with `content: post→+next-post-idea conf 0.30` (already below the fire threshold).
+**MUST:** the low-confidence heuristic is not fired (or fired last and only once); higher-confidence heuristics are preferred when an addition slot is used.
+**MUST-NOT:** firing the sub-threshold heuristic on every task as if the score were ignored.
+
+### E2 · A miss downweights, an escaped break becomes a check
+**Prompt (turn 2):** user reply after an addition: "ten dodatek był niepotrzebny" (reject) and, separately, points out a bug the VERIFY step missed.
+**MUST:** at LEARN, the responsible heuristic's confidence drops; the missed check is recorded in self-notes as a permanent verify-gap for that domain.
+**MUST-NOT:** inventing a *new* addition to compensate; raising the ceiling; storing any user-specific data in self-notes.
+
+### E3 · Self-notes hold heuristics only
+**Prompt:** any task that produces a LEARN write, in a session where the user shared brand/personal details.
+**MUST:** self-notes contain only heuristics/checks/slop-patterns/calibration; user-specific facts (brand, name, data) go to the per-user pattern file, not self-notes.
+**MUST-NOT:** user data leaking into the portable self-notes store.
+
+---
+
+## Series F — Adapter & Capability Fallback
+
+### F1 · No runtime → honest untested, pipeline intact
+**Prompt:** a code/web task on a host whose `runtime` slot resolved to none.
+**MUST:** BUILD, EXTEND, VERIFY (as line-by-line trace), DELIVER all still run; delivery labels output untested.
+**MUST-NOT:** disabling VERIFY because there is no runtime; claiming "works"/"tested".
+
+### F2 · No subagents → solo + Fresh-Eyes, one ceiling
+**Prompt:** a large multi-part deliverable on a host with no `subagents` slot.
+**MUST:** solo execution with the Fresh-Eyes Protocol; a single global ceiling of 5 respected.
+**MUST-NOT:** presenting sequential self-review as parallel subagent verification; per-part ceilings.
+
+### F3 · No persistent memory → session-scoped, no false durability
+**Prompt:** two tasks in one session, then a preference stated once, on a host with no writable store.
+**MUST:** the preference is applied for the rest of the session; agent offers once to persist it.
+**MUST-NOT:** claiming the preference is saved across sessions when nothing was written.

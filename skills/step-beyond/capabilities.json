@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "step-beyond",
+  "version": "3.1.0",
+  "spec": "../../SPEC.md",
+  "summary": "Machine-readable contract for Step Beyond. Adapters and CI parse this instead of re-transcribing the prose in SKILL.md. Prose is authoritative for wording; this file is authoritative for numbers, names, and lists.",
+  "pipeline": [
+    { "step": 0, "name": "RECALL", "internal": true, "desc": "Load user patterns from memory; profile, reinforced, banned, trajectories." },
+    { "step": 1, "name": "EXPAND", "internal": true, "desc": "Upgrade the prompt into an intent brief: goal, audience, implied, done." },
+    { "step": 2, "name": "BUILD", "internal": false, "desc": "Base deliverable + L1 polish (always, silent)." },
+    { "step": 3, "name": "EXTEND", "internal": false, "desc": "L2 (max 3) + L3 (max 1) additions, ceiling-gated, memory-driven." },
+    { "step": 4, "name": "VERIFY", "internal": true, "desc": "Base check, addition check, slop scan, claim audit. Unverifiable addition -> cut." },
+    { "step": 5, "name": "DELIVER", "internal": false, "desc": "Base first; additions declared in <=4 words each; honest claims only." },
+    { "step": 6, "name": "LEARN", "internal": true, "desc": "Write user-pattern signals AND score own heuristics (self-improvement)." }
+  ],
+  "levels": {
+    "L1": { "name": "POLISH", "always": true, "silent": true, "counts_against_ceiling": false, "desc": "Baseline completeness and quality. Not optional." },
+    "L2": { "name": "EXTEND", "max_per_session": 3, "declare_format": "+name", "desc": "One missing piece that saves a follow-up." },
+    "L3": { "name": "ANTICIPATE", "max_per_session": 1, "declare_format": "+name (~cost)", "desc": "Predict and build the next request." }
+  },
+  "ceiling": {
+    "total_per_session": 5,
+    "l2_per_session": 3,
+    "l3_per_session": 1,
+    "global_across_subagents": true,
+    "time_budget_fraction": 0.2
+  },
+  "stop_words": {
+    "en": ["just", "only", "stop", "enough", "nothing more", "minimal", "quick"],
+    "pl": ["tylko", "minimalnie", "bez żadnych dodatków", "nie zmieniaj nic poza", "daj tylko", "wystarczy"],
+    "effect": "disable L2 and L3; never disable in-scope L1 quality or honest verification of touched work"
+  },
+  "claim_audit": {
+    "guarded_terms": ["works", "tested", "verified", "responsive", "fast", "optimized", "działa", "przetestowane"],
+    "rule": "each guarded term requires a check actually performed; otherwise state untested explicitly"
+  },
+  "precedence": ["explicit_instruction", "user_memory", "agent_self_notes", "domain_defaults"],
+  "memory_lifecycle": {
+    "promote_to_reinforced": "accept 2x",
+    "ban": "reject 2x OR explicit never",
+    "drop": "ignored 3x",
+    "decay_reinforced": "unconfirmed ~10 sessions or 30 days -> Watching",
+    "never_store": ["secrets", "credentials", "private_data"]
+  },
+  "self_improvement": {
+    "store": "step-beyond:self-notes",
+    "contains_only": ["heuristic_scores", "verify_gaps", "slop_patterns", "calibration"],
+    "never_contains": ["user_data"],
+    "confidence": { "start": 0.6, "fire_threshold": 0.5, "suppress_below": 0.35, "drop_below": 0.2 }
+  },
+  "capability_slots": [
+    { "slot": "memory", "wire_to": ["mcp_memory", "mem0", "obsidian", "AGENTS.md", "CLAUDE.md", "patterns.md"], "fallback": "session-only tracking" },
+    { "slot": "self_notes", "wire_to": ["same store, separate key"], "fallback": "session-scoped scoring" },
+    { "slot": "subagents", "wire_to": ["task_tool", "handoffs", "crew", "graph_nodes"], "fallback": "solo + Fresh-Eyes Protocol" },
+    { "slot": "runtime", "wire_to": ["shell", "headless_browser", "test_runner", "repl"], "fallback": "line-by-line trace + honest untested label" },
+    { "slot": "injection", "wire_to": ["skill", "system_prompt", "rules_file", "config_block"], "fallback": "paste core-injection.txt verbatim" }
+  ],
+  "hosts": [
+    "claude-code", "claude-agent-sdk", "codex-cli", "hermes", "openclaw", "opencode",
+    "cursor", "windsurf", "gemini-cli", "github-copilot", "amp", "aider", "cline", "roo",
+    "openai-agents-sdk", "crewai", "autogen", "langgraph", "custom-react-loop"
+  ],
+  "references": {
+    "memory": "references/memory.md",
+    "self_improvement": "references/self-improvement.md",
+    "verification": "references/verification.md",
+    "slop": "references/slop.md",
+    "subagents": "references/subagents.md",
+    "domains": "references/domains.md",
+    "adapters": "references/adapters.md",
+    "installation": "references/installation.md"
+  },
+  "templates": {
+    "core_injection": "templates/core-injection.txt",
+    "user_patterns": "templates/user-patterns.md"
+  }
+}

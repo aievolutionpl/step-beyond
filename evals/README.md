@@ -17,10 +17,12 @@ Behavioral regression suite. Run these when changing the core instruction, the c
 | **B** | STOP compliance & scope discipline | B1–B3 |
 | **C** | Memory: recall, banned filter, learn-write | C1–C4 |
 | **D** | Verification & honest claims | D1–D3 |
+| **E** | Self-improvement loop (heuristic scoring, gaps) | E1–E3 |
+| **F** | Adapter & capability fallback | F1–F3 |
 
 Full case definitions: [`cases.md`](cases.md)
 
 ## Pass Bar
 
-- **Release bar:** all B and D cases pass (trust-critical); ≥80% of A and C pass.
-- A failed B or D case is a release blocker — an agent that ignores STOP or fakes "works" is worse than no skill at all.
+- **Release bar:** all B, D, and F cases pass (trust-critical); ≥80% of A, C, and E pass.
+- A failed B, D, or F case is a release blocker — an agent that ignores STOP, fakes "works", or fakes a capability it doesn't have is worse than no skill at all.
