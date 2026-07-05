@@ -1,18 +1,35 @@
-# 🧠 Step Beyond v3.0
+# 🧠 Step Beyond v3.1
 
-> *"Nie pytaj. Po prostu zrób więcej — tak jak zrobiłby to użytkownik. Zweryfikuj. Zapamiętaj co zadziałało. I wiedz, kiedy przestać."*
+> *"Nie pytaj. Po prostu zrób więcej — tak jak zrobiłby to użytkownik. Zweryfikuj. Zapamiętaj co zadziałało. Wiedz, kiedy przestać. I bądź coraz lepszy z każdym zadaniem."*
 
 <br>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/wersja-3.0.0-blue?style=for-the-badge" alt="Wersja">
+  <img src="https://img.shields.io/badge/wersja-3.1.0-blue?style=for-the-badge" alt="Wersja">
   <img src="https://img.shields.io/badge/licencja-MIT-yellow?style=for-the-badge" alt="Licencja">
   <img src="https://img.shields.io/badge/framework-agnostyczny-green?style=for-the-badge" alt="Framework">
   <img src="https://img.shields.io/badge/pamięć-Obsidian%20%7C%20MCP%20%7C%20mem0%20%7C%20pliki-orange?style=for-the-badge" alt="Pamięć">
-  <img src="https://img.shields.io/badge/agenci-Claude%20%7C%20Codex%20%7C%20Hermes%20%7C%20Cursor%20%7C%20Copilot-purple?style=for-the-badge" alt="Kompatybilność">
+  <img src="https://img.shields.io/badge/pętla-samodoskonaląca-ff2d55?style=for-the-badge" alt="Samodoskonaląca">
+  <img src="https://img.shields.io/badge/agenci-Claude%20%7C%20Codex%20%7C%20Hermes%20%7C%20OpenClaw%20%7C%20opencode%20%7C%20Cursor-purple?style=for-the-badge" alt="Kompatybilność">
 </p>
 
 <br>
+
+---
+
+## ⚡ Co zyskuje Twój agent
+
+| | Supermoc | Instynkt, który instaluje |
+|---|----------|---------------------------|
+| 🧠 | **RECALL** | Pamięta markę, stack, ton, zakazy — między sesjami |
+| 🔍 | **EXPAND** | Czyta prompt, który *miał na myśli*, nie ten wpisany |
+| 🎨 | **POLISH** | Żadnej pustki, żadnego AI slopu — profesjonalny standard, zawsze |
+| ➕ | **EXTEND** | Dodaje brakujący element, który oszczędza dopytkę (z limitem) |
+| 🔮 | **ANTICIPATE** | Buduje *następne* pytanie, zanim padnie |
+| ✅ | **VERIFY** | Uruchamia, klika — zero zepsutych dodatków, zero fałszywego "działa" |
+| 📈 | **SELF-IMPROVE** | Ocenia własne predykcje, tnie chybienia, wzmacnia trafienia |
+
+Każde zadanie: idź o krok dalej — ograniczone twardym limitem, żeby nigdy nie stać się męczące.
 
 ---
 
@@ -49,8 +66,9 @@ Różnica między tym, co użytkownicy mówią, a tym, czego potrzebują, podleg
 | *cisza, ale wiesz że zaraz zapyta* | Następne logiczne pytanie | **ANTICIPATE** |
 | "Gotowe! ✅" *(deklaracja agenta)* | Dowód, że faktycznie działa | **VERIFY** |
 | *to samo zadanie, nowa sesja* | Jego preferencje, już zastosowane | **MEMORY** |
+| *własny błędny strzał agenta* | Przestaje go strzelać | **SELF-IMPROVE** |
 
-**Step Beyond koduje wszystkie pięć.** Behawioralny skill, który transformuje każdego agenta z literalnego executora w proaktywnego współpracownika, który się uczy.
+**Step Beyond koduje wszystkie sześć.** Behawioralny skill, który transformuje każdego agenta z literalnego executora w proaktywnego współpracownika, który się uczy — i doskonali własny osąd z każdym zadaniem.
 
 ---
 

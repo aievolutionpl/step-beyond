@@ -2,6 +2,21 @@
 
 All notable changes to Step Beyond. Format follows [Keep a Changelog](https://keepachangelog.com/); versions follow SemVer.
 
+## [3.1.0] — 2026-07-05 · The Self-Improvement Release
+
+### Added
+- **Self-Improvement Loop** (`references/self-improvement.md`): a per-agent complement to per-user memory. Each L2/L3 is attributed to the heuristic that produced it; at LEARN the outcome is scored (hit reinforces, miss prunes), heuristics below a firing threshold stop firing, breaks that reach the user become permanent verify checks, and missed slop becomes a new detector. Separate `Agent Self-Notes` store (heuristics only — never user data), confidence math, graceful session-scoped fallback. Wired into the pipeline's LEARN step and the Core Instruction.
+- **Universal Adapter Architecture** (`references/adapters.md`): the core is bound to any host through five capability slots — `memory`, `self-notes`, `subagents`, `runtime`, `injection` — resolved once at session start to a host capability or its documented fallback. Includes a host capability matrix, adapter conformance rules, and a 4-step porting guide.
+- **First-class host support**: OpenClaw, opencode, Gemini CLI, and Amp / Aider / Cline / Roo added to `references/installation.md` (all via the marked `AGENTS.md`/rules core block).
+- **Visual capability panel + compatibility strip** at the top of `SKILL.md` and `README.md`: an icon-per-superpower table (RECALL/EXPAND/POLISH/EXTEND/ANTICIPATE/VERIFY/SELF-IMPROVE) with the fallback each degrades to, plus a "runs on any agent" strip and a literal-vs-Step-Beyond contrast block.
+
+### Changed
+- **Precedence rule** now four-tier: explicit instruction > user memory > agent self-notes > domain defaults (was three-tier). Updated in SKILL.md, core-injection, SPEC §7.
+- **SPEC.md**: LEARN stage (§2) updated to include heuristic scoring; new normative §10 (Self-Improvement Loop) and §11 (Adapter Capability Contract).
+- **Core Instruction / `core-injection.txt`**: LEARN step gains the self-scoring clause; identity line becomes "an extension of the user's thinking that improves with every task."
+- **Plugin manifests** bumped to 3.1.0; descriptions and keywords updated (`self-improvement`, `agent-adapter`).
+- READMEs and version-history tables updated for v3.1; framework table expanded with OpenClaw / opencode / Gemini CLI / Amp / Aider / Cline / Roo.
+
 ## [3.0.0] — 2026-07-04 · The Learning Release
 
 ### Added
