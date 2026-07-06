@@ -28,6 +28,7 @@ New examples should follow this shape. It keeps every file scannable in under a 
 | [`research-analysis.md`](research-analysis.md) | RESEARCH | Claim audit (every statement traced to a consulted source) plus sourced anticipation of the next ask |
 | [`memory-learning.md`](memory-learning.md) | cross-cutting | The per-user **Memory** loop across three sessions — cold start to trajectory prediction |
 | [`self-improvement-loop.md`](self-improvement-loop.md) | cross-cutting | The per-agent **Self-Improvement** loop across three unrelated users — heuristic confidence rising/falling, independent of any one user's preferences |
+| [`chatgpt-agent-mode.md`](chatgpt-agent-mode.md) | ChatGPT / Agent Mode | Adapting the universal skill into a ChatGPT-ready instruction pack with install guide, core template, and bounded proactivity |
 
 `memory-learning.md` and `self-improvement-loop.md` are a deliberate pair: the first shows the agent getting better *for one user*, the second shows it getting better *at the job, for everyone*. Read them back to back — see `references/self-improvement.md` §"Interaction With Memory" for how the two loops relate.
 
@@ -35,6 +36,6 @@ New examples should follow this shape. It keeps every file scannable in under a 
 
 `references/domains.md` defines 11 domain trees: IMAGE, WEB, CONTENT, CODE, RESEARCH, EMAIL, TECHNICAL, VIDEO, AUDIO, DATA, SOCIAL.
 
-Dedicated examples currently exist for: **IMAGE, WEB, CONTENT, CODE, RESEARCH**, plus two cross-cutting examples (memory, self-improvement) and one domain-agnostic flagship (onboarding).
+Dedicated examples currently exist for: **IMAGE, WEB, CONTENT, CODE, RESEARCH**, plus two cross-cutting examples (memory, self-improvement), one domain-agnostic flagship (onboarding), and one ChatGPT/Agent Mode adapter trace.
 
 **Not yet covered:** EMAIL, TECHNICAL, VIDEO, AUDIO, SOCIAL. If you write one, follow the format above and add a row to the index — see [`CONTRIBUTING.md`](../CONTRIBUTING.md).
