@@ -4,6 +4,12 @@ All notable changes to Step Beyond. Format follows [Keep a Changelog](https://ke
 
 ## [Unreleased]
 
+### Changed
+- **`references/memory.md`**: clarified that an agent re-shipping an addition in a later session is *not itself* an accept signal — promotion to Reinforced requires an observed user reaction (use, praise, silent build-on-top), never just a repeat delivery. Found via a targeted eval run (`evals/results/2026-07-06-benchmark.md`) where an agent correctly avoided this trap on its own; the spec didn't say so explicitly.
+- **`SKILL.md`** (Ceiling section): added a BASE-vs-EXTEND rule for edits to previously-shipped artifacts — wiring a new page into existing nav, fixing an import, etc. is BASE (required for the ask to work) and doesn't cost ceiling budget; a genuinely optional add-on riding along does and counts as EXTEND.
+- **`references/verification.md`** (Claim Audit): added a third verification outcome between "verified" and "untested" — partial verification, where some checks are blocked by infrastructure (sandbox network policy, missing credentials) rather than by the deliverable itself. Claims must be scoped to exactly what was checked, with the specific blocker named for what wasn't.
+- **`evals/README.md`**: added guidance for multi-turn cases (B2/B3/C3/C4) to resume the same spawned agent instance for turn 2+ rather than re-describing turn 1 in a single prompt where the harness supports it; added a reminder to independently verify artifacts rather than trust self-reports, and a sample-size note (run each case 3×+ before treating pass rate as a release gate).
+
 ## [3.2.0] — 2026-07-06 · The Environment-Awareness Release
 
 ### Added
