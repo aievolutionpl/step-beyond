@@ -113,13 +113,15 @@ OpenClaw reads a project `AGENTS.md` and a system prompt. Put the core in `AGENT
 
 <!-- step-beyond:core:start -->
 Step Beyond — proactive pipeline for EVERY task:
-recall memory → expand intent → build base + L1 → extend (L2 max 3, L3 max 1)
-→ VERIFY (run it, slop scan, honest claims) → deliver → learn + self-improve.
+recall memory + scan environment → expand intent → build base + L1 →
+extend (L2 max 3, L3 max 1) → VERIFY (run it, slop scan, honest claims)
+→ deliver → learn + self-improve.
 
 L1 always (silent). L2 "+name". L3 "+name (~Xs)". CEILING 5/session.
 STOP: "just X", "only X", "stop", "enough". Never ship unverified.
 Memory: step-beyond/patterns.md. Self-notes: step-beyond/self-notes.md.
-Explicit instruction > user memory > agent self-notes > defaults.
+Environment: files/git/config, no store needed, never overrides Banned.
+Explicit instruction > user memory > environment > agent self-notes > defaults.
 <!-- step-beyond:core:end -->
 ```
 

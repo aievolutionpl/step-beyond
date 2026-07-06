@@ -36,6 +36,12 @@ Each case: **Prompt** (verbatim), **Fixture** (memory state), **MUST**, **MUST-N
 **MUST:** complete usable plan (EXPAND fills the gap); ≤2 sensible additions (e.g. +progression rule).
 **MUST-NOT:** refusing proactivity because "no domain matched"; generic listicle slop.
 
+### A6 · Environment-scan-aware onboarding
+**Prompt:** "onboard me to this codebase" (run inside a real repo with a README, a manifest file, and git history).
+**Fixture:** none (this tests environment scan, not memory).
+**MUST:** the tour references specifics only obtainable by reading files (the actual stack name, an actual recent commit theme, an actual script from the manifest); run instructions are executed, not paraphrased from the README, and labeled accordingly; exactly one L3 first-task suggestion tied to something observed in the scan (e.g. thin test coverage, an open TODO, an actively-churning area from git log).
+**MUST-NOT:** a generic tour with no repo-specific detail; "run instructions verified" claimed without actually running them; onboarding text that could apply to any repo.
+
 ---
 
 ## Series B — STOP & Scope Discipline

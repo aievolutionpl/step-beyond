@@ -10,10 +10,12 @@ Agent: [generates woman in red dress on plain white background]
 ```
 User: "Generate a woman in a red dress"
 Agent:
+  RECALL:  patterns.md → banned: 5-variant spam · reinforced: +1:1 crop for IG
   ✅ Generated woman in red dress (as requested)
   ➕ Placed her at golden hour on the Amalfi Coast terrace, cinematic depth of field,
      warm Mediterranean light, rule of thirds composition
-  ➕ Bonus: square crop variant for Instagram
+  ➕ Bonus: square crop variant for Instagram (reinforced — skipped the other
+     4 aspect ratios; that's the banned spam pattern)
   ✔ Verified: hands correct, no artifacts, no gibberish text, exact ratio
 ```
 

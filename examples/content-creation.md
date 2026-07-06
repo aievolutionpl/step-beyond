@@ -9,11 +9,20 @@ Agent: [writes a single post]
 ## Good (Step Beyond v3)
 ```
 User: "Write a post about AI automation for my Facebook group"
-Agent:
+
+Agent (internal):
+  RECALL: patterns.md → Trajectories: "post → carousel → reels-script" (seen
+          2×). Watching: this user's last 2 posts both closed with a
+          "part 2" tease, and both got comments asking for the follow-up.
+  L3:     that's a real signal, not a default freebie — trajectory + an
+          observed pattern earns one next-post idea.
+
+Agent (delivered):
   ✅ Post written: "Większość firm próbuje automatyzować 5 rzeczy naraz..."
   ➕ Added: 3 alternative hooks (curiosity, contrarian, story-driven),
      engagement CTA, comment-starter question
   ➕ Next-post idea: "Part 2 — jak zmierzyć czy automatyzacja działa (metryki)"
+     (this user's last 2 posts both earned follow-up demand this way)
   ➕ Image brief: split-screen before/after, dark navy + gold brand palette
   ✔ Verified: slop scan clean, numbers sourced, brand palette from memory
 ```

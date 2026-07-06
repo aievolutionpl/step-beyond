@@ -4,9 +4,28 @@ All notable changes to Step Beyond. Format follows [Keep a Changelog](https://ke
 
 ## [Unreleased]
 
+## [3.2.0] — 2026-07-06 · The Environment-Awareness Release
+
+### Added
+- **Environment Scan** (`references/environment-scan.md`): RECALL gains a second, always-available source alongside memory — reading manifests (`package.json`/`pyproject.toml`/`Cargo.toml`/`go.mod`), `git log`/blame, directory structure, existing code style, config/CI/lint files, and docs (`README.md`/`CLAUDE.md`/`AGENTS.md`) before acting. No pipeline stage added — this enriches step 0 (RECALL) only, preserving the 7-stage shape. Read-only, budget-capped, session-cached, and explicit about what it never opens (secrets/.env/credentials).
+- **Four new examples**: `examples/code-development.md` (CODE — environment scan before writing code), `examples/codebase-onboarding.md` (domain-agnostic flagship — full onboarding trace: README/tree/git log/CI → tour + verified run instructions + predicted first task), `examples/research-analysis.md` (RESEARCH — claim audit + sourced anticipation), `examples/self-improvement-loop.md` (cross-cutting — the per-agent Self-Improvement loop worked across three unrelated users, the first example of this loop anywhere in the repo).
+- **`examples/README.md`**: documents the de facto Bad/Good/Why/More-Examples/Triggers format, indexes every example file by domain, and states transparently which of the 11 domains still lack a dedicated example.
+
 ### Changed
+- **Precedence rule** now five-tier: `explicit instruction > user memory > environment (ground truth) > agent self-notes > domain defaults` (was four-tier, and inconsistently three-tier in `references/memory.md` and SKILL.md's Memory section). Reconciled across `SKILL.md` (Core Instruction + Mental Model + Memory section), `templates/core-injection.txt`, `references/memory.md`, `references/self-improvement.md`, `examples/memory-learning.md`, and `SPEC.md` §2/§7.
+- **`SKILL.md` / `core-injection.txt` reconciled to one canonical wording** — the two files had drifted (three-tier vs four-tier precedence); the Core Instruction block is now identical in substance in both places.
+- **EXPAND's Intent Brief** gains an `ENVIRONMENT` line (`SKILL.md`) between `IMPLIED` and `MEMORY`.
+- **Capability panel**: `SKILL.md` and `README.md`/`README_PL.md` gain a `SCAN` row (eight instincts, was seven), and the Core Instruction / pipeline diagrams note environment scanning inside RECALL.
+- **Domain count fixed**: "10 domains" → "11 domains" (`SKILL.md` progressive-disclosure table and priming-examples closer; `README.md`/`README_PL.md` repository-tree comments).
+- **`references/domains.md`**: CODE/WEB/DATA/TECHNICAL RECALL lines note that stack/conventions may come from an environment scan when memory hasn't seen the repo yet.
+- **`examples/image-generation.md`**: added a RECALL step to its trace, for consistency with the other example files.
+- **`examples/web-development.md`**: added an explicit `ENVIRONMENT` trace step (reads `package.json`, existing component conventions, `git log`) — the flagship demonstration of environment-scanning.
+- **`examples/content-creation.md`**: the L3 next-post prediction is now shown as earned from an observed trajectory/pattern signal, not asserted for free.
+- **`examples/memory-learning.md`**: added a scope note distinguishing the per-user Memory loop shown here from the new per-agent Self-Improvement loop (`examples/self-improvement-loop.md`).
+- **`SPEC.md`**: §2 RECALL definition extended to name environment inspection as an available source; §7 precedence updated to five-tier with a clarifying sentence that environment supplies/corrects factual context but never outranks an explicit instruction or a `Banned` entry.
 - **Quick Start reworked around agent self-install** (`README.md`, `README_PL.md`): the primary path is now "hand your agent the repo link" — a copy-paste prompt that tells any coding agent to read the install docs, detect its own host, and wire the skill in. Manual paths (Claude Code plugin, core-block paste) demoted to a secondary "prefer to do it yourself?" block. The "Universal" section links up to the self-install path.
 - **New `Self-Install (agent-driven)` section** in `references/installation.md`: a deterministic 5-step recipe (detect host → install by matching method → wire memory/self-notes → verify → report & activate) with a host-signal→target table and an idempotency rule, written for an agent to follow when handed the repo link.
+- Plugin manifest (`.claude-plugin/plugin.json`) and version badges (`README.md`, `README_PL.md`) bumped to 3.2.0.
 
 ## [3.1.0] — 2026-07-05 · The Self-Improvement Release
 

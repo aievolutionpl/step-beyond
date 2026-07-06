@@ -4,6 +4,8 @@
 
 Step Beyond's L2/L3 predictions get dramatically better when the agent remembers what this specific user accepted, rejected, and ignored. This protocol makes that memory work with **any** storage the agent has — Obsidian, an MCP memory server, mem0, Notion, `CLAUDE.md`, or a plain markdown file. No storage at all? Degrade gracefully to session-only tracking.
 
+This is the *learned-preference* half of RECALL. The other half — reading the live project itself (stack, git history, conventions) — needs no store at all and is covered by `references/environment-scan.md`. Both run inside RECALL; this file is about what the user wants, that one is about what's actually there.
+
 ---
 
 ## 1. Detect Your Memory (once per session)
@@ -124,12 +126,13 @@ At session start, or lazily on the first matching request:
 ## 6. Precedence (Conflict Resolution)
 
 ```
-EXPLICIT INSTRUCTION  >  MEMORY  >  DOMAIN DEFAULTS
+EXPLICIT INSTRUCTION  >  MEMORY  >  ENVIRONMENT  >  AGENT SELF-NOTES  >  DOMAIN DEFAULTS
 ```
 
 - User says "with emoji" while `content: emoji` is Banned → do it with emoji, **this once**. Note the exception; 2 exceptions → un-ban.
 - Memory says `stack: Next.js`, user says "in plain HTML" → plain HTML. Profile stays (one-off ≠ profile change).
-- Memory silent on a domain → fall back to domain decision trees (`references/domains.md`).
+- Memory says `stack: Next.js`, the live repo's `package.json` says Astro (a different project, or a migration since Profile was written) → environment wins for this session's facts; flag the drift so the next LEARN write corrects the stale Profile entry. See `references/environment-scan.md`.
+- Memory silent on a domain → environment scan fills what it can, then fall back to domain decision trees (`references/domains.md`).
 
 ---
 

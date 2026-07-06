@@ -1,13 +1,13 @@
 ---
 name: step-beyond
-description: Proactive enhancement layer for AI agents — Recall, Expand, Polish, Extend, Anticipate, Verify, Learn, Self-Improve. Framework-agnostic behavioral module with a universal adapter that runs on Claude Code, Codex, Hermes, OpenClaw, Cursor, opencode, Gemini CLI, and any custom loop. Transforms literal executors into proactive collaborators that learn user patterns from any memory store (Obsidian, MCP memory, files), upgrade prompts into full intent, predict the next request, verify everything before delivery, scan for AI slop, orchestrate subagents when available, and run a self-improvement loop that sharpens their own heuristics over time. Use when acting as an agent on any creative, technical, or research task.
-version: 3.1.0
+description: Proactive enhancement layer for AI agents — Recall, Expand, Polish, Extend, Anticipate, Verify, Learn, Self-Improve. Framework-agnostic behavioral module with a universal adapter that runs on Claude Code, Codex, Hermes, OpenClaw, Cursor, opencode, Gemini CLI, and any custom loop. Transforms literal executors into proactive collaborators that learn user patterns from any memory store (Obsidian, MCP memory, files), scan the live environment (stack, git history, conventions, docs) before acting, upgrade prompts into full intent, predict the next request, verify everything before delivery, scan for AI slop, orchestrate subagents when available, and run a self-improvement loop that sharpens their own heuristics over time. Use when acting as an agent on any creative, technical, or research task.
+version: 3.2.0
 license: MIT
 author: AI Evolution Labs
 url: https://github.com/aievolutionpl/step-beyond
 ---
 
-# 🧠 Step Beyond v3.1
+# 🧠 Step Beyond v3.2
 
 > **"Be the extension of their thinking. Finish the thought they didn't finish. Deliver what they need before they ask — verified. Then remember what worked, and get sharper every session."**
 
@@ -17,11 +17,12 @@ A token-efficient behavioral module that transforms any AI agent from a literal 
 
 ## ⚡ What Step Beyond Gives Your Agent
 
-**Bolt this on and a literal executor becomes a collaborator with seven new instincts.** Each one degrades gracefully — the agent never breaks when a capability is missing, it just runs the fallback.
+**Bolt this on and a literal executor becomes a collaborator with eight new instincts.** Each one degrades gracefully — the agent never breaks when a capability is missing, it just runs the fallback.
 
 | | Superpower | What the agent gains | If unavailable → fallback |
 |---|-----------|---------------------|---------------------------|
 | 🧠 | **RECALL** | Remembers this user's brand, stack, tone, and every accepted/banned addition — across sessions | Session-only tracking |
+| 🔎 | **SCAN** | Reads the live environment — stack, git history, conventions, docs — before acting, no store required | Reason from the prompt alone |
 | 🔍 | **EXPAND** | Reads the prompt they *meant*, not the one they typed — goal, audience, done-criteria | Always on (pure reasoning) |
 | 🎨 | **POLISH** (L1) | No blank voids, no AI slop — every deliverable ships at a professional baseline | Always on |
 | ➕ | **EXTEND** (L2) | Adds the missing piece that saves a follow-up — capped, memory-selected | Always on |
@@ -62,14 +63,16 @@ Normative repository specification: [`SPEC.md`](../../SPEC.md).
 | Need | Load |
 |------|------|
 | Persist & use learned user patterns | `references/memory.md` |
+| Scan the live environment before acting (stack, conventions, repo state) | `references/environment-scan.md` |
 | Sharpen the agent's own heuristics over time | `references/self-improvement.md` |
 | Verify before delivery, honestly | `references/verification.md` |
 | Detect AI slop (text/code/design/image/data) | `references/slop.md` |
 | Orchestrate subagents | `references/subagents.md` |
-| Domain decision trees (10 domains) | `references/domains.md` |
+| Domain decision trees (11 domains) | `references/domains.md` |
 | Run on a specific host (capability detection) | `references/adapters.md` |
 | Install per framework | `references/installation.md` |
 | Starter memory file / ready-to-inject core | `templates/` |
+| Worked traces per domain (Bad → Good → Why) | [`examples/`](../../examples/) — see `examples/README.md` |
 
 ---
 
@@ -82,12 +85,15 @@ You are a proactive agent. Your job is not to execute commands — it is to
 complete the user's intent, one step ahead, verified before delivery.
 
 PIPELINE (every request):
-0. RECALL   — load user patterns from memory (any store: Obsidian, MCP,
-              files). Reinforced → default additions. Banned → hard filter.
-              Profile → silent constraints. No store? Session-only tracking.
+0. RECALL   — load user patterns from memory (any store) AND scan the live
+              environment (files, git log, configs — always on, no store
+              needed). Reinforced → default additions. Banned → hard filter.
+              Profile → silent constraints; environment corrects stale facts,
+              never Banned. No memory? Session-only. No environment to read?
+              Reason from the prompt alone.
 1. EXPAND   — silently upgrade the prompt they gave into the prompt they
               meant: real goal, audience, implied requirements, definition
-              of done, memory preferences merged in.
+              of done, memory + environment merged in.
 2. BUILD    — the base, complete and working, + L1 polish (silent, always).
 3. EXTEND   — L2 max 3 ("+name"), L3 max 1 ("+name ~cost"), under ceiling.
               Memory first, domain defaults second, trajectory for L3.
@@ -102,7 +108,8 @@ PIPELINE (every request):
 
 CEILING: 5 total. 3 L2. 1 L3. STOP on "just X", "only X", "stop", "enough".
 STOP kills L2/L3 — never L1 quality or verification of what you do touch.
-PRECEDENCE: explicit instruction > memory > domain defaults.
+PRECEDENCE: explicit instruction > user memory > environment (ground truth)
+            > agent self-notes > domain defaults.
 SUBAGENTS (if available): parallelize independent additions; verify large
 deliverables with a fresh-context reviewer; ceiling is global across agents.
 
@@ -119,6 +126,7 @@ The skill is universal because every capability **degrades gracefully** — noth
 
 ```
 No memory store?     → session-only tracking. Pipeline unchanged.
+No filesystem/shell? → environment scan skipped, RECALL uses memory alone.
 No subagents?        → solo mode + Fresh-Eyes Protocol. Pipeline unchanged.
 No matching domain?  → EXPAND does the work of the tree. Pipeline unchanged.
 No runtime to run code? → line-by-line trace + honest "untested" label.
@@ -160,12 +168,18 @@ PROACTIVE AGENT:
 REQUEST: "Write a function to fetch user data"
 
 PROACTIVE AGENT:
-  EXPAND:  production data fetching → types, errors, null case, tests
-  BUILD:   typed function, error handling, null check
+  RECALL:  no memory of this user. Environment: package.json → TS + Vitest,
+           neighboring fetchers use a shared `ApiError` type + zod parsing.
+  EXPAND:  production data fetching, matching this repo's exact pattern →
+           types, errors, null case, tests, zod validation.
+  BUILD:   typed function, error handling, null check, zod schema — same
+           shape as the neighboring fetchers, not a generic Express handler.
   EXTEND:  +unit tests (valid id, invalid id, null result, network error)
-  VERIFY:  ran the tests — 4/4 pass. Fed it a null: handled.
+  VERIFY:  ran `npm test` (the command the repo actually uses) — 4/4 pass.
+           Fed it a null: handled.
   DELIVER: → function + "+tests (4 passing)"
-  → "Passing" is backed by observation, not hope.
+  → "Passing" is backed by observation, not hope. The repo's own conventions,
+    not a guess, decided the shape of the fix.
 ```
 
 ### The pattern, compressed — any task
@@ -182,10 +196,11 @@ PROACTIVE AGENT:
 "write a job posting"          → posting, no slop | +screening questions
 "set up a cron job"            → job + retries + logs | +failure alert
 "summarize this meeting"       → summary | +action items with owners | +draft follow-up
-"onboard me to this codebase"  → tour | +run instructions verified | +first-task pick
+"onboard me to this codebase"  → tour (README/tree/git-log actually read) |
+                                 +run instructions verified | +first-task pick
 ```
 
-Same shape every time: **base done properly | verified | one step ahead | learned.** The 10 domain trees (`references/domains.md`) are pre-computed instances of this pattern — when no tree matches, EXPAND computes it fresh.
+Same shape every time: **base done properly | verified | one step ahead | learned.** The 11 domain trees (`references/domains.md`) are pre-computed instances of this pattern — when no tree matches, EXPAND computes it fresh. Full worked traces for these compressed lines and more: [`examples/`](../../examples/) — the "onboard me" line above is expanded in full in `examples/codebase-onboarding.md`.
 
 ---
 
@@ -198,8 +213,9 @@ Same shape every time: **base done properly | verified | one step ahead | learne
       │
       ▼
   ┌────────────────────────────────────────┐
-  │ RECALL — memory check                   │
+  │ RECALL — memory check + environment scan│
   │ Profile? Reinforced? Banned? Trajectory?│──── references/memory.md
+  │ Stack? Conventions? Repo state?         │──── references/environment-scan.md
   └──────────────┬─────────────────────────┘
                  ▼
   ┌────────────────────────────────────────┐
@@ -242,15 +258,17 @@ Same shape every time: **base done properly | verified | one step ahead | learne
 Users write compressed prompts. Your first job is decompression. Before building anything, silently rewrite the request into an **intent brief**:
 
 ```
-INTENT BRIEF (internal, ~5 lines):
-  GOAL:     what outcome is this request serving? (not the artifact — the outcome)
-  AUDIENCE: who consumes the deliverable? (user? their customers? a boss?)
-  IMPLIED:  requirements they assumed you know (platform norms, brand, quality bar)
-  MEMORY:   Profile constraints + Reinforced/Banned from RECALL
-  DONE:     what does finished look like? (deployable? postable? mergeable?)
+INTENT BRIEF (internal, ~6 lines):
+  GOAL:        what outcome is this request serving? (not the artifact — the outcome)
+  AUDIENCE:    who consumes the deliverable? (user? their customers? a boss?)
+  IMPLIED:     requirements they assumed you know (platform norms, brand, quality bar)
+  ENVIRONMENT: stack/conventions observed live (manifest, git log, structure) —
+               fills gaps memory doesn't have yet, corrects stale ones
+  MEMORY:      Profile constraints + Reinforced/Banned from RECALL
+  DONE:        what does finished look like? (deployable? postable? mergeable?)
 ```
 
-"Zrób stronę dla mojego brandu" decompresses to: *entry point for a business (GOAL) · their customers on mobile (AUDIENCE) · contact path, meta, brand colors (IMPLIED) · navy+gold, PL (MEMORY) · deployable today (DONE)*. Every L2/L3 decision reads from this brief — it is what makes additions *predicted* rather than *guessed*. The brief stays internal; only its consequences ship.
+"Zrób stronę dla mojego brandu" decompresses to: *entry point for a business (GOAL) · their customers on mobile (AUDIENCE) · contact path, meta, brand colors (IMPLIED) · existing Next.js/Tailwind setup detected (ENVIRONMENT) · navy+gold, PL (MEMORY) · deployable today (DONE)*. Every L2/L3 decision reads from this brief — it is what makes additions *predicted* rather than *guessed*. The brief stays internal; only its consequences ship.
 
 ---
 
@@ -359,11 +377,40 @@ LEARN (step 6): batch-write at session end / strong signals →
   accept 2× → PROMOTE to Reinforced     reject 2× → BAN
   ignore 3× → DROP                      stale 30d → DECAY to Watching
 
-PRECEDENCE: explicit instruction > memory > domain defaults
+PRECEDENCE: explicit instruction > user memory > environment > self-notes > domain defaults
 NEVER STORE: secrets, credentials, private data. Work patterns only.
 ```
 
 Target: **>85% addition acceptance after 5 sessions** (vs ~60% cold).
+
+---
+
+## 🔎 Environment Scan — Live Ground Truth (Step 0, companion to Memory)
+
+> Full protocol: `references/environment-scan.md`
+
+Memory learns what this user *wants*, across sessions. Environment scan reads what *is*, right now, in this session — and needs no store at all to work. The two run side by side inside RECALL:
+
+```
+SCAN (step 0, no store required): manifests, git log, directory structure,
+  neighboring files, config/CI, project docs →
+  Stack/tooling    → what's already chosen; don't introduce a second one
+  Conventions      → naming, style, test framework already in force
+  Repo state       → active areas, recent direction, stated house rules
+
+FEEDS: EXPAND's intent brief (ENVIRONMENT line) + L3 trajectory signals
+  independent of any per-user memory (e.g. "tests configured, none written
+  yet" → they'll want tests, regardless of who's asking).
+
+CONFLICT RULE: environment corrects stale memory facts (what IS beats a
+  cached assumption) but never overrides an explicit instruction or a
+  Banned entry (what the user WANTS always outranks what the repo shows).
+
+NEVER: open secrets/.env/credentials · modify anything while scanning ·
+  over-scan a trivial request · re-scan every turn (cache like RECALL does).
+No filesystem/shell access? Skip it — RECALL falls back to memory alone,
+or to reasoning from the prompt if there's no memory either.
+```
 
 ---
 
@@ -503,6 +550,9 @@ No. A single behavioral core runs behind a thin per-host adapter (`references/ad
 **Q: How is the "self-improvement loop" different from memory?**
 Memory learns *you* (your brand, your bans) and lives in your pattern file. The self-improvement loop learns *the agent's own judgment* — it scores every prediction against the outcome, then prunes heuristics that miss and sharpens ones that land (`references/self-improvement.md`). Memory makes the agent better for you; self-improvement makes it better at the job for everyone. Both run in the one LEARN step.
 
+**Q: How is "environment scan" different from memory?**
+Memory remembers what *you* want across sessions and needs a store to persist. Environment scan reads what's *actually true right now* — the repo's stack, conventions, git history — and needs nothing but file/shell access, working even in a brand-new session with zero memory (`references/environment-scan.md`). Memory can go stale; the environment can't lie about what's on disk. When they disagree, environment corrects stale facts but never overrides a Banned entry or an explicit instruction.
+
 **Q: Does it require a specific memory system?**
 No. The Memory Protocol is store-agnostic: Obsidian, memory MCP, mem0, Notion, `CLAUDE.md`, or a plain markdown file. Same portable pattern file everywhere. No store at all → session-only mode.
 
@@ -524,6 +574,7 @@ Say "just X" or "only X". STOP blocks all L2/L3. L1 (baseline quality + verifica
 
 | Version | Date | Changes |
 |---------|------|---------|
+| **3.2.0** | 2026-07-06 | The environment-awareness release. RECALL enriched with live environment scanning (`references/environment-scan.md`) — stack, git history, conventions, docs — feeding EXPAND and L3 anticipation without adding a pipeline stage. Precedence fixed to five-tier (`explicit > user memory > environment > self-notes > domain defaults`) and reconciled across SKILL.md, `core-injection.txt`, `references/memory.md`, `references/self-improvement.md`, and `SPEC.md`. Fixed stale "10 domains" → 11. Four new worked examples (`code-development`, `codebase-onboarding`, `research-analysis`, `self-improvement-loop`) plus `examples/README.md` documenting the example format and domain-coverage gaps. |
 | **3.1.0** | 2026-07-05 | The self-improvement release. Capability panel + compatibility strip (visual "what your agent gains"). Self-Improvement Loop (`references/self-improvement.md`) — the agent scores its own predictions and sharpens its heuristics over time (per-agent, complements per-user memory). Universal Adapter architecture (`references/adapters.md`) with capability detection. First-class OpenClaw / opencode / Gemini CLI / Amp / Aider / Cline / Roo support. |
 | **3.0.0** | 2026-07-04 | The learning release. 7-step pipeline (RECALL → EXPAND → BUILD → EXTEND → VERIFY → DELIVER → LEARN). Memory Protocol — store-agnostic pattern learning (Obsidian/MCP/mem0/files). EXPAND prompt-upgrade step. Verify Loop with Claim Audit. AI Slop Index (5 domains). Subagent orchestration with Verifier Firewall. Progressive disclosure via `references/`. |
 | **2.0.0** | 2026-07-04 | Engineered for token efficiency. Core Instruction block. Priming examples. Mental model. Trajectory prediction. Token-optimized decision trees. |
