@@ -1,4 +1,10 @@
-# 🧠 Step Beyond v3.1
+<p align="center">
+  <img src="step%20beyond%20banner.png" alt="Step Beyond banner" width="100%">
+</p>
+
+<br>
+
+# 🧠 Step Beyond — Skill for AI Agents
 
 > *"Don't ask. Just do more — the way the user would have done it. Verify it. Remember what worked. Know when to stop. And get sharper every task."*
 
@@ -331,13 +337,15 @@ step-beyond/
 </p>
 
 <p align="center">
-  <a href="https://aievolutionlabs.io">
-    <b>AI EVOLUTION LABS</b>
+  <a href="https://www.aievolutionpolska.pl/">
+    <b>AI EVOLUTION POLSKA</b>
   </a>
 </p>
 
 <p align="center">
-  <sub>Jersey · Channel Islands · 2026</sub>
+  <a href="https://www.aievolutionpolska.pl/">https://www.aievolutionpolska.pl/</a>
+  &nbsp;·&nbsp;
+  <a href="https://aievolutionlabs.io/">https://aievolutionlabs.io/</a>
 </p>
 
 <p align="center">
