@@ -179,6 +179,8 @@ ZADANIE: "Zbuduj landing page dla restauracji"
 
 ## Uniwersalny — działa z każdym agentem
 
+> **Nie chcesz wybierać wiersza?** Pomiń tabelę — [daj link do repo swojemu agentowi](#quick-start--daj-to-swojemu-agentowi), a sam się zainstaluje, wykrywając własny host.
+
 | Framework | Jak dodać |
 |-----------|----------|
 | **Claude Code** | `/plugin marketplace add aievolutionpl/step-beyond` → `/plugin install step-beyond@step-beyond` |
@@ -196,16 +198,43 @@ Specyfikacja normatywna: [`SPEC.md`](SPEC.md)
 
 ---
 
-## Quick Start — 60 sekund
+## Quick Start — daj to swojemu agentowi
 
-Skopiuj to do system promptu swojego agenta:
+**Najszybsza instalacja to brak instalacji.** Nie musisz wiedzieć, gdzie Twój host trzyma konfigurację — daj agentowi link do repo, a sam się podepnie. Wklej to do dowolnego agenta (Claude Code, Codex, Cursor, opencode, Gemini CLI, własna pętla):
 
-```yaml
+```text
+Zainstaluj skilla Step Beyond w tym workspace:
+https://github.com/aievolutionpl/step-beyond
+
+Przeczytaj skills/step-beyond/SKILL.md oraz
+skills/step-beyond/references/installation.md, a potem wykonaj sekcję
+"Self-Install (agent-driven)": wykryj, w jakim hoście działasz, i podepnij
+skilla właściwą metodą — katalog skills, blok rdzenia w AGENTS.md / CLAUDE.md
+albo plik reguł/konfiguracji hosta. Podepnij pamięć + self-notes do
+step-beyond/patterns.md i step-beyond/self-notes.md (albo do mojego magazynu
+Obsidian / MCP, jeśli go mam). Zrób to idempotentnie — aktualizuj w miejscu,
+nie duplikuj. Na koniec powiedz mi, jakiej metody użyłeś i jaki plik zapisałeś.
+```
+
+Agent czyta instrukcje instalacji prosto z repo i podpina się sam — nie musisz znać żadnego frameworku. Od następnego zadania działa pełny pipeline.
+
+### Wolisz zainstalować ręcznie?
+
+**Claude Code (plugin — dwie komendy):**
+
+```
+/plugin marketplace add aievolutionpl/step-beyond
+/plugin install step-beyond@step-beyond
+```
+
+**Dowolny inny host (skopiuj blok rdzenia):** wklej do system promptu lub pliku ze stałymi instrukcjami — `.cursorrules`, `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `copilot-instructions.md` itp.:
+
+```text
 ## 🧠 Step Beyond — Proaktywne Ulepszenia
 
 PIPELINE: przypomnij z pamięci → rozwiń intencję → zbuduj bazę + L1 →
 rozszerz (L2 max 3, L3 max 1) → ZWERYFIKUJ (uruchom, skan slopu, uczciwe
-deklaracje) → dostarcz → zapisz wzorce do pamięci.
+deklaracje) → dostarcz → zapisz wzorce do pamięci + oceń własne predykcje.
 
 L1 (ZAWSZE, cicho): Polish. Bez próżni. Prawdziwy kontekst. Baseline.
 L2 (<15% czasu, max 3): Brakujący element. Najpierw z pamięci. "+nazwa"
@@ -215,11 +244,15 @@ VERIFY: nic nie wychodzi niesprawdzone. Nie da się zweryfikować dodatku?
 Wytnij. Deklaruj tylko to, co zaobserwowałeś — żadnych pustych "działa".
 
 PAMIĘĆ (dowolny magazyn — Obsidian/MCP/plik): akceptacja 2× → domyślne.
-odrzucenie 2× → ban. Wyraźna instrukcja > pamięć > domyślne.
+odrzucenie 2× → ban. SELF-IMPROVE: oceń każdą predykcję — trafienie →
+wzmocnij heurystykę, pudło → wytnij ją.
+Wyraźna instrukcja > pamięć użytkownika > self-notes agenta > domyślne.
 
 SUFIT: 5 łącznie/sesję. STOP na: "tylko X", "daj już", "stop", "wystarczy".
 SUBAGENCI (jeśli dostępni): równoległe dodatki, świeży weryfikator.
 ```
+
+Pełna konfiguracja per host: [`references/installation.md`](skills/step-beyond/references/installation.md).
 
 ---
 

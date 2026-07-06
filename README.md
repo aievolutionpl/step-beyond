@@ -219,6 +219,8 @@ TASK: "Build a landing page for a restaurant"
 
 One behavioral core, a thin adapter per host — capability detection wires memory, subagents, and runtime to whatever the platform provides. Architecture: [`references/adapters.md`](skills/step-beyond/references/adapters.md).
 
+> **Don't want to pick a row?** Skip the table — [hand the repo link to your agent](#quick-start--hand-it-to-your-agent) and it self-installs by detecting its own host.
+
 | Framework | How to Add |
 |-----------|-----------|
 | **Claude Code** | `/plugin marketplace add aievolutionpl/step-beyond` → `/plugin install step-beyond@step-beyond` |
@@ -239,11 +241,37 @@ Normative specification: [`SPEC.md`](SPEC.md)
 
 ---
 
-## Quick Start — 60 Seconds
+## Quick Start — Hand It to Your Agent
 
-Copy this into your agent's system prompt:
+**The fastest install is no install.** Don't learn where your host keeps its config — give your agent the repo link and let it wire itself in. Paste this into any coding agent (Claude Code, Codex, Cursor, opencode, Gemini CLI, a custom loop):
 
-```yaml
+```text
+Install the Step Beyond skill into this workspace:
+https://github.com/aievolutionpl/step-beyond
+
+Read skills/step-beyond/SKILL.md and skills/step-beyond/references/installation.md,
+then follow the "Self-Install (agent-driven)" section: detect which agent host
+you're running in and wire the skill in with the matching method — a skills
+directory, an AGENTS.md / CLAUDE.md core block, or the host's rules/config file.
+Wire memory + self-notes to step-beyond/patterns.md and step-beyond/self-notes.md
+(or my Obsidian / MCP store if I have one). Make it idempotent — update in place,
+don't duplicate. Then tell me the method you used and the exact file you wrote.
+```
+
+The agent reads the repo's own install docs and self-installs — no framework knowledge required from you. From the next task on, it runs the full pipeline.
+
+### Prefer to install it yourself?
+
+**Claude Code (plugin — two commands):**
+
+```
+/plugin marketplace add aievolutionpl/step-beyond
+/plugin install step-beyond@step-beyond
+```
+
+**Any other host (copy the core block):** paste this into your agent's system prompt or standing-instructions file — `.cursorrules`, `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `copilot-instructions.md`, etc.:
+
+```text
 ## 🧠 Step Beyond — Proactive Enhancement
 
 PIPELINE: recall memory → expand intent → build base + L1 →
@@ -264,6 +292,8 @@ Explicit instruction > user memory > agent self-notes > defaults.
 CEILING: 5 total/session. STOP on: "just X", "only X", "stop", "enough".
 SUBAGENTS (if available): parallel additions, fresh-context verifier.
 ```
+
+Full per-host setup: [`references/installation.md`](skills/step-beyond/references/installation.md).
 
 ---
 

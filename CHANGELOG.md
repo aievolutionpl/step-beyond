@@ -2,6 +2,12 @@
 
 All notable changes to Step Beyond. Format follows [Keep a Changelog](https://keepachangelog.com/); versions follow SemVer.
 
+## [Unreleased]
+
+### Changed
+- **Quick Start reworked around agent self-install** (`README.md`, `README_PL.md`): the primary path is now "hand your agent the repo link" — a copy-paste prompt that tells any coding agent to read the install docs, detect its own host, and wire the skill in. Manual paths (Claude Code plugin, core-block paste) demoted to a secondary "prefer to do it yourself?" block. The "Universal" section links up to the self-install path.
+- **New `Self-Install (agent-driven)` section** in `references/installation.md`: a deterministic 5-step recipe (detect host → install by matching method → wire memory/self-notes → verify → report & activate) with a host-signal→target table and an idempotency rule, written for an agent to follow when handed the repo link.
+
 ## [3.1.0] — 2026-07-05 · The Self-Improvement Release
 
 ### Added
