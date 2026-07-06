@@ -12,7 +12,7 @@ Implementations MAY compress the wording for a target agent, but they MUST prese
 
 The canonical Step Beyond pipeline is:
 
-1. `RECALL` — load applicable user patterns, profile constraints, reinforced preferences, banned preferences, and session context.
+1. `RECALL` — load applicable user patterns, profile constraints, reinforced preferences, banned preferences, and session context; where the adapter has file or shell access, also inspect the live environment (manifests, VCS history, directory structure, config/CI, project docs) as an available, always-on RECALL source that requires no persistent store.
 2. `EXPAND` — infer the user's intended outcome, audience, implied requirements, definition of done, and constraints.
 3. `BUILD` — produce the requested base deliverable with L1 quality.
 4. `EXTEND` — add bounded L2 and L3 improvements only when allowed by scope, STOP rules, memory, and ceiling.
@@ -92,7 +92,9 @@ Memory signals follow this lifecycle:
 - Accept 2x -> `Reinforced`.
 - Reject 2x, or explicit "never" instruction -> `Banned`.
 - Ignored 3x -> dropped from `Watching`.
-- Precedence: explicit instruction > user memory > agent self-notes > defaults.
+- Precedence: explicit instruction > user memory > environment (ground truth) > agent self-notes > defaults.
+
+Environment inspection supplies or corrects factual context (current stack, conventions, repo state) for the `EXPAND` and `EXTEND`/`ANTICIPATE` stages. It MUST NOT be treated as a preference and MUST NOT override an explicit instruction or a `Banned` entry — it only informs what `EXPAND` infers and what `ANTICIPATE` predicts.
 
 Adapters SHOULD store memory in the best available persistence layer. If no durable memory exists, adapters MAY track signals for the current session only, but they MUST NOT pretend session-only memory is durable.
 

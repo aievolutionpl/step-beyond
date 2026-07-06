@@ -120,7 +120,7 @@ Never bloat: cap Heuristic Scores at the ~20 highest-signal entries; prune the l
 Both loops feed EXTEND/ANTICIPATE. When they conflict, resolve cleanly:
 
 ```
-EXPLICIT INSTRUCTION  >  USER MEMORY  >  AGENT SELF-NOTES  >  DOMAIN DEFAULTS
+EXPLICIT INSTRUCTION  >  USER MEMORY  >  ENVIRONMENT (ground truth)  >  AGENT SELF-NOTES  >  DOMAIN DEFAULTS
 ```
 
 - User's `Reinforced: +dark-mode` beats a low global confidence for the dark-mode heuristic — **this user** wants it, fire it. (Log the outcome to *both*.)

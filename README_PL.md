@@ -1,11 +1,11 @@
-# 🧠 Step Beyond v3.1
+# 🧠 Step Beyond v3.2
 
 > *"Nie pytaj. Po prostu zrób więcej — tak jak zrobiłby to użytkownik. Zweryfikuj. Zapamiętaj co zadziałało. Wiedz, kiedy przestać. I bądź coraz lepszy z każdym zadaniem."*
 
 <br>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/wersja-3.1.0-blue?style=for-the-badge" alt="Wersja">
+  <img src="https://img.shields.io/badge/wersja-3.2.0-blue?style=for-the-badge" alt="Wersja">
   <img src="https://img.shields.io/badge/licencja-MIT-yellow?style=for-the-badge" alt="Licencja">
   <img src="https://img.shields.io/badge/framework-agnostyczny-green?style=for-the-badge" alt="Framework">
   <img src="https://img.shields.io/badge/pamięć-Obsidian%20%7C%20MCP%20%7C%20mem0%20%7C%20pliki-orange?style=for-the-badge" alt="Pamięć">
@@ -22,6 +22,7 @@
 | | Supermoc | Instynkt, który instaluje |
 |---|----------|---------------------------|
 | 🧠 | **RECALL** | Pamięta markę, stack, ton, zakazy — między sesjami |
+| 🔎 | **SCAN** | Czyta żywe repozytorium — stack, historię git, konwencje — zanim zacznie działać |
 | 🔍 | **EXPAND** | Czyta prompt, który *miał na myśli*, nie ten wpisany |
 | 🎨 | **POLISH** | Żadnej pustki, żadnego AI slopu — profesjonalny standard, zawsze |
 | ➕ | **EXTEND** | Dodaje brakujący element, który oszczędza dopytkę (z limitem) |
@@ -83,6 +84,7 @@ Różnica między tym, co użytkownicy mówią, a tym, czego potrzebują, podleg
 │      ▼                                                      │
 │  0. RECALL ─── wczytaj wzorce użytkownika z DOWOLNEJ        │
 │      │         pamięci (Obsidian · MCP · mem0 · plik)       │
+│      │         + zeskanuj żywe środowisko (bez magazynu)     │
 │      ▼                                                      │
 │  1. EXPAND ─── ulepsz prompt, który dostałeś, do promptu,   │
 │      │         który użytkownik miał na myśli (intent brief)│
@@ -300,16 +302,19 @@ step-beyond/
 │   ├── SKILL.md                ← Rdzeń specyfikacji behawioralnej
 │   ├── references/             ← Progressive disclosure — ładowane na żądanie
 │   │   ├── memory.md           ← Protokół pamięci (Obsidian/MCP/mem0/pliki)
+│   │   ├── environment-scan.md ← Skan środowiska (stack/git/konwencje — bez magazynu)
+│   │   ├── self-improvement.md ← Pętla samodoskonalenia (heurystyki agenta)
 │   │   ├── verification.md     ← Pętla weryfikacji + protokół świeżych oczu
 │   │   ├── slop.md             ← Indeks AI slopu (tekst/kod/design/obraz/dane)
 │   │   ├── subagents.md        ← Orkiestracja: role, firewall, szablony
-│   │   ├── domains.md          ← 10 drzew decyzyjnych domen
+│   │   ├── domains.md          ← 11 drzew decyzyjnych domen
+│   │   ├── adapters.md         ← Uniwersalny adapter — wykrywanie możliwości
 │   │   └── installation.md     ← Instalacja per framework
 │   └── templates/
 │       ├── user-patterns.md    ← Startowy plik pamięci
 │       └── core-injection.txt  ← Rdzeń do wstrzyknięcia (gotowy plik)
 ├── evals/                      ← Testy behawioralne + wyniki bazowe
-├── examples/                   ← Przykłady before/after, w tym memory-learning
+├── examples/                   ← Przykłady before/after (zob. examples/README.md)
 ├── CHANGELOG.md · CONTRIBUTING.md · LICENSE (MIT)
 ├── README.md                   ← Wersja angielska
 └── README_PL.md                ← Jesteś tutaj

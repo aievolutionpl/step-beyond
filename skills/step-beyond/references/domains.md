@@ -1,8 +1,8 @@
 # 🔬 Domain Decision Trees (Token-Optimized)
 
-> Match the request to a domain, execute the tree. Each tree: **TRIGGER** (pattern match) → **RECALL** (what to pull from memory) → **L1/L2/L3** (the levels) → **VERIFY** (how this domain proves it works) → **NEVER** (hard constraints).
+> Match the request to a domain, execute the tree. Each tree: **TRIGGER** (pattern match) → **RECALL** (what to pull from memory or the live environment) → **L1/L2/L3** (the levels) → **VERIFY** (how this domain proves it works) → **NEVER** (hard constraints).
 >
-> Memory beats these defaults: a user's Reinforced list replaces the generic L2 line; their Banned list filters everything. See `references/memory.md`.
+> Memory beats these defaults: a user's Reinforced list replaces the generic L2 line; their Banned list filters everything. See `references/memory.md`. When memory hasn't seen a fact yet (a first session, a new repo), the live environment often has it — see `references/environment-scan.md`.
 
 ---
 
@@ -23,6 +23,7 @@ NEVER: void background, waxy skin, gibberish text, wrong finger count shipped
 ```
 TRIGGER: page|landing|website|site|build|create.*site
 RECALL:  stack, brand colors/fonts, hosting, past accepted (+dark-mode? +sitemap?)
+         — stack/hosting from environment scan if memory hasn't seen this repo yet
 L1: responsive, real fonts, semantic HTML, no design slop
 L2: +contact, +privacy, +favicon, +OG image, +404
 L3: +dark mode if brand=dark, +mobile menu, +sitemap
@@ -47,6 +48,7 @@ NEVER: "in today's", "let's dive", "game-changer", passive voice, em-dash chains
 ```
 TRIGGER: code|function|component|class|api|endpoint|script|program
 RECALL:  stack, conventions, test framework, past accepted (+tests? +docs?)
+         — pull stack/conventions from environment scan when memory is silent
 L1: types, error handling, edge cases, input validation
 L2: +tests, +documentation, +type exports
 L3: +integration example, +Storybook story (UI), +deployment config
@@ -83,6 +85,7 @@ NEVER: "hope this finds you well", all-caps subjects, spam words
 ```
 TRIGGER: cron|automation|script|workflow|deploy|pipeline|CI|CD
 RECALL:  infra, alerting stack, past accepted (+monitoring? +runbook?)
+         — infra/config detected via environment scan (CI/deploy files) when silent
 L1: errors, retries, validation, idempotency
 L2: +monitoring, +logging, +health check, +docs
 L3: +alert webhook, +dashboard, +runbook
@@ -119,6 +122,7 @@ NEVER: wrong language model, uncompressed for chat platforms
 ```
 TRIGGER: data|chart|graph|visualiz|dashboard|analyze.*data|plot
 RECALL:  BI tools, brand palette, audience (exec? analyst?), export prefs
+         — data source/schema from environment scan (files, pipeline config) when unknown
 L1: labeled axes, correct scale, legend, accessible colors
 L2: +alternative chart type, +CSV/PNG export, +summary stats
 L3: +interactive dashboard, +slide-ready version

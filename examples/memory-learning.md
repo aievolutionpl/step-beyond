@@ -2,6 +2,8 @@
 
 How the same request gets better across three sessions, because the agent remembers. Full protocol: `skills/step-beyond/references/memory.md`. (Validated by a real eval run — see `evals/results/2026-07-04-baseline.md`.)
 
+> **Scope note:** this trace shows the per-user **Memory** loop (brand, bans, trajectories). For the separate per-agent **Self-Improvement** loop — the agent scoring and pruning its own heuristics, independent of any one user — see [`self-improvement-loop.md`](self-improvement-loop.md).
+
 ---
 
 ## Session 1 — Cold Start (no memory yet)
@@ -90,4 +92,4 @@ User reaction: "o, super, właśnie miałem o to pytać"
 - Did not store anything private — only work preferences
 - Did not write to memory every message — batched at session end
 - Did not let memory override words: had the user said "in English this time",
-  English wins (explicit > memory > defaults)
+  English wins (explicit > memory > environment > self-notes > defaults)

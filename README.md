@@ -11,7 +11,7 @@
 <br>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-3.1.0-blue?style=for-the-badge" alt="Version">
+  <img src="https://img.shields.io/badge/version-3.2.0-blue?style=for-the-badge" alt="Version">
   <img src="https://img.shields.io/badge/license-MIT-yellow?style=for-the-badge" alt="License">
   <img src="https://img.shields.io/badge/framework-agnostic-green?style=for-the-badge" alt="Framework">
   <img src="https://img.shields.io/badge/memory-Obsidian%20%7C%20MCP%20%7C%20mem0%20%7C%20files-orange?style=for-the-badge" alt="Memory">
@@ -28,6 +28,7 @@
 | | Superpower | The instinct it installs |
 |---|-----------|--------------------------|
 | 🧠 | **RECALL** | Remembers brand, stack, tone, bans — across sessions |
+| 🔎 | **SCAN** | Reads the live repo — stack, git history, conventions — before acting |
 | 🔍 | **EXPAND** | Reads the prompt they *meant*, not the one they typed |
 | 🎨 | **POLISH** | No blank voids, no AI slop — professional baseline, always |
 | ➕ | **EXTEND** | Adds the missing piece that saves a follow-up (capped) |
@@ -97,6 +98,7 @@ The gap between what users say and what they need follows predictable rules — 
 │      ▼                                                      │
 │  0. RECALL ─── read user patterns from ANY memory store     │
 │      │         (Obsidian · MCP memory · mem0 · plain file)  │
+│      │         + scan the live environment (no store needed)│
 │      ▼                                                      │
 │  1. EXPAND ─── upgrade the prompt they gave into the        │
 │      │         prompt they meant (intent brief)             │
@@ -286,8 +288,9 @@ VERIFY: nothing ships unchecked. Can't verify an addition? Cut it.
 Claim only what you observed — no unbacked "works"/"tested".
 
 MEMORY (any store — Obsidian/MCP/file): accept 2× → default. reject 2× → banned.
+ENVIRONMENT (files/git/config, no store needed): corrects stale facts, never Banned.
 SELF-IMPROVE: score each prediction — hit → reinforce heuristic, miss → prune it.
-Explicit instruction > user memory > agent self-notes > defaults.
+Explicit instruction > user memory > environment > agent self-notes > defaults.
 
 CEILING: 5 total/session. STOP on: "just X", "only X", "stop", "enough".
 SUBAGENTS (if available): parallel additions, fresh-context verifier.
@@ -341,18 +344,19 @@ step-beyond/
 │   ├── SKILL.md                ← Core behavioral spec
 │   ├── references/             ← Progressive disclosure — loaded on demand
 │   │   ├── memory.md           ← Memory Protocol (Obsidian/MCP/mem0/files)
+│   │   ├── environment-scan.md ← Environment Scan (stack/git/conventions — no store needed)
 │   │   ├── self-improvement.md ← Self-Improvement Loop (per-agent heuristics)
 │   │   ├── verification.md     ← Verify Loop + Fresh-Eyes Protocol
 │   │   ├── slop.md             ← AI Slop Index (text/code/design/image/data)
 │   │   ├── subagents.md        ← Orchestration: roles, firewall, templates
-│   │   ├── domains.md          ← 10 domain decision trees
+│   │   ├── domains.md          ← 11 domain decision trees
 │   │   ├── adapters.md         ← Universal adapter — capability detection
 │   │   └── installation.md     ← Per-framework setup
 │   └── templates/
 │       ├── user-patterns.md    ← Starter memory file
 │       └── core-injection.txt  ← Ready-to-inject core (custom loops)
 ├── evals/                      ← Behavioral regression suite + baseline results
-├── examples/                   ← Before/after walkthroughs incl. memory-learning
+├── examples/                   ← Before/after walkthroughs (see examples/README.md)
 ├── CHANGELOG.md · CONTRIBUTING.md · LICENSE (MIT)
 ├── README.md                   ← You are here
 └── README_PL.md                ← Polish version
