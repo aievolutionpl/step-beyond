@@ -215,33 +215,40 @@ TASK: "Build a landing page for a restaurant"
 
 ---
 
-## Universal — Works With Any Agent
+## 🚀 Get Started
 
-One behavioral core, a thin adapter per host — capability detection wires memory, subagents, and runtime to whatever the platform provides. Architecture: [`references/adapters.md`](skills/step-beyond/references/adapters.md).
+Pick the path that matches your agent. **Claude Code users: it's two commands.** Everyone else: paste one block. No build step, no dependencies — Step Beyond is pure behavioral instruction.
 
-| Framework | How to Add |
-|-----------|-----------|
-| **Claude Code** | `/plugin marketplace add aievolutionpl/step-beyond` → `/plugin install step-beyond@step-beyond` |
-| **Claude Agent SDK / manual** | Copy `skills/step-beyond/` into `~/.claude/skills/` or paste block into `CLAUDE.md` |
-| **Codex CLI** | `--custom-instructions` or `config.toml` |
-| **Hermes Agent** | `skills: [step-beyond]` in `config.yaml` |
-| **OpenClaw / opencode** | Marked core block in `AGENTS.md` (loads first, every task) |
-| **Gemini CLI** | `GEMINI.md` core block |
-| **Cursor / Windsurf** | `.cursorrules` / `.windsurfrules` |
-| **GitHub Copilot** | `copilot-instructions.md` |
-| **Amp / Aider / Cline / Roo** | Rules / system-prompt file |
-| **OpenAI Agents SDK / CrewAI / AutoGen / LangGraph** | Inject core into orchestrator; map roles per `references/subagents.md` |
-| **Custom ReAct Loop** | Inject as first system message |
+### Option A — Claude Code plugin (recommended)
 
-Full instructions: [`skills/step-beyond/references/installation.md`](skills/step-beyond/references/installation.md)
+Run these two commands inside Claude Code:
 
-Normative specification: [`SPEC.md`](SPEC.md)
+```
+/plugin marketplace add aievolutionpl/step-beyond
+/plugin install step-beyond@step-beyond
+```
 
----
+That's it. Claude auto-loads the skill whenever it's relevant and pulls the `references/` files on demand, so it costs almost no tokens until it actually fires. **To confirm it's live:** run `/plugin` and check that `step-beyond` shows as installed.
 
-## Quick Start — 60 Seconds
+### Option B — manual skill install (Claude Code / Agent SDK)
 
-Copy this into your agent's system prompt:
+No plugin marketplace? Drop the skill folder in directly:
+
+```bash
+# All your projects
+git clone https://github.com/aievolutionpl/step-beyond /tmp/step-beyond && \
+  cp -r /tmp/step-beyond/skills/step-beyond ~/.claude/skills/
+
+# Just this project
+git clone https://github.com/aievolutionpl/step-beyond /tmp/step-beyond && \
+  cp -r /tmp/step-beyond/skills/step-beyond .claude/skills/
+```
+
+Restart the agent — it discovers the skill on next launch.
+
+### Option C — any other agent (Codex, Hermes, Cursor, Gemini, custom loops…)
+
+Step Beyond is just instructions, so any agent that reads a system prompt or rules file can run it. Paste this block into that file (`CLAUDE.md`, `AGENTS.md`, `.cursorrules`, `GEMINI.md`, `config.toml` instructions, or your custom system message):
 
 ```yaml
 ## 🧠 Step Beyond — Proactive Enhancement
@@ -264,6 +271,40 @@ Explicit instruction > user memory > agent self-notes > defaults.
 CEILING: 5 total/session. STOP on: "just X", "only X", "stop", "enough".
 SUBAGENTS (if available): parallel additions, fresh-context verifier.
 ```
+
+Per-framework file paths and config snippets (Hermes `config.yaml`, Codex `config.toml`, Copilot, Aider, LangGraph, CrewAI, and more) are in [`references/installation.md`](skills/step-beyond/references/installation.md).
+
+### Verify it's working
+
+Give your agent a deliberately under-specified task — for example:
+
+> "Build a landing page for a coffee shop."
+
+**Without Step Beyond** you get one bare HTML file and a "Done ✅". **With it**, the agent should complete the intent (extra pages, favicon, mobile), tell you what it verified, and list any additions in a few words each. That difference is the skill firing.
+
+---
+
+## Compatibility — Works With Any Agent
+
+One behavioral core, a thin adapter per host — capability detection wires memory, subagents, and runtime to whatever the platform provides. Architecture: [`references/adapters.md`](skills/step-beyond/references/adapters.md).
+
+| Framework | How to Add |
+|-----------|-----------|
+| **Claude Code** | `/plugin marketplace add aievolutionpl/step-beyond` → `/plugin install step-beyond@step-beyond` |
+| **Claude Agent SDK / manual** | Copy `skills/step-beyond/` into `~/.claude/skills/` or paste block into `CLAUDE.md` |
+| **Codex CLI** | `--custom-instructions` or `config.toml` |
+| **Hermes Agent** | `skills: [step-beyond]` in `config.yaml` |
+| **OpenClaw / opencode** | Marked core block in `AGENTS.md` (loads first, every task) |
+| **Gemini CLI** | `GEMINI.md` core block |
+| **Cursor / Windsurf** | `.cursorrules` / `.windsurfrules` |
+| **GitHub Copilot** | `copilot-instructions.md` |
+| **Amp / Aider / Cline / Roo** | Rules / system-prompt file |
+| **OpenAI Agents SDK / CrewAI / AutoGen / LangGraph** | Inject core into orchestrator; map roles per `references/subagents.md` |
+| **Custom ReAct Loop** | Inject as first system message |
+
+Full instructions: [`skills/step-beyond/references/installation.md`](skills/step-beyond/references/installation.md)
+
+Normative specification: [`SPEC.md`](SPEC.md)
 
 ---
 
