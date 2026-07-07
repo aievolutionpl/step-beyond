@@ -89,6 +89,8 @@ PRUNE     file > 100 lines         → delete weakest Watching entries first
 | "too much", "I didn't ask for that" | **reject** (strong — counts double) |
 | No reaction, addition unused | **ignore** |
 
+**The agent re-shipping something is not a signal.** Delivering `+X` again in a later session — because it's still a good default, or because it's on Watching and worth offering again — is not itself an accept, even if it works and nothing broke. An accept requires the *user's* reaction: they kept it, used it, said nothing negative and moved on to build on top of it, or praised it. Counting your own repeated delivery as a second acceptance inflates confidence nobody actually confirmed. When in doubt, leave the count where it was and note the re-delivery date instead of bumping the counter.
+
 ---
 
 ## 4. Read Protocol (RECALL — pipeline step 0)

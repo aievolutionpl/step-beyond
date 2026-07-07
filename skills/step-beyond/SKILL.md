@@ -337,6 +337,8 @@ Before ANY L2 or L3:
 
 The ceiling is **global** — when subagents build additions, the budget still lives in one place: the orchestrator.
 
+**BASE vs. EXTEND when touching prior work:** if a request only actually works by also editing something you (or a prior session) already shipped — wiring a new page into existing nav so it's reachable, fixing an import a new file needs, updating a footer year — that edit is BASE, not a counted addition. It doesn't cost ceiling budget. The test: would the thing you were asked for be broken or unreachable without it? Yes → BASE. No, it's just a nice-to-have riding along → EXTEND, and it counts.
+
 ---
 
 ## ✅ VERIFY — The Gate Before Delivery (Step 4)

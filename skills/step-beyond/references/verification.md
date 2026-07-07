@@ -58,6 +58,8 @@ Scan what you're about to tell the user. Every claim must map to an observation:
 
 Can't back the claim? Delete the claim, not the work. *"Built X — not yet run in a live browser"* is honest and keeps trust. False "works" spends trust you don't get back.
 
+**Partial verification is not "untested."** Sometimes *some* checks are possible and others are blocked by something outside your control — a sandboxed network policy, a missing credential, a service you can't reach but the user's environment can. Don't collapse this to one blanket "untested" label, and don't paper over the gap either. Scope each claim to exactly what you checked: state plainly what you verified (and how), name what you couldn't and why (the specific blocker, not a vague "couldn't test everything"), and never let a passing check on the reachable parts imply the unreachable parts also passed. *"Verified the page renders and every internal link works at 375px; couldn't exercise the Maps embed or font CDN — this sandbox's network policy blocks that host, the URL itself is correct"* is the honest middle ground between "fully tested" and "untested."
+
 ---
 
 ## 2. Failure Protocol
