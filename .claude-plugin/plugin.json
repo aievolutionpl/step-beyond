@@ -1,7 +1,7 @@
 {
   "name": "step-beyond",
-  "description": "Proactive enhancement layer for AI agents — learns user patterns from any memory store, upgrades prompts into full intent, predicts the next request, verifies everything before delivery, scans for AI slop, orchestrates subagents when available, and runs a self-improvement loop that sharpens its own heuristics. Universal adapter runs on Claude Code, Codex, Hermes, OpenClaw, opencode, Cursor, Gemini CLI, and custom loops.",
-  "version": "3.2.0",
+  "description": "Proactive enhancement layer for AI agents — learns user patterns from any memory store, upgrades prompts into full intent, takes engineer-grade initiative that advances the goal instead of generic filler, predicts the next request, verifies everything before delivery, scans for AI slop, orchestrates subagents when available, onboards itself to any host on first run, and runs a self-improvement loop that sharpens its own heuristics. Universal adapter runs on Claude Code, Codex, Hermes, OpenClaw, opencode, Cursor, Gemini CLI, and custom loops.",
+  "version": "3.3.0",
   "author": {
     "name": "AI Evolution Labs",
     "url": "https://github.com/aievolutionpl"
@@ -18,6 +18,8 @@
     "behavioral-priming",
     "subagents",
     "self-improvement",
-    "agent-adapter"
+    "agent-adapter",
+    "initiative",
+    "onboarding"
   ]
 }

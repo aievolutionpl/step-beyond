@@ -155,3 +155,21 @@ An adapter binds the host-agnostic core to a specific host through five capabili
 4. Never present a fallback as the native capability — in particular, `runtime`-absent output MUST be labelled untested rather than claimed verified (§6), and sequential self-review MUST NOT be presented as parallel subagent verification.
 
 An adapter that alters the behavioral semantics of the core to fit its host is non-conformant regardless of host fit.
+
+## 12. Agent Onboarding
+
+Onboarding is the one-time ritual an agent performs when it first adopts Step Beyond on a host (distinct from onboarding a human to a codebase, which is an ordinary domain task). An adapter SHOULD perform onboarding at first adoption and re-run it idempotently on upgrade.
+
+The onboarding ritual has six beats: detect the host, wire the five capability slots (§11), seed the per-user and per-agent stores if absent, perform an initial environment scan to calibrate the first task, announce the resulting capability state to the user once, and activate the full pipeline from the next task.
+
+The capability announcement MUST be honest: it MUST name only powers the wiring actually delivered, MUST state each degradation and its fallback plainly, and MUST NOT present a fallback as the native capability (consistent with §6 and §11.4). Onboarding MUST NOT block the user's first task; any beat that cannot complete degrades to its documented fallback and the ritual continues. On a warm start (a populated memory store already present), the adapter MUST NOT reseed existing stores or re-onboard the user as new; it loads the existing memory and MAY reduce the announcement to a single line or omit it.
+
+## 13. Initiative
+
+Initiative is the reasoning standard governing how additions are selected within the pipeline; it does not add a stage and does not alter the ceiling (§4), STOP rules (§5), or precedence (§7). An adapter that implements the initiative standard SHOULD:
+
+1. Select each L1–L3 addition by deriving it from the request's done-state and likely failure modes, not from a fixed checklist. Each proposed addition SHOULD be justifiable in one sentence referencing something specific to the current request; additions that are only generically justifiable SHOULD be dropped.
+2. Prefer the cheapest verifiable step that advances the user's actual goal over adding more of what the deliverable already contains.
+3. When a valuable move is out of scope for autonomous action — irreversible, architectural, expensive, or exceeding the ceiling — surface it to the user in a single line rather than either performing it unasked or discarding it. Surfacing such a move in one line costs no ceiling budget and MUST NOT be suppressed by STOP, which disables built additions but not a one-line proposal.
+
+Initiative MUST remain subordinate to every other rule in this specification: it never exceeds the ceiling, never overrides explicit scope or a `Banned` entry, and never ships an unverified addition (an unverifiable addition is cut to a one-line proposal, per §3/§6).

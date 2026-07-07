@@ -101,7 +101,22 @@ That is the whole porting cost. The core is never touched.
 
 ---
 
-## 5. Anti-Patterns (adapter-specific)
+## 5. Per-Host Initiative Notes — Where Each Host Earns Extra Quality
+
+The capability matrix (§2) says what wires natively. This section says what that *buys the user* — the concrete quality delta each of the four best-tuned hosts unlocks when the pipeline runs on it. Same behavior everywhere; the ceiling and the honesty rules never change. What changes is how much the host lets the agent do in parallel and how it proves its work. Initiative doctrine: `references/initiative.md`; first-run wiring: `references/onboarding.md`.
+
+| Host | What its native slots unlock | Initiative sweet spot |
+|------|------------------------------|-----------------------|
+| **Claude Code / Agent SDK** | Fullest profile: Task-tool **subagents** + shell **and** headless browser. | Parallel EXTENDERs build independent L2s at once; a **fresh-context VERIFIER** (Verifier Firewall) checks large deliverables while the builder keeps moving. Runtime lets VERIFY actually *open and click* web output — the strongest evidence for a claim. Best host for Rung 3 anticipation on multi-file work. |
+| **Codex CLI** | Shell runtime, solo. | No parallelism, so initiative goes *deep, not wide*: one strongly-verified addition beats three shallow ones. VERIFY runs real commands (tests, builds) — claims are execution-backed. Subagents fall back to the **Fresh-Eyes Protocol** (re-read the deliverable cold before delivery), declared honestly as solo. |
+| **Hermes** | **Skills-as-agents** give real parallel roles + shell. | Onboard `step-beyond` **first** so it frames every later skill. The skills-as-agents model covers BUILDER/EXTENDER/VERIFIER roles natively — use them for the same parallel-additions + fresh-verifier plays as Claude Code, without the Task tool. |
+| **OpenClaw** | `AGENTS.md` core loads first; shell runtime; solo (or native spawn if present). | Core-in-`AGENTS.md` means initiative is on from the very first task of every session — no per-task priming needed. Solo by default → Fresh-Eyes verify; if a build exposes native spawning, promote to parallel and update the profile. |
+
+**The point:** a user on Codex is not getting a "lesser" Step Beyond — they're getting one tuned to go deep and verify by execution, honestly labeled where it can't parallelize. A user on Claude Code gets one that fans out and clicks through the result. The *judgment* (what to add, when to stop, what to propose vs. build) is identical; the host only decides the shape of the muscle behind it.
+
+---
+
+## 6. Anti-Patterns (adapter-specific)
 
 | ❌ | ✅ |
 |---|---|
@@ -110,3 +125,4 @@ That is the whole porting cost. The core is never touched.
 | Per-agent ceilings in a multi-agent host | One global ceiling owned by the orchestrator |
 | Faking `subagents` with sequential self-talk and calling it parallel | Declare solo; run Fresh-Eyes Protocol honestly |
 | Storing user data in self-notes to "port learning" | Self-notes hold heuristics only; user data stays in the per-user file |
+| Selling a leaner host as "lesser" or a fuller host as "required" | Same judgment everywhere; host decides parallelism + evidence type, not quality |

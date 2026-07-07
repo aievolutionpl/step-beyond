@@ -1,11 +1,11 @@
-# 🧠 Step Beyond v3.2
+# 🧠 Step Beyond v3.3
 
 > *"Nie pytaj. Po prostu zrób więcej — tak jak zrobiłby to użytkownik. Zweryfikuj. Zapamiętaj co zadziałało. Wiedz, kiedy przestać. I bądź coraz lepszy z każdym zadaniem."*
 
 <br>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/wersja-3.2.0-blue?style=for-the-badge" alt="Wersja">
+  <img src="https://img.shields.io/badge/wersja-3.3.0-blue?style=for-the-badge" alt="Wersja">
   <img src="https://img.shields.io/badge/licencja-MIT-yellow?style=for-the-badge" alt="Licencja">
   <img src="https://img.shields.io/badge/framework-agnostyczny-green?style=for-the-badge" alt="Framework">
   <img src="https://img.shields.io/badge/pamięć-Obsidian%20%7C%20MCP%20%7C%20mem0%20%7C%20pliki-orange?style=for-the-badge" alt="Pamięć">
@@ -31,6 +31,13 @@
 | 📈 | **SELF-IMPROVE** | Ocenia własne predykcje, tnie chybienia, wzmacnia trafienia |
 
 Każde zadanie: idź o krok dalej — ograniczone twardym limitem, żeby nigdy nie stać się męczące.
+
+**Dwie warstwy sprawiają, że te osiem mocy naprawdę działa — nowość w v3.3:**
+
+| | Warstwa | Co dodaje |
+|---|---|---|
+| 🚀 | **INITIATIVE** | *Jak* agent myśli, wykonując pipeline — odtwórz prawdziwy cel, zamknij tryby awarii, zrób najtańszy weryfikowalny krok naprzód i *nazwij* większy ruch, którego nie powinien wykonać bez pytania. Zamienia generyczny wypełniacz "+dokumentacja" w dodatki odnoszące się do czegoś konkretnego w Twoim zapytaniu. → [`initiative.md`](skills/step-beyond/references/initiative.md) |
+| 🎬 | **ONBOARDING** | Rytuał pierwszego uruchomienia — agent wykrywa swój host, podpina pamięć, kalibruje się do Twojego repo i mówi *raz, uczciwie*, jakie moce są aktywne, a co jest ograniczone. Żadnego kreatora konfiguracji, żadnego przechwalania. → [`onboarding.md`](skills/step-beyond/references/onboarding.md) |
 
 ---
 
@@ -159,6 +166,43 @@ CLAIM AUDIT     "działa" / "przetestowane" / "responsywne" — tylko jeśli wid
 
 **Zepsuty dodatek jest gorszy niż brak dodatku. Fałszywa deklaracja jest gorsza niż oba.**
 
+### Warstwa inicjatywy (nowość w v3.3)
+
+Pipeline to *co* agent robi. Inicjatywa to *jak myśli, robiąc to* — różnica między agentem odhaczającym punkty a takim, którego senior engineer chce w zespole.
+
+```
+Każde zadanie — myśl jak inżynier, który jest WŁAŚCICIELEM rezultatu:
+  DONE-STATE → jak wygląda "wdrożone i działające" dla PRAWDZIWEGO celu?
+  GAP        → co dzieli dosłowne polecenie od tego stanu ukończenia?
+  FAILURE    → jak to się psuje w rękach użytkownika? Zamknij to zawczasu.
+  TRAJECTORY → jaki jest ich następny ruch? Zrób go już-gotowym lub o jeden klik.
+```
+
+Potem zrób **najtańszy weryfikowalny krok naprzód** — i ruch spoza schematu, który większość agentów pomija: gdy zapytanie ujawnia *większy* ruch, którego nie powinieneś wykonać bez pytania (refaktor, zmiana schematu, przegląd bezpieczeństwa), **nazwij go w jednej linii i pozwól użytkownikowi zdecydować** — nigdy nie buduj po cichu rzeczy nieodwracalnej, nigdy nie połykaj insightu.
+
+```
+❌ Generycznie:  "Naprawiłem błąd. +dodałem jakieś testy ✅"
+✅ Inicjatywa:   "Naprawiłem. +test odtwarzający dokładnie ten błąd (dowód poprawki).
+                 Ten sam wzorzec niesprawdzonego inputu jest w signup — sprawdzić?"
+```
+
+Test odróżniający inicjatywę od szumu: **czy potrafisz wyjaśnić dodatek jednym zdaniem odnoszącym się do czegoś konkretnego w TYM zapytaniu?** Jeśli nie — to wypełniacz z checklisty, wytnij go. Pełna doktryna: [`references/initiative.md`](skills/step-beyond/references/initiative.md).
+
+### Onboarding pierwszego uruchomienia (nowość w v3.3)
+
+Pierwszą rzeczą, którą agent robi pod Step Beyond, nie jest odpowiedź na prompt — to **przebudzenie.** Sześciotaktowy rytuał uruchamia się raz na host: wykryj host → podepnij pięć slotów możliwości → zasiej pamięć → skalibruj się do repo → **ogłoś, co jest aktywne** → aktywuj.
+
+```
+✅ Step Beyond działa na Codex CLI.
+   • Zapamiętam Twoje preferencje między sesjami → step-beyond/patterns.md
+   • Czytam repo zanim zacznę działać (wykryto: TypeScript · Vitest · pnpm)
+   • Weryfikuję zanim powiem "gotowe" — i mówię "nieuruchomione", gdy nie mogę uruchomić
+   • Host solo: brak równoległych subagentów, więc robię self-review świeżym okiem
+   Powiedz "zrób tylko X", żeby wyłączyć dodatki. Pierwsze zadanie?
+```
+
+Jedna uczciwa linia statusu — nigdy kreator konfiguracji, nigdy deklarowanie mocy, której host nie ma. Powracający użytkownicy dostają ciepły start: pamięć się wczytuje, a agent pomija całe wyjaśnienie. Pełny rytuał + profile per host: [`references/onboarding.md`](skills/step-beyond/references/onboarding.md).
+
 ---
 
 ## Rezultaty
@@ -188,7 +232,9 @@ ZADANIE: "Zbuduj landing page dla restauracji"
 | **Claude Code** | `/plugin marketplace add aievolutionpl/step-beyond` → `/plugin install step-beyond@step-beyond` |
 | **Claude Agent SDK / ręcznie** | Skopiuj `skills/step-beyond/` do `~/.claude/skills/` lub wklej blok do `CLAUDE.md` |
 | **Codex CLI** | `--custom-instructions` lub `config.toml` |
-| **Hermes Agent** | `skills: [step-beyond]` w `config.yaml` |
+| **Hermes Agent** | `skills: [step-beyond]` w `config.yaml` (jako **pierwszy**) |
+| **OpenClaw / opencode** | Oznaczony blok rdzenia w `AGENTS.md` (ładuje się pierwszy, każde zadanie) |
+| **Gemini CLI** | Blok rdzenia w `GEMINI.md` |
 | **Cursor / Windsurf** | `.cursorrules` / `.windsurfrules` |
 | **GitHub Copilot** | `copilot-instructions.md` |
 | **OpenAI Agents SDK / CrewAI / LangGraph** | Wstrzyknij rdzeń do orkiestratora; role wg `references/subagents.md` |
@@ -215,10 +261,12 @@ skilla właściwą metodą — katalog skills, blok rdzenia w AGENTS.md / CLAUDE
 albo plik reguł/konfiguracji hosta. Podepnij pamięć + self-notes do
 step-beyond/patterns.md i step-beyond/self-notes.md (albo do mojego magazynu
 Obsidian / MCP, jeśli go mam). Zrób to idempotentnie — aktualizuj w miejscu,
-nie duplikuj. Na koniec powiedz mi, jakiej metody użyłeś i jaki plik zapisałeś.
+nie duplikuj. Następnie wykonaj rytuał onboardingu z references/onboarding.md
+i podaj mi jednolinijkowe ogłoszenie możliwości: jaki host wykryłeś, jakie moce
+są aktywne i co jest ograniczone na tym hoście.
 ```
 
-Agent czyta instrukcje instalacji prosto z repo i podpina się sam — nie musisz znać żadnego frameworku. Od następnego zadania działa pełny pipeline.
+Agent czyta instrukcje instalacji prosto z repo, podpina się sam — nie musisz znać żadnego frameworku — po czym onboarduje się i mówi Ci dokładnie, co teraz potrafi. Od następnego zadania działa pełny pipeline.
 
 ### Wolisz zainstalować ręcznie?
 
@@ -301,6 +349,8 @@ step-beyond/
 ├── skills/step-beyond/         ← Skill (layout pluginu)
 │   ├── SKILL.md                ← Rdzeń specyfikacji behawioralnej
 │   ├── references/             ← Progressive disclosure — ładowane na żądanie
+│   │   ├── initiative.md       ← Doktryna inicjatywy (myśl jak LLM engineer)
+│   │   ├── onboarding.md       ← Rytuał onboardingu agenta (pierwsze uruchomienie, per host)
 │   │   ├── memory.md           ← Protokół pamięci (Obsidian/MCP/mem0/pliki)
 │   │   ├── environment-scan.md ← Skan środowiska (stack/git/konwencje — bez magazynu)
 │   │   ├── self-improvement.md ← Pętla samodoskonalenia (heurystyki agenta)
@@ -308,7 +358,7 @@ step-beyond/
 │   │   ├── slop.md             ← Indeks AI slopu (tekst/kod/design/obraz/dane)
 │   │   ├── subagents.md        ← Orkiestracja: role, firewall, szablony
 │   │   ├── domains.md          ← 11 drzew decyzyjnych domen
-│   │   ├── adapters.md         ← Uniwersalny adapter — wykrywanie możliwości
+│   │   ├── adapters.md         ← Uniwersalny adapter — wykrywanie możliwości + jakość per host
 │   │   └── installation.md     ← Instalacja per framework
 │   └── templates/
 │       ├── user-patterns.md    ← Startowy plik pamięci
