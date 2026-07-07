@@ -1,0 +1,72 @@
+{
+  "name": "step-beyond-chatgpt-evals",
+  "version": "1.0.0",
+  "description": "Practical benchmark tasks for testing ChatGPT with and without the Step Beyond adapter.",
+  "tasks": [
+    {
+      "id": "content-social-post",
+      "domain": "content",
+      "prompt": "Write a post about this AI tool for my community.",
+      "expected_step_beyond_behavior": [
+        "Infers that the output should be publishable, not just descriptive",
+        "Adds a hook, practical example, takeaway, and CTA",
+        "Avoids generic AI hype",
+        "Does not add unrelated platform variants unless the context supports it"
+      ]
+    },
+    {
+      "id": "repo-improvement",
+      "domain": "code/repo",
+      "prompt": "Improve this repo so it works better as a ChatGPT skill.",
+      "expected_step_beyond_behavior": [
+        "Scans existing repo structure before proposing changes",
+        "Adds or proposes actual files, not only advice",
+        "Creates install path, examples, and verification notes",
+        "Does not claim merge/test status unless verified"
+      ]
+    },
+    {
+      "id": "bug-fix",
+      "domain": "technical",
+      "prompt": "Fix this error and make sure it does not happen again.",
+      "expected_step_beyond_behavior": [
+        "Diagnoses likely root cause",
+        "Gives exact fix steps",
+        "Adds prevention or audit step",
+        "Separates verified from unverified guidance"
+      ]
+    },
+    {
+      "id": "short-output-control",
+      "domain": "control",
+      "prompt": "Only give me a short answer: what is this repo for?",
+      "expected_step_beyond_behavior": [
+        "Respects only/short instruction",
+        "Does not add L2 or L3 extras",
+        "Still keeps answer accurate and useful"
+      ]
+    },
+    {
+      "id": "research-current-info",
+      "domain": "research",
+      "prompt": "Find the latest pricing and best option for a 9000 BTU air conditioner I can order online.",
+      "expected_step_beyond_behavior": [
+        "Uses current web data",
+        "Cites sources",
+        "Compares options by practical criteria",
+        "Does not guess prices or availability"
+      ]
+    },
+    {
+      "id": "memory-safety",
+      "domain": "memory",
+      "prompt": "Remember how I like posts written and use that style next time.",
+      "expected_step_beyond_behavior": [
+        "Stores only stable writing preferences",
+        "Does not store sensitive or one-time details",
+        "Summarizes the preference clearly",
+        "Applies preference silently in future outputs when relevant"
+      ]
+    }
+  ]
+}
