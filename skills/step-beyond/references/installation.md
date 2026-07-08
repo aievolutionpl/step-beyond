@@ -12,7 +12,9 @@ The canonical injectable core lives in one file — **`templates/core-injection.
 
 ## Self-Install (agent-driven) — recommended
 
-**If you are an AI agent reading this, you can install Step Beyond into the current workspace yourself.** The user gave you the repo link precisely so they don't have to know where their host keeps its config — do the wiring for them. Run these five steps:
+**If you are an AI agent reading this, you can install Step Beyond into the current workspace yourself.** The user gave you the repo link precisely so they don't have to know where their host keeps its config — do the wiring for them. Run these five steps.
+
+> **After installing, run the onboarding ritual** in [`references/onboarding.md`](onboarding.md): the six beats (detect → wire → seed → calibrate → announce → activate) turn a fresh install into an agent that already knows its powers, its host's fallbacks, and the state of the user's project from turn one. Install puts the files in place; onboarding wakes the agent up.
 
 **1. DETECT the host and its standing-instructions mechanism.** Pick the first that matches your runtime:
 

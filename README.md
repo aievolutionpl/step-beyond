@@ -11,7 +11,7 @@
 <br>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-3.2.0-blue?style=for-the-badge" alt="Version">
+  <img src="https://img.shields.io/badge/version-3.3.0-blue?style=for-the-badge" alt="Version">
   <img src="https://img.shields.io/badge/license-MIT-yellow?style=for-the-badge" alt="License">
   <img src="https://img.shields.io/badge/framework-agnostic-green?style=for-the-badge" alt="Framework">
   <img src="https://img.shields.io/badge/memory-Obsidian%20%7C%20MCP%20%7C%20mem0%20%7C%20files-orange?style=for-the-badge" alt="Memory">
@@ -45,6 +45,13 @@
 ```
 
 Every job, every task: go one step beyond — bounded by a hard ceiling so it never tips into annoying.
+
+**Two layers make those eight powers actually land — new in v3.3:**
+
+| | Layer | What it adds |
+|---|---|---|
+| 🚀 | **INITIATIVE** | *How* the agent thinks while running the pipeline — reverse-engineer the real goal, close the failure modes, take the cheapest verifiable step forward, and *name* the bigger move it shouldn't make unasked. Turns generic "+docs" filler into additions that reference something specific about your request. → [`initiative.md`](skills/step-beyond/references/initiative.md) |
+| 🎬 | **ONBOARDING** | The first-run ritual — the agent detects its host, wires its memory, calibrates to your repo, and tells you *once, honestly* what powers are live and what's degraded. No config wizard, no overclaiming. → [`onboarding.md`](skills/step-beyond/references/onboarding.md) |
 
 ---
 
@@ -197,6 +204,43 @@ result: the agent at month 2 is measurably better at this than day 1.
 
 Full protocol: [`references/self-improvement.md`](skills/step-beyond/references/self-improvement.md). A miss is never wasted — it's a downweight.
 
+### The Initiative Layer (new in v3.3)
+
+The pipeline is *what the agent does*. Initiative is *how it thinks while doing it* — the difference between an agent that ticks the boxes and one a senior engineer wants on the team.
+
+```
+Every task, think like the engineer who OWNS the outcome:
+  DONE-STATE → what does "shipped and working" look like for the REAL goal?
+  GAP        → what stands between the literal ask and that done-state?
+  FAILURE    → how does this break in their hands? Close it before it happens.
+  TRAJECTORY → what's their next move? Make it already-done or one click away.
+```
+
+Then take the **cheapest verifiable step that moves the goal forward** — and the outside-the-box rung most agents miss: when the request reveals a *bigger* move you shouldn't make unasked (a refactor, a schema change, a security sweep), you **name it in one line and let the user pull** — never silently build the irreversible thing, never silently swallow the insight.
+
+```
+❌ Generic:  "Fixed the bug. +added some tests ✅"
+✅ Initiative: "Fixed it. +a test that reproduces the exact bug (proves the fix).
+              The same unvalidated-input pattern is in signup — want me to check it?"
+```
+
+The test that separates initiative from noise: **could you explain the addition in one sentence that references something specific about THIS request?** If not, it's checklist filler — cut it. Full doctrine: [`references/initiative.md`](skills/step-beyond/references/initiative.md).
+
+### First-Run Onboarding (new in v3.3)
+
+The first thing an agent does under Step Beyond isn't answer a prompt — it **wakes up.** A six-beat ritual runs once per host: detect the host → wire the five capability slots → seed memory → calibrate to your repo → **announce what's live** → activate.
+
+```
+✅ Step Beyond is live on Codex CLI.
+   • I'll remember your preferences across sessions → step-beyond/patterns.md
+   • I read the repo before acting (detected: TypeScript · Vitest · pnpm)
+   • I verify before I claim "done" — and say "untested" when I can't run it
+   • Solo host: no parallel subagents here, so I self-review with fresh eyes
+   Say "just do X" anytime to switch off the extras. First task?
+```
+
+One honest status line — never a config wizard, never claiming a power the host can't deliver. Returning users get a warm start: memory loads, and the agent skips the whole explanation. Full ritual + per-host profiles: [`references/onboarding.md`](skills/step-beyond/references/onboarding.md).
+
 ---
 
 ## The Results
@@ -257,10 +301,12 @@ you're running in and wire the skill in with the matching method — a skills
 directory, an AGENTS.md / CLAUDE.md core block, or the host's rules/config file.
 Wire memory + self-notes to step-beyond/patterns.md and step-beyond/self-notes.md
 (or my Obsidian / MCP store if I have one). Make it idempotent — update in place,
-don't duplicate. Then tell me the method you used and the exact file you wrote.
+don't duplicate. Then run the onboarding ritual in references/onboarding.md and
+give me the one-line capability announcement: which host you detected, what
+powers are live, and anything that's degraded on this host.
 ```
 
-The agent reads the repo's own install docs and self-installs — no framework knowledge required from you. From the next task on, it runs the full pipeline.
+The agent reads the repo's own install docs, self-installs — no framework knowledge required from you — then onboards itself and tells you exactly what it can now do. From the next task on, it runs the full pipeline.
 
 ### Prefer to install it yourself?
 
@@ -343,6 +389,8 @@ step-beyond/
 ├── skills/step-beyond/         ← The skill (plugin layout)
 │   ├── SKILL.md                ← Core behavioral spec
 │   ├── references/             ← Progressive disclosure — loaded on demand
+│   │   ├── initiative.md       ← Initiative Doctrine (think like an LLM engineer)
+│   │   ├── onboarding.md       ← Agent Onboarding Ritual (first-run, per-host)
 │   │   ├── memory.md           ← Memory Protocol (Obsidian/MCP/mem0/files)
 │   │   ├── environment-scan.md ← Environment Scan (stack/git/conventions — no store needed)
 │   │   ├── self-improvement.md ← Self-Improvement Loop (per-agent heuristics)
@@ -350,7 +398,7 @@ step-beyond/
 │   │   ├── slop.md             ← AI Slop Index (text/code/design/image/data)
 │   │   ├── subagents.md        ← Orchestration: roles, firewall, templates
 │   │   ├── domains.md          ← 11 domain decision trees
-│   │   ├── adapters.md         ← Universal adapter — capability detection
+│   │   ├── adapters.md         ← Universal adapter — capability detection + per-host quality
 │   │   └── installation.md     ← Per-framework setup
 │   └── templates/
 │       ├── user-patterns.md    ← Starter memory file
