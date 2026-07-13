@@ -4,11 +4,38 @@ import test from 'node:test';
 
 const read = (path: string) => readFile(path, 'utf8');
 
+const expectedLifecycle = [
+  'CONTEXT',
+  'INTENT',
+  'DECIDE',
+  'BUILD',
+  'INITIATIVE',
+  'EXECUTE',
+  'VERIFY',
+  'DELIVER',
+  'LEARN',
+];
+
 test('normative spec contains hybrid policy vocabulary', async () => {
   const spec = await read('SPEC.md');
   for (const term of ['AUTO_WITH_DISCLOSURE', 'partially_verified', 'unknown', 'IntentHypothesis']) {
     assert.match(spec, new RegExp(term), `SPEC.md must define ${term}`);
   }
+});
+
+test('derived skills declare the canonical lifecycle without redefining it', async () => {
+  const spec = await read('SPEC.md');
+  const lifecycleSection = spec.match(/## 2\. Turn lifecycle(?<body>[\s\S]*?)## 3\./u)?.groups?.body ?? '';
+  const lifecycle = [...lifecycleSection.matchAll(/^\d+\. `([A-Z]+)`/gmu)].map((match) => match[1]);
+  assert.deepEqual(lifecycle, expectedLifecycle);
+
+  const declaration = lifecycle.join(' → ');
+  const files = await Promise.all([
+    read('skills/step-beyond/SKILL.md'),
+    read('skills/step-beyond-chatgpt/SKILL.md'),
+    read('skills/step-beyond-chatgpt/SKILL_PL.md'),
+  ]);
+  for (const content of files) assert.ok(content.includes(declaration));
 });
 
 test('portable instructions do not retain fixed 5/3/1 or STOP-bypass semantics', async () => {

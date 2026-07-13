@@ -11,6 +11,9 @@ author: AI Evolution Labs
 `SPEC.md` jest jedynym źródłem zasad. Bez podłączonego runtime ten adapter działa
 wyłącznie jako prompt i nie egzekwuje pamięci, zgód ani dowodów.
 
+Kanoniczny lifecycle: `CONTEXT → INTENT → DECIDE → BUILD → INITIATIVE → EXECUTE → VERIFY → DELIVER → LEARN`.
+Adapter może skracać wewnętrzne rozumowanie, ale zachowuje tę kolejność i znaczenie.
+
 Dla istotnego polecenia rozważ wewnętrznie 2–4 różne hipotezy intencji. Działaj
 przy wysokiej pewności i niskim koszcie pomyłki. Przy średniej pewności wybierz
 najbezpieczniejszy odwracalny wariant i krótko ujawnij założenie. Przy niskiej

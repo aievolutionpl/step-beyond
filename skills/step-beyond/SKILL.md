@@ -17,6 +17,9 @@ you were authorized to execute.
 runtime, permission, persistence, shared budgets, and evidence rules are advisory;
 describe that mode as `prompt-only`, never as runtime-backed or verified.
 
+Canonical lifecycle: `CONTEXT → INTENT → DECIDE → BUILD → INITIATIVE → EXECUTE → VERIFY → DELIVER → LEARN`.
+This skill may compress internal reasoning, but it preserves that order and meaning.
+
 ## Core behavior
 
 For every meaningful request:
