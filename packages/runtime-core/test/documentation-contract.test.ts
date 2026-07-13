@@ -124,3 +124,34 @@ test('slop reference defines detection and repair per domain', async () => {
     assert.match(section, /\| Pattern \| Detect \| Repair \|/u, `${domain} needs an operational table`);
   }
 });
+
+test('README surfaces share version capabilities lifecycle and evidence limits', async () => {
+  const files = await Promise.all(['README.md', 'README_PL.md', 'README_CHATGPT.md'].map(read));
+  for (const content of files) {
+    for (const term of [
+      '4.0.0-alpha.2',
+      'RECALL',
+      'SCAN',
+      'EXPAND',
+      'POLISH',
+      'EXTEND',
+      'ANTICIPATE',
+      'VERIFY',
+      'SELF-IMPROVE',
+      'prompt-only',
+      'runtime-backed',
+    ]) {
+      assert.match(content, new RegExp(term, 'u'));
+    }
+    assert.match(
+      content,
+      /CONTEXT → INTENT → DECIDE → BUILD → INITIATIVE → EXECUTE → VERIFY → DELIVER → LEARN/u,
+    );
+    assert.match(content, /evals\/README\.md/u);
+  }
+  for (const content of files.slice(0, 2)) {
+    assert.match(content, /https:\/\/www\.aievolutionpolska\.pl\//u);
+    assert.match(content, /https:\/\/aievolutionlabs\.io\//u);
+    assert.match(content, /Created with obsessive attention to detail by/u);
+  }
+});
