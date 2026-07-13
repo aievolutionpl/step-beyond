@@ -177,3 +177,30 @@ test('release metadata uses one version across packages and skills', async () =>
     assert.match(await read(path), /^version: 4\.0\.0-alpha\.2$/mu);
   }
 });
+
+test('README surfaces lead with the Step Beyond product promise and its boundary', async () => {
+  const [english, polish, chatgpt] = await Promise.all([
+    read('README.md'),
+    read('README_PL.md'),
+    read('README_CHATGPT.md'),
+  ]);
+
+  for (const content of [english, chatgpt]) {
+    assert.match(content, /Every task\. One step further\./u);
+    assert.match(content, /## The Step Beyond instinct/u);
+    assert.match(
+      content,
+      /Every task gets Step Beyond reasoning\. Extra work happens only when it is useful, safe, permitted, and verifiable\./u,
+    );
+  }
+  assert.match(polish, /Każde zadanie\. Jeden krok dalej\./u);
+  assert.match(polish, /## Instynkt Step Beyond/u);
+  assert.match(
+    polish,
+    /Każde zadanie korzysta z rozumowania Step Beyond\. Dodatkowa praca powstaje tylko wtedy, gdy jest użyteczna, bezpieczna, dozwolona i możliwa do zweryfikowania\./u,
+  );
+
+  for (const content of [english, polish, chatgpt]) {
+    assert.match(content, /What evidence|Jaki dowód/u);
+  }
+});

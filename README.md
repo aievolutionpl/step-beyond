@@ -4,16 +4,34 @@
 
 # Step Beyond
 
-### A behavioral framework for agents that understand intent, act within authority, verify claims, and learn from evidence.
+## Every task. One step further.
+
+Step Beyond gives your agent a standing instinct to understand the outcome
+behind the prompt, complete the missing pieces, predict the next useful move,
+and verify the result before delivery.
 
 **Version 4.0.0-alpha.2** · Hybrid prompt and TypeScript reference implementation
 
 [Polski](README_PL.md) · [ChatGPT edition](README_CHATGPT.md) · [Specification](SPEC.md) · [Runtime API](docs/runtime.md)
 
-Step Beyond turns a literal task request into a controlled agent workflow. The
-model interprets language and proposes alternatives. The runtime handles policy,
-permission, state, evidence, and audit records when the host exposes the required
-capabilities.
+The agent acts as a thoughtful collaborator. It reads the task in context,
+notices what the finished outcome needs, and looks one useful step ahead.
+
+## The Step Beyond instinct
+
+For every meaningful task, the agent asks:
+
+1. What outcome does the user need?
+2. What necessary piece is missing from the literal request?
+3. What will the user probably need next?
+4. Am I authorized to act on it?
+5. What evidence proves the result?
+
+**Every task gets Step Beyond reasoning. Extra work happens only when it is useful, safe, permitted, and verifiable.**
+
+The model interprets language and proposes alternatives. The runtime handles
+policy, permission, state, evidence, and audit records when the host exposes the
+required capabilities.
 
 The framework has two honest operating modes:
 
