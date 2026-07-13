@@ -101,3 +101,16 @@ test('eval template exposes repetition coverage and cross-session memory evidenc
     assert.match(cases, new RegExp(term, 'iu'));
   }
 });
+
+test('adapter guidance assigns one owner to host-native capabilities', async () => {
+  const adapters = await read('skills/step-beyond/references/adapters.md');
+  for (const term of [
+    'When the host already has memory, verification, or skills',
+    'Claude Code',
+    'Cursor',
+    'one owner per record',
+    'one verification record per material claim',
+  ]) {
+    assert.match(adapters, new RegExp(term, 'iu'));
+  }
+});
