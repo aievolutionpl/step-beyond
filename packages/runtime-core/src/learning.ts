@@ -20,3 +20,25 @@ export function proposeHeuristicRevision(heuristicId: string, events: LearningEv
     reasonEvents: eligible.map((event) => event.evidenceRef), status: 'proposed' as const,
   };
 }
+
+export interface HeuristicRevision {
+  id: string;
+  heuristicId: string;
+  previousVersion: number;
+  proposedVersion: number;
+  reasonEvents: string[];
+  status: 'proposed' | 'active' | 'reverted';
+  authorizationRef?: string;
+  revertReason?: string;
+}
+
+export function activateHeuristicRevision(revision: HeuristicRevision, authorizationRef?: string): HeuristicRevision {
+  if (!authorizationRef) throw new Error('Authorization is required to activate a global heuristic revision');
+  if (revision.status !== 'proposed') throw new Error('Only proposed revisions can be activated');
+  return { ...revision, status: 'active', authorizationRef };
+}
+
+export function revertHeuristicRevision(revision: HeuristicRevision, reason: string): HeuristicRevision {
+  if (revision.status !== 'active') throw new Error('Only active revisions can be reverted');
+  return { ...revision, status: 'reverted', revertReason: reason };
+}

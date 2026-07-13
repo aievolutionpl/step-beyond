@@ -1,5 +1,8 @@
 # Hybrid Runtime Implementation Plan
 
+**Execution status:** Implemented on `agent/hybrid-runtime-implementation`. The
+checkboxes below are retained as the test-first execution record and review map.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a dependency-light TypeScript reference runtime that enforces Step Beyond intent, permission, initiative, memory, verification, and learning policies and provides a repeatable evaluation harness.

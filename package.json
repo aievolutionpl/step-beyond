@@ -8,7 +8,7 @@
     "evals/runner"
   ],
   "scripts": {
-    "test": "tsx --test packages/*/test/*.test.ts evals/runner/test/*.test.ts",
+    "test": "tsx --test --test-concurrency=1 packages/*/test/*.test.ts evals/runner/test/*.test.ts",
     "typecheck": "tsc --noEmit",
     "eval:runtime": "tsx evals/runner/src/cli.ts",
     "validate": "npm run typecheck && npm test && npm run eval:runtime"

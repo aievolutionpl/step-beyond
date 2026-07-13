@@ -2,9 +2,11 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import {
+  activateHeuristicRevision,
   applyLearningEvent,
   createVerificationRecord,
   proposeHeuristicRevision,
+  revertHeuristicRevision,
   renderVerifiedClaims,
 } from '../src/index.js';
 
@@ -18,6 +20,17 @@ test('derives all three verification states without deleting the artifact', () =
   ]);
   assert.equal(output.artifact, 'artifact-content');
   assert.deepEqual(output.claims, []);
+});
+
+test('heuristic revisions require authorization to activate and can be reverted', () => {
+  const proposed = {
+    id: 'r1', heuristicId: 'h1', previousVersion: 1, proposedVersion: 2,
+    reasonEvents: ['a', 'b', 'c'], status: 'proposed' as const,
+  };
+  assert.throws(() => activateHeuristicRevision(proposed), /authorization/i);
+  const active = activateHeuristicRevision(proposed, 'review:approved');
+  assert.equal(active.status, 'active');
+  assert.equal(revertHeuristicRevision(active, 'regression').status, 'reverted');
 });
 
 test('unknown learning outcome is neutral', () => {

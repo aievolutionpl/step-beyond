@@ -27,6 +27,24 @@ test('keeps project facts separate and preserves provenance', () => {
   assert.equal(context.sources.get('p1'), 'package.json');
 });
 
+test('assembles only the most relevant context within the token budget', () => {
+  const context = assembleContext({
+    instruction: 'Fix the TypeScript parser',
+    maxContextTokens: 12,
+    userEntries: [
+      { id: 'u1', kind: 'preference', value: 'Use Polish', source: 'user', confidence: 1, relevance: 0.8, tokenCost: 4 },
+      { id: 'u2', kind: 'preference', value: 'Old image preference', source: 'user', confidence: 1, relevance: 0.1, tokenCost: 6 },
+    ],
+    projectFacts: [
+      { id: 'p1', value: 'TypeScript parser package', source: 'package.json', relevance: 1, tokenCost: 8 },
+    ],
+  });
+  assert.deepEqual(context.projectFacts.map((entry) => entry.id), ['p1']);
+  assert.deepEqual(context.userEntries.map((entry) => entry.id), ['u1']);
+  assert.equal(context.estimatedTokens, 12);
+  assert.deepEqual(context.omitted, ['u2']);
+});
+
 test('strict turn has no optional actions or proposals', () => {
   const result = decideTurn({
     message: 'Popraw tylko literówkę, nic więcej.', hypotheses,

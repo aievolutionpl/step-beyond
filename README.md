@@ -2,436 +2,171 @@
   <img src="step%20beyond%20banner.png" alt="Step Beyond banner" width="100%">
 </p>
 
-<br>
+# Step Beyond
 
-# 🧠 Step Beyond — Skill for AI Agents
+Step Beyond helps an agent reconstruct the user's real goal, use relevant
+context, take permission-aware initiative, verify claims, and learn without
+turning uncertain observations into facts.
 
-> *"Don't ask. Just do more — the way the user would have done it. Verify it. Remember what worked. Know when to stop. And get sharper every task."*
+Version 4 introduces two explicit operating modes:
 
-<br>
+- **prompt-only** — a portable skill for semantic reasoning;
+- **runtime-backed** — the skill plus deterministic policy, persistence,
+  permission, initiative, verification, and evaluation modules.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/version-3.3.0-blue?style=for-the-badge" alt="Version">
-  <img src="https://img.shields.io/badge/license-MIT-yellow?style=for-the-badge" alt="License">
-  <img src="https://img.shields.io/badge/framework-agnostic-green?style=for-the-badge" alt="Framework">
-  <img src="https://img.shields.io/badge/memory-Obsidian%20%7C%20MCP%20%7C%20mem0%20%7C%20files-orange?style=for-the-badge" alt="Memory">
-  <img src="https://img.shields.io/badge/loop-self--improving-ff2d55?style=for-the-badge" alt="Self-Improving">
-  <img src="https://img.shields.io/badge/agents-Claude%20%7C%20Codex%20%7C%20Hermes%20%7C%20OpenClaw%20%7C%20opencode%20%7C%20Cursor-purple?style=for-the-badge" alt="Compatibility">
-</p>
+Only adapter/host combinations supported by repeated behavioral measurements
+should be called **verified**. The reference runtime and deterministic smoke eval
+do not by themselves prove behavior for every model or host.
 
-<br>
+## Why the hybrid architecture
 
----
-
-## ⚡ What Your Agent Gains
-
-| | Superpower | The instinct it installs |
-|---|-----------|--------------------------|
-| 🧠 | **RECALL** | Remembers brand, stack, tone, bans — across sessions |
-| 🔎 | **SCAN** | Reads the live repo — stack, git history, conventions — before acting |
-| 🔍 | **EXPAND** | Reads the prompt they *meant*, not the one they typed |
-| 🎨 | **POLISH** | No blank voids, no AI slop — professional baseline, always |
-| ➕ | **EXTEND** | Adds the missing piece that saves a follow-up (capped) |
-| 🔮 | **ANTICIPATE** | Builds the *next* request before it's asked |
-| ✅ | **VERIFY** | Runs it, clicks it — zero broken additions, zero false "works" |
-| 📈 | **SELF-IMPROVE** | Scores its own predictions, prunes misses, sharpens hits |
-
-```
-   LITERAL AGENT                 →     STEP BEYOND AGENT
-   does what's typed             →     completes what's meant
-   forgets every session         →     remembers, applies silently
-   ships "Done ✅" unopened       →     ships verified, or says untested
-   same mistakes forever         →     measurably sharper each session
-```
-
-Every job, every task: go one step beyond — bounded by a hard ceiling so it never tips into annoying.
-
-**Two layers make those eight powers actually land — new in v3.3:**
-
-| | Layer | What it adds |
-|---|---|---|
-| 🚀 | **INITIATIVE** | *How* the agent thinks while running the pipeline — reverse-engineer the real goal, close the failure modes, take the cheapest verifiable step forward, and *name* the bigger move it shouldn't make unasked. Turns generic "+docs" filler into additions that reference something specific about your request. → [`initiative.md`](skills/step-beyond/references/initiative.md) |
-| 🎬 | **ONBOARDING** | The first-run ritual — the agent detects its host, wires its memory, calibrates to your repo, and tells you *once, honestly* what powers are live and what's degraded. No config wizard, no overclaiming. → [`onboarding.md`](skills/step-beyond/references/onboarding.md) |
-
----
-
-## The Problem
-
-Every AI agent has the same fatal flaws: **they're literal, they're forgetful, and they overclaim.**
-
-```
-USER:  "Build a landing page"
-AGENT: *builds a single HTML file* "Done! ✅"
-USER:  "Where's the contact page?"
-USER:  "Where's the favicon?"
-USER:  "Why doesn't it work on mobile?"
-USER:  "...and the form is broken. Did you even open it?"
-USER:  (next week) "I told you last time — our colors are navy and gold."
-```
-
-**12 turns. 8 minutes. Frustration on both sides. Repeated next session, from zero.**
-
-A good collaborator doesn't wait to be told about the contact page — they build it. They don't ship a form they never submitted. And they don't ask for your brand colors twice.
-
----
-
-## The Insight
-
-> **"The best assistant is the one you don't have to manage."**
-
-The gap between what users say and what they need follows predictable rules — and *this user's* rules are learnable:
-
-| User says... | User actually needs... | Mechanism |
-|-------------|----------------------|-----------|
-| "Generate an image" | Image + context + social formats | **POLISH** |
-| "Build a landing page" | Page + subpages + meta + favicon + mobile | **EXTEND** |
-| *silence, but you know they'll ask* | The next logical request | **ANTICIPATE** |
-| "Done! ✅" *(agent's claim)* | Proof it actually works | **VERIFY** |
-| *same request, new session* | Their preferences, already applied | **MEMORY** |
-| *the agent's own wrong guess* | It stops making that guess | **SELF-IMPROVE** |
-
-**Step Beyond encodes all six.** A behavioral skill that transforms any agent from a literal executor into a proactive collaborator that learns — and improves its own judgment with every task.
-
----
-
-## How It Works — The Pipeline
-
-```
-┌────────────────────────────────────────────────────────────┐
-│                    STEP BEYOND v3 ENGINE                    │
-│                                                            │
-│  USER INPUT                                                 │
-│      │                                                      │
-│      ▼                                                      │
-│  0. RECALL ─── read user patterns from ANY memory store     │
-│      │         (Obsidian · MCP memory · mem0 · plain file)  │
-│      │         + scan the live environment (no store needed)│
-│      ▼                                                      │
-│  1. EXPAND ─── upgrade the prompt they gave into the        │
-│      │         prompt they meant (intent brief)             │
-│      ▼                                                      │
-│  2. BUILD ──── base + L1 polish (always, silent)            │
-│      │                                                      │
-│      ▼                                                      │
-│  3. EXTEND ─── L2 (max 3) + L3 (max 1), ceiling-gated,      │
-│      │         memory-driven  [subagents: parallel]         │
-│      ▼                                                      │
-│  4. VERIFY ─── run it · render it · click it                │
-│      │         slop scan · claim audit                      │
-│      │         can't verify? CUT IT.  [subagents: fresh-    │
-│      │         context verifier]                            │
-│      ▼                                                      │
-│  5. DELIVER ── base first, additions in ≤4 words each       │
-│      │                                                      │
-│      ▼                                                      │
-│  6. LEARN ──── accepted? → default next time                │
-│                rejected 2×? → banned forever                │
-│                → written back to memory (learns the USER)   │
-│                + score own prediction: hit → reinforce      │
-│                  heuristic, miss → prune (the AGENT sharpens)│
-└────────────────────────────────────────────────────────────┘
-```
-
-### The Three Layers
-
-| Layer | Name | Cost | Rule |
-|-------|------|------|------|
-| **L1** | **Polish** | $0 · +0s | Always. No void. No slop. Baseline quality — not "extra." |
-| **L2** | **Extend** | <15% time | The missing piece. Max 3/session. Memory-selected first. |
-| **L3** | **Anticipate** | <30% time | Predict the next request. Max 1/session. Trajectory-driven. |
-
-### The Ceiling
-
-```
-Total:       5 / session    ██████████  100%
-Level 2:     3 / session    ██████      60%
-Level 3:     1 / session    ██          20%
-
-STOP if budget exhausted.
-STOP on: "just X", "only X", frustration, speed mode.
-CUT any addition that can't be verified.
-```
-
-### The Memory (new in v3)
-
-Works with **whatever memory the agent has** — one portable pattern file, any store:
-
-```
-Obsidian vault  →  {vault}/step-beyond/patterns.md
-Memory MCP/mem0 →  document keyed "step-beyond:patterns"
-CLAUDE.md       →  marked section, ≤40 lines
-Plain files     →  step-beyond/patterns.md
-Nothing         →  session-only mode (still learns within the session)
-```
-
-```
-accept 2×  → REINFORCED  (default L2 from now on)
-reject 2×  → BANNED      (never again)
-ignore 3×  → DROPPED
-result: ~60% addition acceptance cold → >85% by session 5
-```
-
-### The Verify Loop (new in v3)
-
-```
-BASE CHECK      exercise it the way the user will — open, run, click, read
-ADDITION CHECK  every L2/L3, same bar. Unverifiable → becomes a suggestion.
-SLOP SCAN       AI-slop index for text, code, design, image, data
-CLAIM AUDIT     "works" / "tested" / "responsive" — only if observed
-```
-
-**A broken addition is worse than no addition. A false claim is worse than both.**
-
-### The Self-Improvement Loop (new in v3.1)
-
-Memory learns *you*. The self-improvement loop learns *the agent's own judgment* — so it gets better at the job for everyone, not just for this user.
-
-```
-Every L2/L3 is a bet: "this addition will land."
-  PREDICT → log the addition + the heuristic behind it
-  OBSERVE → accepted / rejected / ignored / cut?
-  SCORE   → hit → heuristic gains confidence · miss → loses it
-  ADJUST  → low-confidence heuristic stops firing · escaped break becomes a
-            permanent new check · missed slop becomes a new detector
-```
-
-```
-Two ledgers, one LEARN step:
-  memory      →  what THIS USER wants   (per-user file)
-  self-notes  →  which of MY heuristics predict well   (per-agent, portable)
-result: the agent at month 2 is measurably better at this than day 1.
-```
-
-Full protocol: [`references/self-improvement.md`](skills/step-beyond/references/self-improvement.md). A miss is never wasted — it's a downweight.
-
-### The Initiative Layer (new in v3.3)
-
-The pipeline is *what the agent does*. Initiative is *how it thinks while doing it* — the difference between an agent that ticks the boxes and one a senior engineer wants on the team.
-
-```
-Every task, think like the engineer who OWNS the outcome:
-  DONE-STATE → what does "shipped and working" look like for the REAL goal?
-  GAP        → what stands between the literal ask and that done-state?
-  FAILURE    → how does this break in their hands? Close it before it happens.
-  TRAJECTORY → what's their next move? Make it already-done or one click away.
-```
-
-Then take the **cheapest verifiable step that moves the goal forward** — and the outside-the-box rung most agents miss: when the request reveals a *bigger* move you shouldn't make unasked (a refactor, a schema change, a security sweep), you **name it in one line and let the user pull** — never silently build the irreversible thing, never silently swallow the insight.
-
-```
-❌ Generic:  "Fixed the bug. +added some tests ✅"
-✅ Initiative: "Fixed it. +a test that reproduces the exact bug (proves the fix).
-              The same unvalidated-input pattern is in signup — want me to check it?"
-```
-
-The test that separates initiative from noise: **could you explain the addition in one sentence that references something specific about THIS request?** If not, it's checklist filler — cut it. Full doctrine: [`references/initiative.md`](skills/step-beyond/references/initiative.md).
-
-### First-Run Onboarding (new in v3.3)
-
-The first thing an agent does under Step Beyond isn't answer a prompt — it **wakes up.** A six-beat ritual runs once per host: detect the host → wire the five capability slots → seed memory → calibrate to your repo → **announce what's live** → activate.
-
-```
-✅ Step Beyond is live on Codex CLI.
-   • I'll remember your preferences across sessions → step-beyond/patterns.md
-   • I read the repo before acting (detected: TypeScript · Vitest · pnpm)
-   • I verify before I claim "done" — and say "untested" when I can't run it
-   • Solo host: no parallel subagents here, so I self-review with fresh eyes
-   Say "just do X" anytime to switch off the extras. First task?
-```
-
-One honest status line — never a config wizard, never claiming a power the host can't deliver. Returning users get a warm start: memory loads, and the agent skips the whole explanation. Full ritual + per-host profiles: [`references/onboarding.md`](skills/step-beyond/references/onboarding.md).
-
----
-
-## The Results
-
-```
-TASK: "Build a landing page for a restaurant"
-
-┌───────────────────────────────┬──────────────────────────────┐
-│ WITHOUT Step Beyond           │ WITH Step Beyond v3          │
-├───────────────────────────────┼──────────────────────────────┤
-│ Turns: 12                     │ Turns: 4                     │
-│ Follow-ups: 4                 │ Follow-ups: 0                │
-│ Files: 1 HTML                 │ HTML + 4 subpages + favicon  │
-│ Verified: never opened        │ Every link clicked, 375px ✓  │
-│ Next session: starts from 0   │ Brand + preferences recalled │
-└───────────────────────────────┴──────────────────────────────┘
-```
-
----
-
-## Universal — Works With Any Agent
-
-One behavioral core, a thin adapter per host — capability detection wires memory, subagents, and runtime to whatever the platform provides. Architecture: [`references/adapters.md`](skills/step-beyond/references/adapters.md).
-
-> **Don't want to pick a row?** Skip the table — [hand the repo link to your agent](#quick-start--hand-it-to-your-agent) and it self-installs by detecting its own host.
-
-| Framework | How to Add |
-|-----------|-----------|
-| **Claude Code** | `/plugin marketplace add aievolutionpl/step-beyond` → `/plugin install step-beyond@step-beyond` |
-| **Claude Agent SDK / manual** | Copy `skills/step-beyond/` into `~/.claude/skills/` or paste block into `CLAUDE.md` |
-| **Codex CLI** | `--custom-instructions` or `config.toml` |
-| **Hermes Agent** | `skills: [step-beyond]` in `config.yaml` |
-| **OpenClaw / opencode** | Marked core block in `AGENTS.md` (loads first, every task) |
-| **Gemini CLI** | `GEMINI.md` core block |
-| **Cursor / Windsurf** | `.cursorrules` / `.windsurfrules` |
-| **GitHub Copilot** | `copilot-instructions.md` |
-| **Amp / Aider / Cline / Roo** | Rules / system-prompt file |
-| **OpenAI Agents SDK / CrewAI / AutoGen / LangGraph** | Inject core into orchestrator; map roles per `references/subagents.md` |
-| **Custom ReAct Loop** | Inject as first system message |
-
-Full instructions: [`skills/step-beyond/references/installation.md`](skills/step-beyond/references/installation.md)
-
-Normative specification: [`SPEC.md`](SPEC.md)
-
----
-
-## Quick Start — Hand It to Your Agent
-
-**The fastest install is no install.** Don't learn where your host keeps its config — give your agent the repo link and let it wire itself in. Paste this into any coding agent (Claude Code, Codex, Cursor, opencode, Gemini CLI, a custom loop):
+Prompts are good at interpreting language and generating alternatives. They are
+not reliable owners of shared counters, durable memory, permissions, audit logs,
+or evidence. Step Beyond keeps the first category in the model and moves the
+second into a lightweight TypeScript controller.
 
 ```text
-Install the Step Beyond skill into this workspace:
-https://github.com/aievolutionpl/step-beyond
-
-Read skills/step-beyond/SKILL.md and skills/step-beyond/references/installation.md,
-then follow the "Self-Install (agent-driven)" section: detect which agent host
-you're running in and wire the skill in with the matching method — a skills
-directory, an AGENTS.md / CLAUDE.md core block, or the host's rules/config file.
-Wire memory + self-notes to step-beyond/patterns.md and step-beyond/self-notes.md
-(or my Obsidian / MCP store if I have one). Make it idempotent — update in place,
-don't duplicate. Then run the onboarding ritual in references/onboarding.md and
-give me the one-line capability announcement: which host you detected, what
-powers are live, and anything that's degraded on this host.
+host adapter
+    -> context assembler
+    -> intent resolver
+    -> permission gate
+    -> adaptive initiative scorer
+    -> host executor
+    -> verification ledger
+    -> learning updater
 ```
 
-The agent reads the repo's own install docs, self-installs — no framework knowledge required from you — then onboards itself and tells you exactly what it can now do. From the next task on, it runs the full pipeline.
+The normative contract is [`SPEC.md`](SPEC.md). The approved architecture is
+[`docs/superpowers/specs/2026-07-13-hybrid-runtime-design.md`](docs/superpowers/specs/2026-07-13-hybrid-runtime-design.md).
 
-### Prefer to install it yourself?
+## Implemented runtime modules
 
-**Claude Code (plugin — two commands):**
+| Package | Responsibility |
+|---|---|
+| `@step-beyond/runtime-core` | strict scope, intent decisions, permission classes, adaptive initiative, verification, learning, context, turn control |
+| `@step-beyond/runtime-store` | namespace isolation, secret rejection, atomic JSON state, append-only audit, correction, deletion, rollback |
+| `@step-beyond/adapter-reference` | cached capability detection, honest degradation, explicit publication permission |
+| `@step-beyond/eval-runner` | fresh runs, comparison arms, deterministic assertions, raw evidence, token/cost/latency/consent metrics |
 
+The packages have no production dependencies. Development uses TypeScript,
+`node:test`, and `tsx`.
+
+Token cost is bounded by a relevance-ranked context budget. The short portable
+skill stays resident; references and project context are loaded progressively,
+only when the current task needs them.
+
+## Quick start
+
+Requirements: Node.js 20 or newer.
+
+```bash
+npm install
+npm run validate
 ```
-/plugin marketplace add aievolutionpl/step-beyond
-/plugin install step-beyond@step-beyond
+
+Import the policy functions directly:
+
+```ts
+import {
+  classifyAction,
+  detectStrictScope,
+  resolveIntent,
+  selectInitiatives,
+} from '@step-beyond/runtime-core';
 ```
 
-**Any other host (copy the core block):** paste this into your agent's system prompt or standing-instructions file — `.cursorrules`, `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `copilot-instructions.md`, etc.:
+See [`docs/runtime.md`](docs/runtime.md) for API examples, persistence, adapter
+wiring, and degradation behavior.
+
+## Portable skill
+
+Install `skills/step-beyond/` in a host that supports skills, or inject
+`skills/step-beyond/templates/core-injection.txt` as standing instructions.
+
+The portable layer:
+
+- forms several intent hypotheses instead of selecting the first interpretation;
+- distinguishes confidence from mistake cost;
+- treats `only` / `just` / `tylko` / `nic więcej` as absolute strict scope;
+- distinguishes understanding, proposing, execution, and publication;
+- reports `verified`, `partially_verified`, and `unverified` claims;
+- treats `unknown` as neutral and keeps project facts outside user memory.
+
+Without the runtime these are behavioral instructions, not enforceable
+guarantees. Hosts must label that state as prompt-only.
+
+## Permission classes
+
+- `AUTO`: cheap, reversible, local, in scope.
+- `AUTO_WITH_DISCLOSURE`: reversible local action based on a material assumption.
+- `ASK`: publication, sending, cost, credentials, security, destructive or
+  irreversible action, or high-cost ambiguity.
+- `FORBIDDEN`: authority escalation, secret exfiltration, sensitive-memory
+  persistence without a valid basis, or action outside granted authority.
+
+Permission is evaluated before initiative score.
+
+## Adaptive initiative
+
+The old fixed `5/3/1` ceiling is replaced by:
 
 ```text
-## 🧠 Step Beyond — Proactive Enhancement
-
-PIPELINE: recall memory → expand intent → build base + L1 →
-extend (L2 max 3, L3 max 1) → VERIFY (run it, slop scan, honest claims) →
-deliver → learn (write patterns to memory + score own predictions, self-improve).
-
-L1 (ALWAYS, silent): Polish. No void. Real context. Baseline quality.
-L2 (<15% time, max 3): The missing piece. Memory-selected first. "+name"
-L3 (<30% time, max 1): Anticipate the next request. "+name (~Xs)"
-
-VERIFY: nothing ships unchecked. Can't verify an addition? Cut it.
-Claim only what you observed — no unbacked "works"/"tested".
-
-MEMORY (any store — Obsidian/MCP/file): accept 2× → default. reject 2× → banned.
-ENVIRONMENT (files/git/config, no store needed): corrects stale facts, never Banned.
-SELF-IMPROVE: score each prediction — hit → reinforce heuristic, miss → prune it.
-Explicit instruction > user memory > environment > agent self-notes > defaults.
-
-CEILING: 5 total/session. STOP on: "just X", "only X", "stop", "enough".
-SUBAGENTS (if available): parallel additions, fresh-context verifier.
+expected_value * confidence * reversibility * verifiability
+* historical_accuracy / max(cost + risk, epsilon)
 ```
 
-Full per-host setup: [`references/installation.md`](skills/step-beyond/references/installation.md).
+`fast`, `standard`, and `exploratory` modes adjust thresholds. `strict` disables
+optional actions and unsolicited proposals completely.
 
----
+## Memory and learning
 
-## The Science — Why This Works
+Memory entries distinguish facts, preferences, constraints, observations,
+hypotheses, trajectories, open loops, and negative feedback. Every entry carries
+provenance, scope, confidence, timestamps, origin, sensitivity, and status.
 
-### 1. Cognitive Load Reduction
-Every follow-up the user types costs mental energy. Step Beyond eliminates 70–90% of follow-ups by pre-empting them.
+The reference store rejects likely credentials, isolates namespaces, and supports
+inspection, correction, soft deletion, audit history, and rollback. Silence is
+not automatically a rejection. `unknown` does not change learning state.
 
-### 2. Pattern Completion
-Humans rarely specify complete requirements. "Build a page" assumes contact, privacy, favicon, mobile. Step Beyond encodes these as domain rules — then overrides them with *this user's* learned patterns.
+## Verification
 
-### 3. Memory-Driven Calibration
-Domain defaults are a cold-start heuristic. The real signal is what *this user* accepted, rejected, and ignored — persisted in whatever memory exists, from Obsidian to a plain markdown file. After 5 sessions the agent isn't guessing anymore.
+A useful artifact is not removed only because an external integration cannot be
+run. The ledger narrows the claim instead:
 
-### 4. Trust Through Verification
-Proactivity fails the moment one addition arrives broken — users stop reading all of them. The Verify Loop (run it, slop-scan it, audit every claim) is what makes 5 additions per session sustainable.
+- `verified` — stated scope checked and passed;
+- `partially_verified` — named checks passed, named scope remains unchecked;
+- `unverified` — no meaningful execution evidence supports the claim.
 
-### 5. The Ceiling Principle
-5 enhancements total, hard STOP signals, a permanent Banned list. Proactive ≠ annoying.
+## Evaluation
 
-### 6. Framework-Neutral Design
-Pure behavioral specification. System prompt, skill file, or config block. Claude, GPT, Gemini, DeepSeek, custom models.
-
----
-
-## Anti-Patterns — What NOT to Do
-
-| ❌ Wrong Approach | ✅ Right Approach |
-|------------------|------------------|
-| "Be creative and add value" | "Add one logical next step. Know when to stop." |
-| "Always go above and beyond" | Ceiling: 5 total, 3 L2, 1 L3 |
-| "Double-check your work" | The 4-step Verify Loop with Claim Audit |
-| Ship 5 additions, 2 broken | Verify each — unverifiable becomes a suggestion |
-| Re-ask brand colors every session | RECALL from the pattern file |
-| "Surprise me" | Predict from this user's accepted patterns |
-
----
-
-## Repository
-
-```
-step-beyond/
-├── .claude-plugin/             ← Claude Code plugin + marketplace manifests
-├── skills/step-beyond/         ← The skill (plugin layout)
-│   ├── SKILL.md                ← Core behavioral spec
-│   ├── references/             ← Progressive disclosure — loaded on demand
-│   │   ├── initiative.md       ← Initiative Doctrine (think like an LLM engineer)
-│   │   ├── onboarding.md       ← Agent Onboarding Ritual (first-run, per-host)
-│   │   ├── memory.md           ← Memory Protocol (Obsidian/MCP/mem0/files)
-│   │   ├── environment-scan.md ← Environment Scan (stack/git/conventions — no store needed)
-│   │   ├── self-improvement.md ← Self-Improvement Loop (per-agent heuristics)
-│   │   ├── verification.md     ← Verify Loop + Fresh-Eyes Protocol
-│   │   ├── slop.md             ← AI Slop Index (text/code/design/image/data)
-│   │   ├── subagents.md        ← Orchestration: roles, firewall, templates
-│   │   ├── domains.md          ← 11 domain decision trees
-│   │   ├── adapters.md         ← Universal adapter — capability detection + per-host quality
-│   │   └── installation.md     ← Per-framework setup
-│   └── templates/
-│       ├── user-patterns.md    ← Starter memory file
-│       └── core-injection.txt  ← Ready-to-inject core (custom loops)
-├── evals/                      ← Behavioral regression suite + baseline results
-├── examples/                   ← Before/after walkthroughs (see examples/README.md)
-├── CHANGELOG.md · CONTRIBUTING.md · LICENSE (MIT)
-├── README.md                   ← You are here
-└── README_PL.md                ← Polish version
+```bash
+npm test
+npm run typecheck
+npm run eval:runtime
 ```
 
----
+`eval:runtime` is a deterministic replay smoke test. Its generated report says so
+explicitly and must not be presented as a live-model benchmark.
 
-<br>
+A publishable behavioral benchmark should run fresh sessions repeatedly across:
 
-<p align="center">
-  <b>Created with obsessive attention to detail by</b>
-</p>
+1. baseline without Step Beyond;
+2. current released behavior;
+3. new prompt-only behavior;
+4. runtime-backed behavior;
+5. relevant ablations.
 
-<p align="center">
-  <a href="https://www.aievolutionpolska.pl/">
-    <b>AI EVOLUTION POLSKA</b>
-  </a>
-</p>
+It must preserve raw transcripts and artifacts and report model/runtime/adapter
+versions, parameters, tokens, cost, latency, and consent violations. Existing
+historical Markdown results remain examples with their original limitations.
 
-<p align="center">
-  <a href="https://www.aievolutionpolska.pl/">https://www.aievolutionpolska.pl/</a>
-  &nbsp;·&nbsp;
-  <a href="https://aievolutionlabs.io/">https://aievolutionlabs.io/</a>
-</p>
+## Status
 
-<p align="center">
-  <sub>MIT License — Use it. Remix it. Ship it. Just don't remove the attribution.</sub>
-</p>
+The TypeScript implementation is a reference runtime. Additional production host
+adapters and live-model benchmark claims require separate adapter-specific runs.
+See [`evals/README.md`](evals/README.md) and the generated smoke report in
+`evals/results/runtime-smoke.json`.
 
-<br>
+## License
+
+MIT

@@ -1,5 +1,33 @@
 # Changelog
 
+## [4.0.0-alpha.1] - 2026-07-13
+
+### Added
+- Dependency-light TypeScript runtime core for strict scope, multi-hypothesis
+  intent resolution, action permission classes, adaptive initiative, claim-scoped
+  verification, conservative learning, context assembly, and turn decisions.
+- Auditable JSON user-model store with namespace isolation, secret rejection,
+  atomic snapshots, corrections, soft deletion, audit history, and rollback.
+- Reference host adapter with cached capability detection, honest degradation, and
+  explicit publication permission references.
+- Provider-neutral repeatable eval runner with fresh adapter instances, raw
+  evidence retention, comparison arms, and cost/token/latency/consent metrics.
+- Runtime API documentation, implementation plan, and generated deterministic
+  smoke report.
+
+### Changed
+- `SPEC.md` is now the single normative hybrid contract.
+- The portable and ChatGPT skills use multiple intent hypotheses, absolute strict
+  scope, adaptive initiative, three verification states, and neutral `unknown`.
+- Fixed `5/3/1`, STOP-bypassing proposals, silence-as-rejection, and unsupported
+  compatibility/performance claims were removed from active guidance.
+
+### Verification limits
+- The generated runtime smoke report is deterministic replay, not a live-model
+  benchmark.
+- Additional production host adapters remain unverified until repeated
+  adapter-specific behavioral evals are recorded.
+
 All notable changes to Step Beyond. Format follows [Keep a Changelog](https://keepachangelog.com/); versions follow SemVer.
 
 ## [Unreleased]

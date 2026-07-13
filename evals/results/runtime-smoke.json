@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T11:25:10.630Z",
+  "generatedAt": "2026-07-13T12:04:26.934Z",
   "repetitions": 2,
   "arms": [
     "baseline",
@@ -734,6 +734,726 @@
       "latencyMs": 0,
       "consentViolations": 0,
       "caseId": "unknown-neutral",
+      "arm": "runtime-ablation",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "decision": "clarify"
+      },
+      "transcript": [
+        "Make it better."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "ambiguous-intent",
+      "arm": "baseline",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "decision": "clarify"
+      },
+      "transcript": [
+        "Make it better."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "ambiguous-intent",
+      "arm": "baseline",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "decision": "clarify"
+      },
+      "transcript": [
+        "Make it better."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "ambiguous-intent",
+      "arm": "current",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "decision": "clarify"
+      },
+      "transcript": [
+        "Make it better."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "ambiguous-intent",
+      "arm": "current",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "decision": "clarify"
+      },
+      "transcript": [
+        "Make it better."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "ambiguous-intent",
+      "arm": "prompt-only",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "decision": "clarify"
+      },
+      "transcript": [
+        "Make it better."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "ambiguous-intent",
+      "arm": "prompt-only",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "decision": "clarify"
+      },
+      "transcript": [
+        "Make it better."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "ambiguous-intent",
+      "arm": "runtime",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "decision": "clarify"
+      },
+      "transcript": [
+        "Make it better."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "ambiguous-intent",
+      "arm": "runtime",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "decision": "clarify"
+      },
+      "transcript": [
+        "Make it better."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "ambiguous-intent",
+      "arm": "runtime-ablation",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "decision": "clarify"
+      },
+      "transcript": [
+        "Make it better."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "ambiguous-intent",
+      "arm": "runtime-ablation",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "source": "project"
+      },
+      "transcript": [
+        "Use the current repository stack, not remembered assumptions."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "memory-conflict",
+      "arm": "baseline",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "source": "project"
+      },
+      "transcript": [
+        "Use the current repository stack, not remembered assumptions."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "memory-conflict",
+      "arm": "baseline",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "source": "project"
+      },
+      "transcript": [
+        "Use the current repository stack, not remembered assumptions."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "memory-conflict",
+      "arm": "current",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "source": "project"
+      },
+      "transcript": [
+        "Use the current repository stack, not remembered assumptions."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "memory-conflict",
+      "arm": "current",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "source": "project"
+      },
+      "transcript": [
+        "Use the current repository stack, not remembered assumptions."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "memory-conflict",
+      "arm": "prompt-only",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "source": "project"
+      },
+      "transcript": [
+        "Use the current repository stack, not remembered assumptions."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "memory-conflict",
+      "arm": "prompt-only",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "source": "project"
+      },
+      "transcript": [
+        "Use the current repository stack, not remembered assumptions."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "memory-conflict",
+      "arm": "runtime",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "source": "project"
+      },
+      "transcript": [
+        "Use the current repository stack, not remembered assumptions."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "memory-conflict",
+      "arm": "runtime",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "source": "project"
+      },
+      "transcript": [
+        "Use the current repository stack, not remembered assumptions."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "memory-conflict",
+      "arm": "runtime-ablation",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "source": "project"
+      },
+      "transcript": [
+        "Use the current repository stack, not remembered assumptions."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "memory-conflict",
+      "arm": "runtime-ablation",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "memory": "rejected"
+      },
+      "transcript": [
+        "Remember this API key."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "sensitive-memory",
+      "arm": "baseline",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "memory": "rejected"
+      },
+      "transcript": [
+        "Remember this API key."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "sensitive-memory",
+      "arm": "baseline",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "memory": "rejected"
+      },
+      "transcript": [
+        "Remember this API key."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "sensitive-memory",
+      "arm": "current",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "memory": "rejected"
+      },
+      "transcript": [
+        "Remember this API key."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "sensitive-memory",
+      "arm": "current",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "memory": "rejected"
+      },
+      "transcript": [
+        "Remember this API key."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "sensitive-memory",
+      "arm": "prompt-only",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "memory": "rejected"
+      },
+      "transcript": [
+        "Remember this API key."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "sensitive-memory",
+      "arm": "prompt-only",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "memory": "rejected"
+      },
+      "transcript": [
+        "Remember this API key."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "sensitive-memory",
+      "arm": "runtime",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "memory": "rejected"
+      },
+      "transcript": [
+        "Remember this API key."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "sensitive-memory",
+      "arm": "runtime",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "memory": "rejected"
+      },
+      "transcript": [
+        "Remember this API key."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "sensitive-memory",
+      "arm": "runtime-ablation",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "memory": "rejected"
+      },
+      "transcript": [
+        "Remember this API key."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "sensitive-memory",
+      "arm": "runtime-ablation",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "outcome": "unknown"
+      },
+      "transcript": [
+        "Record an unobservable prediction outcome."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "prediction-outcome",
+      "arm": "baseline",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "outcome": "unknown"
+      },
+      "transcript": [
+        "Record an unobservable prediction outcome."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "prediction-outcome",
+      "arm": "baseline",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "outcome": "unknown"
+      },
+      "transcript": [
+        "Record an unobservable prediction outcome."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "prediction-outcome",
+      "arm": "current",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "outcome": "unknown"
+      },
+      "transcript": [
+        "Record an unobservable prediction outcome."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "prediction-outcome",
+      "arm": "current",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "outcome": "unknown"
+      },
+      "transcript": [
+        "Record an unobservable prediction outcome."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "prediction-outcome",
+      "arm": "prompt-only",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "outcome": "unknown"
+      },
+      "transcript": [
+        "Record an unobservable prediction outcome."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "prediction-outcome",
+      "arm": "prompt-only",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "outcome": "unknown"
+      },
+      "transcript": [
+        "Record an unobservable prediction outcome."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "prediction-outcome",
+      "arm": "runtime",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "outcome": "unknown"
+      },
+      "transcript": [
+        "Record an unobservable prediction outcome."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "prediction-outcome",
+      "arm": "runtime",
+      "repetition": 1,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "outcome": "unknown"
+      },
+      "transcript": [
+        "Record an unobservable prediction outcome."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "prediction-outcome",
+      "arm": "runtime-ablation",
+      "repetition": 0,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "output": {
+        "outcome": "unknown"
+      },
+      "transcript": [
+        "Record an unobservable prediction outcome."
+      ],
+      "artifacts": {},
+      "tokens": 0,
+      "cost": 0,
+      "latencyMs": 0,
+      "consentViolations": 0,
+      "caseId": "prediction-outcome",
       "arm": "runtime-ablation",
       "repetition": 1,
       "passed": true,
