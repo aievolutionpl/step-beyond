@@ -38,6 +38,18 @@ Run at least five repetitions per case in CI when cost permits. Performance or
 compatibility claims require a documented sample-size rationale and should use at
 least twenty fresh runs per case by default.
 
+**Release-gate floor:** a case with fewer than three independent fresh runs may
+be retained as exploratory evidence, but it MUST NOT contribute to a release
+pass rate. This is a minimum eligibility rule, not evidence that `N=3` is enough
+for a performance or compatibility claim; the stronger guidance above still
+applies.
+
+Multi-session cases must use genuine continuity. Run Session A, persist the
+observable event through the adapter, then start Session B with fresh conversation
+context and only the declared store available. Preserve the store diff and audit
+record as persistence evidence. Repeating Session A's facts inside Session B's
+prompt does not test memory.
+
 Metrics include intent accuracy, unnecessary clarification, harmful assumptions,
 initiative acceptance, strict-scope compliance, unsupported claims, memory
 precision, correction latency, follow-up reduction, tokens, cost, and actions

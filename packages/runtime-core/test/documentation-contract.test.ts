@@ -86,3 +86,18 @@ test('active guidance does not teach the legacy v3 pipeline or unsupported rates
     assert.doesNotMatch(content, /CEILING:\s*5 total|5 additions across ALL agents/iu);
   }
 });
+
+test('eval template exposes repetition coverage and cross-session memory evidence', async () => {
+  const template = await read('evals/results/TEMPLATE.md');
+  for (const term of ['Provider', 'Model / version', 'Date', 'N', 'Pass / N', 'NOT RUN']) {
+    assert.match(template, new RegExp(term, 'iu'));
+  }
+  for (const caseId of ['A1', 'A6', 'B1', 'B3', 'C1', 'C4', 'D1', 'D3']) {
+    assert.match(template, new RegExp(`\\| ${caseId} \\|`, 'u'));
+  }
+
+  const cases = await read('evals/cases.md');
+  for (const term of ['Session A', 'Session B', 'persistence evidence', 'PASS:', 'FAIL:']) {
+    assert.match(cases, new RegExp(term, 'iu'));
+  }
+});
