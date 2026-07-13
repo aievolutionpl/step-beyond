@@ -1,0 +1,6 @@
+{
+  "name": "@step-beyond/eval-runner",
+  "version": "4.0.0-alpha.1",
+  "type": "module",
+  "private": true
+}

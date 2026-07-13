@@ -1,0 +1,9 @@
+{
+  "name": "@step-beyond/adapter-reference",
+  "version": "4.0.0-alpha.1",
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@step-beyond/runtime-core": "4.0.0-alpha.1"
+  }
+}

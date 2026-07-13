@@ -1,175 +1,184 @@
 # Step Beyond Specification
 
-This document defines the normative behavior for Step Beyond and for agent adapters that implement it.
+This document is the normative source for Step Beyond behavior. Skills,
+templates, adapters, references, and examples MUST NOT redefine these rules.
 
-## 1. Definition
+## 1. Conformance modes
 
-Step Beyond is a behavioral skill framework, not a single prompt. A prompt can carry the core instruction, but the framework is the full operating model: pipeline, addition levels, ceilings, STOP rules, claim auditing, memory lifecycle, verification standards, and adapter behavior.
+- `prompt-only`: portable reasoning guidance without enforceable persistence,
+  permission, shared state, or evidence guarantees.
+- `runtime-backed`: the portable layer plus a conforming policy controller.
+- `verified`: runtime-backed behavior repeatedly tested on the named adapter and
+  host. Package readiness alone is not verification of model behavior.
 
-Implementations MAY compress the wording for a target agent, but they MUST preserve the behavioral semantics in this specification.
+Implementations MUST identify their mode honestly.
 
-## 2. Canonical Pipeline
+## 2. Turn lifecycle
 
-The canonical Step Beyond pipeline is:
+1. `CONTEXT`: assemble explicit instruction, conversation, user model, project
+   facts, host capabilities, and relevant open loops with provenance.
+2. `INTENT`: create two to four materially distinct `IntentHypothesis` records.
+3. `DECIDE`: choose action, disclosed assumption, one clarification question,
+   or a permission request based on confidence and mistake cost.
+4. `BUILD`: produce the requested base result within explicit scope.
+5. `INITIATIVE`: rank optional candidates after permission classification.
+6. `EXECUTE`: perform only operations authorized for their specific stage.
+7. `VERIFY`: attach claim-scoped evidence and status.
+8. `DELIVER`: lead with the result and report only supported claims.
+9. `LEARN`: apply observable outcome events to isolated, auditable stores.
 
-1. `RECALL` — load applicable user patterns, profile constraints, reinforced preferences, banned preferences, and session context; where the adapter has file or shell access, also inspect the live environment (manifests, VCS history, directory structure, config/CI, project docs) as an available, always-on RECALL source that requires no persistent store.
-2. `EXPAND` — infer the user's intended outcome, audience, implied requirements, definition of done, and constraints.
-3. `BUILD` — produce the requested base deliverable with L1 quality.
-4. `EXTEND` — add bounded L2 and L3 improvements only when allowed by scope, STOP rules, memory, and ceiling.
-5. `VERIFY` — check touched work and additions; audit claims before delivery.
-6. `DELIVER` — present the base result first, then concise disclosure of accepted additions and verification status.
-7. `LEARN` — update memory signals based on accepted, rejected, ignored, or explicitly instructed behavior, AND update the agent's own heuristic scores (self-improvement, §10).
+Prompt-only implementations SHOULD follow the same reasoning sequence but MUST
+NOT imply that advisory instructions enforce state or permissions.
 
-Adapters MUST treat this sequence as the canonical lifecycle. Some stages MAY be internal or compressed, but none MAY be skipped when applicable.
+## 3. Intent hypotheses
 
-## 3. Normative Definitions of L1, L2, and L3
+Each `IntentHypothesis` contains:
 
-### L1 — Baseline Polish
+- goal;
+- expected result;
+- audience;
+- constraints;
+- definition of done;
+- missing information;
+- confidence;
+- mistake cost;
+- evidence references.
 
-L1 is baseline polish. It is always allowed unless it violates explicit user scope.
+Duplicate paraphrases do not count as alternatives. The decision rules are:
 
-L1 includes quality needed for the requested artifact to be complete, professional, and non-sloppy: coherent structure, obvious edge handling, formatting preservation, basic accessibility or readability, and removal of avoidable defects. L1 is not counted as an optional addition when it is necessary to satisfy the user's request.
+- high confidence and low mistake cost: proceed;
+- medium confidence and a reversible local action: select the safest variant and
+  disclose the material assumption briefly;
+- low confidence or high mistake cost: ask one short blocking question;
+- public, expensive, irreversible, credential-related, or security-sensitive
+  operation: request permission regardless of confidence.
 
-### L2 — Useful Missing Piece
+## 4. Strict scope
 
-L2 is a useful missing piece that the user did not explicitly request but is likely to need for the requested outcome.
+Imperative phrases such as `only`, `just`, `nothing else`, `tylko`, `nic więcej`,
+and equivalent unambiguous wording activate strict scope.
 
-L2 additions are capped at a maximum of 3 per session. They MUST be selected by relevance, memory, domain norms, and verification feasibility. L2 MUST NOT override explicit user scope.
+Strict scope disables all optional actions and unsolicited proposals. It does not
+disable work required for the requested result to function or honest reporting of
+checks actually performed. Strict scope remains active until the user broadens it.
 
-### L3 — Anticipation
+## 5. Permission policy
 
-L3 is anticipation: one next-step deliverable or preparation that predicts a likely future request.
+Every operation receives one class before initiative scoring:
 
-L3 additions are capped at a maximum of 1 per session. L3 requires stronger justification than L2 and MUST be easy to explain as a direct continuation of the user's trajectory. L3 MUST NOT override explicit user scope.
+- `AUTO`: cheap, reversible, local, within scope;
+- `AUTO_WITH_DISCLOSURE`: reversible local action based on a material assumption;
+- `ASK`: external publication, sending, material cost, credentials, security,
+  destructive work, irreversible work, or high-cost ambiguity;
+- `FORBIDDEN`: authority escalation, secret exfiltration, sensitive-memory
+  persistence without a valid basis, or action outside granted authority.
 
-## 4. Ceiling Rules
+Understanding, proposing, executing, and publishing are separate permissions.
+Authorization for one stage does not authorize the next.
 
-The ceiling rules are global for one user session:
+## 6. Adaptive initiative
 
-- Maximum 5 total additions per session.
-- Maximum 3 L2 additions per session.
-- Maximum 1 L3 addition per session.
-- Explicit user scope beats memory and defaults.
+Permission classification runs before scoring and cannot be bypassed. Eligible
+candidates use normalized factors:
 
-The ceiling applies across all tools, subagents, and adapter layers. If multiple agents collaborate, the adapter MUST enforce one shared ceiling.
+```text
+score = expected_value * confidence * reversibility * verifiability
+        * historical_accuracy / max(cost + risk, epsilon)
+```
 
-## 5. STOP Rules
+Modes configure thresholds:
 
-STOP rules detect user instructions that request narrow execution. STOP phrases include, but are not limited to:
+- `fast`: high threshold, at most the strongest optional action;
+- `standard`: balanced threshold;
+- `exploratory`: lower proposal threshold, unchanged permission requirements;
+- `strict`: no optional actions or unsolicited proposals.
 
-- `only`
-- `just`
-- `minimal`
-- `tylko`
-- `minimalnie`
-- `bez żadnych dodatków`
-- `nie zmieniaj nic poza`
-- `daj tylko`
+The runtime MUST record reason codes for selection and rejection.
 
-When STOP is active, the adapter MUST disable L2 and L3 additions. STOP does not disable L1 quality required by the requested scope, and it does not disable honest verification of touched work.
+## 7. User model
 
-## 6. Claim Audit
+User-model kinds are `fact`, `preference`, `constraint`, `observation`,
+`hypothesis`, `trajectory`, `open_loop`, and `negative_feedback`.
 
-The adapter MUST audit claims before delivery. Words and phrases such as the following require evidence or an explicit untested disclaimer:
-
-- `works`
-- `tested`
-- `verified`
-- `responsive`
-- `fast`
-- `optimized`
-- `działa`
-- `przetestowane`
-
-If the agent says a claim, it MUST have concrete evidence from a check it actually performed. If it did not perform the check, it MUST say so explicitly, for example: "not run", "untested", or "not benchmarked".
-
-Claim audit applies to base work, L1 polish, L2 additions, L3 additions, package readiness, and benchmark statements.
-
-## 7. Memory Lifecycle
-
-Memory signals follow this lifecycle:
-
-- Accept 2x -> `Reinforced`.
-- Reject 2x, or explicit "never" instruction -> `Banned`.
-- Ignored 3x -> dropped from `Watching`.
-- Precedence: explicit instruction > user memory > environment (ground truth) > agent self-notes > defaults.
-
-Environment inspection supplies or corrects factual context (current stack, conventions, repo state) for the `EXPAND` and `EXTEND`/`ANTICIPATE` stages. It MUST NOT be treated as a preference and MUST NOT override an explicit instruction or a `Banned` entry — it only informs what `EXPAND` infers and what `ANTICIPATE` predicts.
-
-Adapters SHOULD store memory in the best available persistence layer. If no durable memory exists, adapters MAY track signals for the current session only, but they MUST NOT pretend session-only memory is durable.
-
-## 8. Required Implementation Behavior for an Agent Adapter
-
-An agent adapter implementing Step Beyond MUST:
-
-1. Load the core instruction or equivalent canonical behavior.
-2. Apply STOP rules before proposing or creating L2/L3 additions.
-3. Apply the global ceiling across the session.
-4. Perform claim audit before delivery.
-5. Distinguish readiness checks from true model-behavior benchmark results.
-
-Readiness checks can show that files, packages, links, syntax, or tests are prepared to run. True model-behavior benchmark results require executing benchmark cases against the target model or adapter and recording observed outcomes. An adapter MUST NOT present package-readiness results as behavioral benchmark proof.
-
-## 9. Pass/Fail Definitions
-
-### Package-Readiness Pass/Fail
-
-Package-readiness passes when the repository or package is structurally ready for use: required files exist, declared links resolve, install or packaging metadata is coherent, and available static checks pass.
-
-Package-readiness fails when required files are missing, metadata is invalid, links are broken, static checks fail, or the package cannot be installed or loaded in the target environment.
-
-Package-readiness does not prove that a model will follow Step Beyond behavior.
-
-### Behavioral Model Benchmark Pass/Fail
-
-A behavioral model benchmark passes when the target model or adapter is run against benchmark cases and observed outputs satisfy the expected Step Beyond behavior, including pipeline adherence, ceiling compliance, STOP compliance, verification honesty, and memory behavior where applicable.
-
-A behavioral model benchmark fails when observed outputs violate required behavior, such as adding L2/L3 under STOP, exceeding ceilings, overclaiming verification, treating readiness as benchmark evidence, or ignoring explicit user scope.
-
-### STOP-Rule Regression Pass/Fail
-
-A STOP-rule regression passes when prompts containing STOP phrases disable L2 and L3 while preserving in-scope L1 quality and honest verification of touched work.
-
-A STOP-rule regression fails when the agent adds optional L2/L3 work despite STOP, omits necessary in-scope quality, or makes unsupported claims about verification.
-
-## 10. Self-Improvement Loop
-
-The self-improvement loop is a per-agent complement to per-user memory (§7). Where memory learns the user's preferences, the self-improvement loop learns the reliability of the agent's own heuristics. Both run inside the `LEARN` stage.
-
-An adapter that implements the self-improvement loop MUST:
-
-1. Attribute each L2/L3 addition to the heuristic that produced it at `EXTEND`/`ANTICIPATE`.
-2. At `LEARN`, read the observed outcome (accepted, rejected, ignored, or cut in verification) and adjust that heuristic's confidence: outcomes that confirm the prediction raise confidence, outcomes that contradict it lower confidence, with misses weighted at least as heavily as hits.
-3. Suppress heuristics whose confidence falls below the firing threshold, and prefer higher-confidence heuristics when selecting additions.
-4. Convert a break that reaches the user despite `VERIFY` into a permanent additional verification check, and slop flagged by the user that the scan missed into a permanent additional slop pattern.
-
-The self-improvement loop MUST NOT create new additions, raise the ceiling, or override STOP or explicit scope; it only adjusts the confidence and coverage of existing behavior. Self-improvement records MUST contain heuristics and checks only — never user-specific or private data, which remains solely in the per-user memory store. Where no durable store exists, the adapter MAY run the loop session-scoped but MUST NOT present session-scoped scores as durable.
-
-## 11. Adapter Capability Contract
-
-An adapter binds the host-agnostic core to a specific host through five capability slots: `memory`, `self-notes`, `subagents`, `runtime`, and `injection`. An adapter MUST:
-
-1. Resolve each slot once at session start to either a host capability or its documented fallback, and cache the result for the session.
-2. Preserve identical pipeline behavior whether a slot is served natively or by fallback; a missing capability MUST trigger its fallback and MUST NOT disable any pipeline stage.
-3. Enforce a single global ceiling and a single `LEARN` write across all tools and subagents the host exposes.
-4. Never present a fallback as the native capability — in particular, `runtime`-absent output MUST be labelled untested rather than claimed verified (§6), and sequential self-review MUST NOT be presented as parallel subagent verification.
-
-An adapter that alters the behavioral semantics of the core to fit its host is non-conformant regardless of host fit.
-
-## 12. Agent Onboarding
-
-Onboarding is the one-time ritual an agent performs when it first adopts Step Beyond on a host (distinct from onboarding a human to a codebase, which is an ordinary domain task). An adapter SHOULD perform onboarding at first adoption and re-run it idempotently on upgrade.
-
-The onboarding ritual has six beats: detect the host, wire the five capability slots (§11), seed the per-user and per-agent stores if absent, perform an initial environment scan to calibrate the first task, announce the resulting capability state to the user once, and activate the full pipeline from the next task.
-
-The capability announcement MUST be honest: it MUST name only powers the wiring actually delivered, MUST state each degradation and its fallback plainly, and MUST NOT present a fallback as the native capability (consistent with §6 and §11.4). Onboarding MUST NOT block the user's first task; any beat that cannot complete degrades to its documented fallback and the ritual continues. On a warm start (a populated memory store already present), the adapter MUST NOT reseed existing stores or re-onboard the user as new; it loads the existing memory and MAY reduce the announcement to a single line or omit it.
-
-## 13. Initiative
-
-Initiative is the reasoning standard governing how additions are selected within the pipeline; it does not add a stage and does not alter the ceiling (§4), STOP rules (§5), or precedence (§7). An adapter that implements the initiative standard SHOULD:
-
-1. Select each L1–L3 addition by deriving it from the request's done-state and likely failure modes, not from a fixed checklist. Each proposed addition SHOULD be justifiable in one sentence referencing something specific to the current request; additions that are only generically justifiable SHOULD be dropped.
-2. Prefer the cheapest verifiable step that advances the user's actual goal over adding more of what the deliverable already contains.
-3. When a valuable move is out of scope for autonomous action — irreversible, architectural, expensive, or exceeding the ceiling — surface it to the user in a single line rather than either performing it unasked or discarding it. Surfacing such a move in one line costs no ceiling budget and MUST NOT be suppressed by STOP, which disables built additions but not a one-line proposal.
-
-Initiative MUST remain subordinate to every other rule in this specification: it never exceeds the ceiling, never overrides explicit scope or a `Banned` entry, and never ships an unverified addition (an unverifiable addition is cut to a one-line proposal, per §3/§6).
+Every record contains source, source reference, timestamps, scope, confidence,
+confirmation count, last-use date, revalidation date, explicit/inferred origin,
+sensitivity, and status.
+
+Rules:
+
+- an inferred hypothesis MUST NOT become a fact automatically;
+- an observation MUST NOT become a preference without supporting feedback;
+- project facts remain in a separate project-context cache;
+- user and global heuristic namespaces remain isolated;
+- secrets and unnecessary personal data MUST be rejected before persistence;
+- users MUST be able to inspect, correct, delete, and roll back records;
+- persistence changes MUST be attributable and auditable.
+
+## 8. Verification ledger
+
+Every material claim maps to a verification record containing the claim, method,
+executed check, evidence, result, verified scope, unchecked elements, environment
+blockers, and one status:
+
+- `verified`: the stated scope was directly checked and passed;
+- `partially_verified`: useful checks passed but named scope remains unchecked;
+- `unverified`: no meaningful execution evidence supports the claim.
+
+An unavailable check does not require deleting a useful artifact. The unsupported
+claim is removed or narrowed. A passing check MUST NOT imply unchecked components
+also passed.
+
+## 9. Learning
+
+Outcome values are `explicit_accept`, `explicit_reject`, `adopted`, `reverted`,
+`corrected`, `ignored`, and `unknown`.
+
+`unknown` is neutral. Silence or unobservable usage MUST NOT automatically become
+rejection or failure. User preferences, heuristic evaluation, verification-gap
+learning, and slop-pattern learning are independent streams.
+
+Global heuristic revisions require multiple eligible events, contain no private
+user content, and are versioned, attributable, auditable, and reversible. New
+runtime releases SHOULD keep them proposal-only until poisoning resistance and
+rollback behavior are measured.
+
+## 10. Adapter contract
+
+A runtime adapter exposes capability-bound operations:
+
+```text
+read_context
+read_project
+execute_local
+request_permission
+publish_external
+read_user_model
+write_user_model
+record_evidence
+```
+
+Capabilities are detected once and cached. Missing operations produce explicit
+degradation. Adapters MUST NOT change policy semantics to appear compatible.
+
+## 11. Evaluation
+
+Behavioral claims require fresh sessions, repeated runs, raw transcripts,
+artifact checks, provider/model/prompt/runtime/adapter versions, parameters,
+tokens, cost, and latency. Comparison arms are baseline, current release, new
+prompt-only, runtime-backed, and appropriate ablations.
+
+Required metrics include intent accuracy, unnecessary clarifications, harmful
+assumptions, proactive acceptance, strict-scope compliance, unsupported claims,
+memory precision, correction latency, follow-up reduction, cost, tokens, and
+actions performed without required consent.
+
+Narrative examples and deterministic replay smoke tests are not live-model
+benchmarks. Percentages and host compatibility MUST be labelled as targets until
+supported by repeated measurements.
+
+## 12. Failure behavior
+
+The controller fails closed for permission and sensitive-memory decisions. When
+the runtime is unavailable, a host MAY continue in prompt-only mode after naming
+the degraded guarantees. Storage failure suppresses memory claims, not the user's
+base result. Verification failure removes unsupported claims, not useful work.
