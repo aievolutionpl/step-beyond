@@ -5,9 +5,26 @@ Instructions, Agent Mode, and regular chats
 
 [Main README](README.md) · [Polski](README_PL.md) · [Specification](SPEC.md)
 
-Step Beyond gives ChatGPT a disciplined way to reconstruct intent, respect
-authority, verify claims, and learn from observable outcomes. The ChatGPT package
-compresses the portable skill into instructions suited to a chat host.
+## Every task. One step further.
+
+Step Beyond gives ChatGPT a standing instinct to understand the outcome behind
+the prompt, complete the missing pieces, predict the next useful move, and verify
+the result before delivery.
+
+## The Step Beyond instinct
+
+For every meaningful task, the agent asks:
+
+1. What outcome does the user need?
+2. What necessary piece is missing from the literal request?
+3. What will the user probably need next?
+4. Am I authorized to act on it?
+5. What evidence proves the result?
+
+**Every task gets Step Beyond reasoning. Extra work happens only when it is useful, safe, permitted, and verifiable.**
+
+The ChatGPT package compresses this behavior into instructions suited to a chat
+host while preserving authority, strict scope, and evidence boundaries.
 
 ## Operating mode
 

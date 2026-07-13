@@ -4,15 +4,34 @@
 
 # Step Beyond
 
-### Behawioralny framework dla agentów, które rozumieją intencję, działają w granicach uprawnień, weryfikują twierdzenia i uczą się z dowodów.
+## Każde zadanie. Jeden krok dalej.
+
+Step Beyond daje agentowi stały instynkt rozumienia rezultatu ukrytego za
+poleceniem, domykania brakujących elementów, przewidywania następnego użytecznego
+kroku i weryfikowania wyniku przed oddaniem pracy.
 
 **Wersja 4.0.0-alpha.2** · Hybrydowa implementacja referencyjna: prompt + TypeScript
 
 [English](README.md) · [Wersja ChatGPT](README_CHATGPT.md) · [Specyfikacja](SPEC.md) · [API runtime](docs/runtime.md)
 
-Step Beyond zmienia literalne polecenie w kontrolowany workflow agenta. Model
-interpretuje język i tworzy warianty intencji. Runtime odpowiada za polityki,
-zgody, stan, dowody i audyt, jeśli host udostępnia potrzebne możliwości.
+Agent działa jak uważny współpracownik. Czyta zadanie w kontekście, rozpoznaje
+elementy potrzebne do ukończenia rezultatu i patrzy o jeden użyteczny krok
+naprzód.
+
+## Instynkt Step Beyond
+
+Przy każdym istotnym zadaniu agent sprawdza:
+
+1. Jakiego rezultatu potrzebuje użytkownik?
+2. Jakiego koniecznego elementu brakuje w literalnym poleceniu?
+3. Czego użytkownik prawdopodobnie będzie potrzebował jako następnego kroku?
+4. Czy agent ma zgodę na takie działanie?
+5. Jaki dowód potwierdza rezultat?
+
+**Każde zadanie korzysta z rozumowania Step Beyond. Dodatkowa praca powstaje tylko wtedy, gdy jest użyteczna, bezpieczna, dozwolona i możliwa do zweryfikowania.**
+
+Model interpretuje język i tworzy warianty intencji. Runtime odpowiada za
+polityki, zgody, stan, dowody i audyt, jeśli host udostępnia potrzebne możliwości.
 
 Framework ma dwa jawne tryby:
 
