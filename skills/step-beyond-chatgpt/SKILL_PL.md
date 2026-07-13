@@ -1,7 +1,7 @@
 ---
 name: step-beyond-chatgpt-pl
 description: Promptowa wersja Step Beyond dla ChatGPT — hipotezy intencji, ścisły zakres, zgody, weryfikacja i ostrożne uczenie.
-version: 4.0.0-alpha.1
+version: 4.0.0-alpha.2
 license: MIT
 author: AI Evolution Labs
 ---

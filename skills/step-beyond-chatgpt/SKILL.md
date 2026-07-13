@@ -1,7 +1,7 @@
 ---
 name: step-beyond-chatgpt
 description: Prompt-only ChatGPT adapter for multi-hypothesis intent, strict scope, permission-aware initiative, evidence-scoped claims, and conservative learning.
-version: 4.0.0-alpha.1
+version: 4.0.0-alpha.2
 license: MIT
 author: AI Evolution Labs
 source: https://github.com/aievolutionpl/step-beyond

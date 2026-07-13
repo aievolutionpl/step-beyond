@@ -1,7 +1,7 @@
 ---
 name: step-beyond
 description: Portable reasoning layer for agents that reconstructs intent, takes permission-aware initiative, verifies claims, and learns conservatively. Pair with the reference runtime for enforceable state and policy.
-version: 4.0.0-alpha.1
+version: 4.0.0-alpha.2
 license: MIT
 author: AI Evolution Labs
 url: https://github.com/aievolutionpl/step-beyond

@@ -155,3 +155,25 @@ test('README surfaces share version capabilities lifecycle and evidence limits',
     assert.match(content, /Created with obsessive attention to detail by/u);
   }
 });
+
+test('release metadata uses one version across packages and skills', async () => {
+  const expectedVersion = '4.0.0-alpha.2';
+  const packagePaths = [
+    'package.json',
+    'packages/runtime-core/package.json',
+    'packages/runtime-store/package.json',
+    'packages/adapter-reference/package.json',
+    'evals/runner/package.json',
+  ];
+  for (const path of packagePaths) {
+    const manifest = JSON.parse(await read(path)) as { version?: string };
+    assert.equal(manifest.version, expectedVersion, `${path} version drifted`);
+  }
+  for (const path of [
+    'skills/step-beyond/SKILL.md',
+    'skills/step-beyond-chatgpt/SKILL.md',
+    'skills/step-beyond-chatgpt/SKILL_PL.md',
+  ]) {
+    assert.match(await read(path), /^version: 4\.0\.0-alpha\.2$/mu);
+  }
+});
