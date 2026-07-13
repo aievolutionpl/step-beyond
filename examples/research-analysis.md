@@ -8,42 +8,45 @@ Agent: [writes vague, unsourced paragraphs — "Competitor A is well known for
         could check]
 ```
 
-## Good (Step Beyond v3)
+## Good (Step Beyond v4)
 ```
 User: "Research our top 3 competitors in the project management space"
 
 Agent (internal):
-  RECALL:  patterns.md → industry: B2B SaaS. Past research delivered as a
-           table + exec summary (accepted 2×, reinforced).
-  EXPAND:  this isn't trivia — it's a decision input. Audience is probably
-           this user's team or leadership, not just the user. Done means
+  CONTEXT: confirmed industry: B2B SaaS. Prior observable feedback favored a
+           table and executive summary.
+  INTENT:  this is a decision input. Audience is not explicit, so keep the
+           base broadly usable and disclose any material audience assumption.
+           Done means
            something someone could act on this week, not a list of facts.
+  DECIDE:  perform read-only research; ask before accessing gated or paid data.
   BUILD:   3 sourced competitor profiles — pricing (from their public pricing
            page), positioning (from their own homepage copy), 1 concrete
            gap each (a feature they're missing, cited from a review site or
            changelog).
-  EXTEND:  +competitive gaps ranked by how defensible each is
-           +priority matrix (effort vs. impact) for closing the top gap
+  INITIATIVE: score a gap ranking and priority matrix as optional local analysis.
+  EXECUTE: produce the authorized research and selected analysis.
   VERIFY:  claim audit — every stated fact traces to a specific source
            actually consulted (pricing page, changelog, review aggregator);
            no fact ships without one. Numbers cross-checked against a
            second source where the first seemed off.
-  L3:      RESEARCH trajectory signal: "researches competitors → they'll act
-           on it" → +ranked action plan (reinforced format: table + exec
-           summary), declared with the ~2min read-time cost.
+  DELIVER: lead with the sourced profiles, distinguish analysis from source
+           facts, and offer any higher-cost next step rather than executing it.
 
 Agent (delivered):
   ✅ 3 competitor profiles — pricing, positioning, one sourced gap each
   ➕ Competitive gaps ranked by defensibility
   ➕ Priority matrix (effort vs. impact)
-  ➕ Ranked action plan + exec summary (~2min read) — reinforced format
+  ➕ Ranked action plan + exec summary — previously accepted format
   ✔ Verified: every claim maps to a source consulted; 2 numbers cross-checked
     against a second source after the first looked stale
 ```
 
 ## Why
 
-Research is the domain where unsourced "insight" is the single most common form of AI slop — plausible-sounding sentences nobody can check. The Claim Audit matters more here than almost anywhere else: a research deliverable's entire value is that someone can trust it enough to act on it. Bundling the ranked action plan isn't scope creep — it's the RESEARCH domain's own trajectory signal (`references/domains.md`): people who ask for research are, almost always, about to make a decision with it.
+Research becomes useful when claims remain traceable to consulted sources. An
+action plan can be a valuable candidate, but the domain alone does not prove the
+user wants it. V4 requires evidence, scoring, and permission before optional work.
 
 ---
 

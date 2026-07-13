@@ -1,6 +1,7 @@
 # Codebase Onboarding — Step Beyond Examples
 
-This is the full trace behind the compressed line in `SKILL.md`'s priming examples: `"onboard me to this codebase" → tour | +run instructions verified | +first-task pick`. It's the clearest standalone demonstration of environment scanning — the capability doesn't belong to any one domain; it's what RECALL does whenever there's a repository to read.
+This trace demonstrates project inspection inside `CONTEXT`. It is a worked
+fixture, not evidence that every host exposes filesystem, shell, or VCS access.
 
 ## Bad (literal agent)
 ```
@@ -11,12 +12,12 @@ Agent: [skims the top-level file listing, writes a generic paragraph like
         being worked on]
 ```
 
-## Good (Step Beyond v3)
+## Good (Step Beyond v4)
 ```
 User: "Onboard me to this codebase"
 
 Agent (internal):
-  ENVIRONMENT: read README.md (states purpose + "run `npm run dev`" +
+  CONTEXT:     read README.md (states purpose + "run `npm run dev`" +
                "tests: `npm test`"). Read CLAUDE.md (house rule: "no default
                exports"). Walked directory tree — monorepo, apps/web +
                packages/ui + packages/api. package.json → Next.js, Vitest,
@@ -24,19 +25,23 @@ Agent (internal):
                packages/api/billing/ — that's where the team's attention
                currently is. CI workflow (.github/workflows/ci.yml) runs
                lint + typecheck + test on every PR.
-  EXPAND:      done means three things, not one: (1) an accurate tour, (2)
+  INTENT:      done means three things: (1) an accurate tour, (2)
                run instructions that were actually EXECUTED, not paraphrased
                from the README, (3) one concrete, low-risk first task —
                not a generic "read the code" suggestion.
+  DECIDE:      run local documented commands because the user requested repo
+               onboarding; do not publish or change project files.
   BUILD:       tour organized by the monorepo's own boundaries (apps/web,
                packages/ui, packages/api), naming what each does from what
                was actually read, not guessed.
-  EXTEND:      +ran `npm install && npm run dev` — it started cleanly on
+  INITIATIVE:  treat verified run instructions and one evidence-backed first-task
+               candidate as useful; avoid unrelated cleanup suggestions.
+  EXECUTE:     ran `npm install && npm run dev` — it started cleanly on
                port 3000. +ran `npm test` — 142 passing, 3 skipped.
   VERIFY:      claim audit — "run instructions verified" is only said
                because both commands were actually executed, not because
                the README said so.
-  L3:          one first-task pick, tied to something the scan actually
+  DELIVER:     one first-task pick, tied to something the scan actually
                found: packages/api/billing/ has active development (git
                log) but its test coverage is thin (2 test files vs. 11
                source files) — flagged as a good first PR, not invented.

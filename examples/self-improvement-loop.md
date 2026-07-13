@@ -10,25 +10,23 @@ There is no per-user memory file in this trace. There's one file: **Agent Self-N
 
 ```
 Request:  "build a landing page for my studio"
-EXTEND:   fires heuristic `web: page→+meta/SEO` for the first time this
-          agent has logged it. New heuristic → starts at conf 0.60
-          (domain-default prior).
+INITIATIVE: proposes heuristic `web: page→meta/SEO candidate` with provenance
+            and proposed status; it is not globally active from one event.
+EXECUTE:   includes the local candidate after permission classification.
 DELIVER:  "+meta/SEO"
 User X reaction: uses it, deploys with it intact.
 
 LEARN (self-improvement slice):
   OBSERVE: accepted → HIT
-  SCORE:   conf 0.60 → 0.60 + (1 - 0.60) × 0.15 = 0.66
-  self-notes: `web: page→+meta/SEO   conf 0.66  (hit 1/1)`
+  UPDATE:  record one eligible event; keep the global heuristic proposed.
 ```
 
 ## Session B — User Y, an unrelated web task (the heuristic gets trusted earlier — and a different one starts missing)
 
 ```
 Request:  "build a landing page for my clinic"
-EXTEND:   `web: page→+meta/SEO` fires again — now ranked higher (conf 0.66
-          beats the domain-default prior of 0.60, so it's offered before
-          other candidate L2s, not after).
+INITIATIVE: `web: page→meta/SEO candidate` has another eligible event, but
+            remains subject to the current request, permission, cost, and risk.
           Also fires `content: post→+next-post-idea` on a follow-up content
           request in the same session.
 DELIVER:  "+meta/SEO", "+next-post idea"
@@ -36,12 +34,11 @@ User Y reaction: keeps +meta/SEO. Ignores the next-post idea entirely — no
 reaction, no use.
 
 LEARN (self-improvement slice):
-  OBSERVE: +meta/SEO accepted → HIT.       +next-post-idea ignored → MISS.
-  SCORE:   meta/SEO:  0.66 → 0.66 + (1 - 0.66) × 0.15 = 0.71
-           next-post: 0.60 → 0.60 - 0.60 × 0.20         = 0.48
+  OBSERVE: +meta/SEO adopted. +next-post-idea has no observable outcome → unknown.
+  UPDATE:  adopted can support a revision; unknown is neutral.
   self-notes:
-    `web: page→+meta/SEO           conf 0.71  (hit 2/2)   → fire early`
-    `content: post→+next-post-idea conf 0.48  (hit 0/1)   → fire last`
+    `web: page→meta/SEO candidate — evidence: two eligible adopted events`
+    `content: post→next-post candidate — outcome: unknown, no score change`
 ```
 
 ## Session C — User Z, a code task (a break becomes a permanent check)
@@ -64,7 +61,9 @@ LEARN (self-improvement slice):
            test with a real null, not code-reading, before it can ship again.
 ```
 
-**From this point on, every future session — any user, any domain — runs the function through an actual null before claiming it's handled.** User Z never comes back, and the fix still holds.
+The verification gap can become a proposed global check only through the
+versioned, auditable, reversible process in `SPEC.md`; one event does not silently
+rewrite behavior for every user.
 
 ---
 
@@ -72,8 +71,8 @@ LEARN (self-improvement slice):
 
 | Faculty | Before | After 3 sessions |
 |---|---|---|
-| Prediction accuracy | `+meta/SEO` fires at default confidence, same rank as everything else | Fires early, ranked above generic domain defaults (conf 0.71) |
-| — | `+next-post-idea` fires by default every time a post is written | Fires last / heading toward drop (conf 0.48) — it was guessing, not predicting |
+| Prediction evidence | `+meta/SEO` begins as a proposed candidate | Repeated eligible events can support an auditable revision |
+| Unknown outcome | Silence could be misread as a miss | Unknown remains neutral |
 | Verification coverage | "handles null" claims backed by reading the code | Backed by an executed test, permanently, for every future user |
 | Calibration | Claim bar was uniform | The specific phrase that broke trust once now needs stronger evidence |
 
@@ -82,4 +81,4 @@ LEARN (self-improvement slice):
 - Did not need User X, Y, or Z to be the same person, or to ever return
 - Did not store anything about these users in the self-notes file — no brand, no names, no per-user preference (that's what the User Pattern File is for, and it stays separate)
 - Did not invent a new addition to compensate for the miss — it only adjusted which existing heuristics fire, and how much verification a claim needs
-- Did not raise the ceiling, override STOP, or grant itself new license — self-improvement sharpens existing behavior, never expands it (`SPEC.md` §10)
+- Did not bypass strict scope, permission, or audit controls — learning changes evidence records, not authority

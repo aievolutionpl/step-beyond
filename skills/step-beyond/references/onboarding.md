@@ -23,15 +23,15 @@ Run these in order at first adoption. Beats 1–4 are silent plumbing; beat 5 is
              → picks the injection point + the capability profile.
 ② WIRE       Resolve the five slots once (memory · self-notes · subagents ·
              runtime · injection). Each absent slot → its documented fallback.
-③ SEED       Create the two ledgers if missing: patterns.md (per-user) +
-             self-notes.md (per-agent). Empty is fine — they fill with use.
+③ SEED       Initialize a user-model store only when the selected mode and
+             adapter can provide the declared provenance and control guarantees.
 ④ CALIBRATE  Do a first, cheap environment scan (stack, git log, house rules,
              docs) so the very first task already reflects the project's
              ground truth — not a cold guess. (references/environment-scan.md)
 ⑤ ANNOUNCE   ONE short message: what powers are live, what's degraded and why,
              where memory persists, how to turn it down. Then stop talking.
-⑥ ACTIVATE   Run the full pipeline from the next task — at Rung 1+ initiative
-             (references/initiative.md), not tentative "what would you like?"
+⑥ ACTIVATE   Run the canonical v4 lifecycle from the next task; classify
+             permission before initiative scoring.
 ```
 
 **Onboarding is bounded like everything else.** It is a handful of cheap reads and one message — not an interrogation, not a config wizard, not a wall of setup questions. If a beat can't complete (no writable store, no shell), it degrades and the ritual continues; it never blocks the user's first task.
@@ -44,7 +44,7 @@ Detection (beat ①) picks a profile. These are the four hosts the skill is tune
 
 | Host | Detect signal | Injection point | Native powers at onboarding | Falls back on |
 |------|---------------|-----------------|-----------------------------|---------------|
-| **Claude Code / Agent SDK** | `.claude/` dir, Task tool present | skill (plugin) or `.claude/skills/` | memory (MCP/`CLAUDE.md`/fs) · **subagents (Task tool)** · runtime (shell+browser) | — (fullest profile: parallel EXTENDERs + fresh-context VERIFIER available) |
+| **Claude Code / Agent SDK** | `.claude/` dir, Task tool present | skill or `.claude/skills/` | project instructions, optional tools, local execution when exposed | persistence and verification guarantees depend on the actual adapter |
 | **Codex CLI** | `~/.codex/`, `AGENTS.md` | `config.toml` / `--custom-instructions` | memory (`AGENTS.md`/fs) · runtime (shell) | subagents → **solo + Fresh-Eyes Protocol** |
 | **Hermes** | `config.yaml` with `skills:` | `config.yaml` (list step-beyond **first**) | memory (fs/vault) · **subagents (skills-as-agents)** · runtime (shell) | — (skills-as-agents cover parallel roles) |
 | **OpenClaw** | `AGENTS.md` + system prompt | `AGENTS.md` marked core block | memory (`AGENTS.md`/fs) · runtime (shell) | subagents → solo unless native spawn present |
@@ -61,7 +61,7 @@ This is the part raw installs skip and the part users remember. After wiring, th
 
 ```
 ✅ Step Beyond is live on Codex CLI.
-   • I'll remember your preferences across sessions → step-beyond/patterns.md
+   • User-model store: step-beyond/patterns.md (inspectable and correctable)
    • I read the repo before acting (detected: TypeScript · Vitest · pnpm)
    • I verify before I claim "done" — and say "untested" when I can't run it
    • Solo host: no parallel subagents here, so I self-review with fresh eyes
@@ -76,7 +76,9 @@ This is the part raw installs skip and the part users remember. After wiring, th
    (— claims subagents on a solo host, no persistence path, no off-switch)
 ```
 
-**Announcement rules:** 5 lines or fewer · name the *detected* host and the *real* memory path · state each degradation in plain words (never claim a fallback is the native thing — that's the adapter Claim-Audit rule from `references/adapters.md` §3) · always include the STOP off-switch · end by inviting the first task. Then stop — no more onboarding chatter for the rest of the session.
+**Announcement rules:** keep it short; name the detected host and real store;
+state each degradation plainly; do not present prompt-only behavior as enforced;
+include the strict-scope off-switch; then stop onboarding chatter.
 
 ---
 
@@ -87,22 +89,22 @@ Onboarding adapts to whether the agent has been here before.
 ```
 COLD START (first ever adoption, empty memory):
   Run all six beats. Announcement includes the memory path so the user knows
-  learning has begun. Additions lean on domain defaults + the live environment
-  scan (memory has nothing yet) — acceptance ~60%, and every accept/reject is
-  the first data point. Offer once to create the pattern file if no store exists.
+  learning has begun. Initiative uses current project evidence and conservative
+  candidates because no observed user outcomes exist yet. This is not a measured
+  acceptance-rate claim.
 
 WARM START (memory file already present):
-  Skip SEED. RECALL loads the existing Profile/Reinforced/Banned/Trajectories.
+  Skip SEED. CONTEXT loads relevant, attributable user-model records.
   CALIBRATE still runs (the repo may have changed since last session).
   Announcement is a one-liner or silent — the user already knows the drill;
-  don't re-explain the skill every session. Additions start memory-calibrated
-  (~85%+ acceptance) instead of cold.
+  don't re-explain the skill every session. Initiative may use confirmed prior
+  outcomes, but no acceptance rate is claimed until repeated evals measure it.
 
 RE-ONBOARD (upgrade / re-install):
   Idempotent. Update the marked core block or skills/ tree in place — never
   duplicate (references/installation.md). Preserve both ledgers untouched.
-  Announce only what changed ("Step Beyond updated to v3.3 — initiative doctrine
-  added"), not the whole skill again.
+  Announce only what changed (for example, "Step Beyond updated to v4 — runtime
+  policy and evidence states available"), not the whole skill again.
 ```
 
 The distinction matters because the most common onboarding failure is re-onboarding a returning user as if they were brand new — re-asking brand colors, re-explaining the pipeline, re-seeding a file that already has 40 sessions of learning in it. **Warm start is the norm after day one; treat it as the default, not the exception.**
@@ -138,7 +140,9 @@ STRONG handoff: "Set up and I've read the repo — you're mid-refactor on the
 
 The strong handoff is the calibration from beat ④ paying off immediately: the agent already knows the stack, the active area, and the likely first task before the user has typed a word. That is Rung 1 initiative (`references/initiative.md`) applied to the very first turn — the agent walks in having done its homework, ready to advance the goal, not waiting to be told what the goal is.
 
-From here, every task runs the full RECALL→EXPAND→BUILD→EXTEND→VERIFY→DELIVER→LEARN pipeline. Onboarding is over. It happened once, it was cheap, it was honest, and it left the agent knowing exactly what it can do and exactly where the user's project stands.
+From here, every task uses the canonical lifecycle:
+`CONTEXT → INTENT → DECIDE → BUILD → INITIATIVE → EXECUTE → VERIFY → DELIVER → LEARN`.
+Onboarding is over. The capability announcement states only what was actually wired.
 
 ---
 

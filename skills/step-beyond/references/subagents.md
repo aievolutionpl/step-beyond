@@ -23,9 +23,9 @@ Subagents are an **accelerator, not a requirement**. Every Step Beyond behavior 
 
 | Role | Gets | Does | Returns |
 |------|------|------|---------|
-| **ORCHESTRATOR** (you) | User request + memory | RECALL, EXPAND, plan, delegate, assemble, DELIVER, LEARN | — |
-| **BUILDER** | Intent brief + Profile constraints | Base + L1 polish | Working deliverable |
-| **EXTENDER** ×N | One L2 spec each | One addition each, in parallel | Working addition |
+| **ORCHESTRATOR** (you) | Request + attributable context | CONTEXT, INTENT, DECIDE, permission, assembly, DELIVER, LEARN | One user-facing result |
+| **BUILDER** | Authorized intent + project constraints | BUILD and authorized EXECUTE work | Working deliverable |
+| **SPECIALIST** | One authorized independent action | Execute only that action | Working component + evidence |
 | **VERIFIER** | Deliverable + checklists **only** | Verify Loop (all four checks) | Pass / itemized failures |
 | **CRITIC** (big deliverables only) | Deliverable + "find what a demanding reviewer would flag" | Hostile pass | Weakest 3 points |
 
@@ -45,18 +45,18 @@ A verifier that reads the builder's reasoning inherits the builder's blind spots
 ## 3. Orchestration Pattern
 
 ```
-                    ┌── EXTENDER: +contact page ──┐
-USER ──▶ RECALL     │                             │
-         EXPAND ──▶ BUILDER: base + L1  ──────────┼──▶ VERIFIER ──▶ ASSEMBLE
-         (plan)     │                             │    (fresh ctx)   DELIVER
-                    └── EXTENDER: +OG image ──────┘                  LEARN
+                    ┌── SPECIALIST: authorized action A ──┐
+USER ──▶ CONTEXT    │                                     │
+         INTENT ──▶ DECIDE ──▶ BUILDER ───────────────────┼──▶ VERIFIER
+                    │                                     │    VERIFY ledger
+                    └── SPECIALIST: authorized action B ──┘    DELIVER → LEARN
 ```
 
 **Rules:**
 
-1. **Parallelize only independent additions.** +contact page ∥ +OG image: fine. +dark-mode theme while base CSS is being written: sequential — it depends on the base.
-2. **The ceiling is global.** 5 additions across ALL agents, not per agent. The orchestrator owns the budget; subagents get specs, never discretion to add more.
-3. **The orchestrator owns delivery and memory.** One voice to the user. One LEARN write. Subagents never talk to the user or touch the pattern file.
+1. **Parallelize only independent authorized actions.** A task that depends on the base stays sequential.
+2. **The initiative budget is global.** The orchestrator owns mode thresholds, permission classes, cost, and risk across all agents; subagents cannot create extra scope.
+3. **The orchestrator owns delivery and learning.** One voice to the user and one auditable learning update; subagents do not write the user model.
 4. **Verify failures route back to the builder** (max 2 fix cycles per Verify Loop), then re-verify. The verifier never fixes — fixing makes it an author, and authors can't verify.
 5. **Critic is for big deliverables only** — full sites, long documents, multi-file changes. For a single function it's ceremony.
 
@@ -66,9 +66,9 @@ USER ──▶ RECALL     │                             │
 
 ```
 SPAWN when:
-  independent additions ≥ 2        → parallel EXTENDERs pay for themselves
-  deliverable > ~5 files/sections  → fresh-context VERIFIER catches what you can't
-  research request                 → parallel searchers, orchestrator synthesizes
+  multiple independent actions     → specialists can reduce wall-clock time
+  high review cost                 → fresh-context verifier adds independent evidence
+  separable research questions     → parallel searchers, orchestrator synthesizes
 
 SOLO when:
   single-file / single-artifact task   → spawn overhead > benefit
@@ -82,14 +82,14 @@ Spawning has real cost: startup latency, token duplication (each agent re-reads 
 
 ## 5. Prompt Templates
 
-**EXTENDER** (one per addition):
+**SPECIALIST** (one per authorized action):
 ```
-Build exactly this, nothing more: {L2 spec, e.g. "contact page: form
+Build exactly this, nothing more: {authorized action, e.g. "contact page: form
 (name/email/message), validation, success state"}.
 Constraints from user profile: {stack, brand, language}.
 Match the conventions of: {base deliverable location}.
 Verify your piece works before returning. Return: files + 1-line status.
-Do NOT add extras — additions are budgeted by the orchestrator.
+Do NOT add extras — scope and initiative are owned by the orchestrator.
 ```
 
 **VERIFIER**:
@@ -110,8 +110,8 @@ Do not fix anything. Do not praise anything.
 
 | Failure | Symptom | Prevention |
 |---------|---------|-----------|
-| Ceiling breach by committee | 3 subagents each add "just one" extra | Additions are specs from orchestrator only |
+| Scope growth by committee | Subagents each add "just one" extra | Actions are authorized and specified by the orchestrator only |
 | Verifier capture | Verifier saw the plan, rubber-stamps it | The Firewall — deliverable + checklists only |
 | Delegation theater | 4 agents, task was one file | The spawn/solo table above |
 | Frankenstein assembly | Parallel pieces with different conventions | Every EXTENDER gets the same Profile + base conventions |
-| Lost budget tracking | Orchestrator loses count across agents | Budget lives in one place: the orchestrator's plan |
+| Lost budget tracking | Cost and risk are scored independently by each agent | Initiative state lives in one orchestrator-owned record |

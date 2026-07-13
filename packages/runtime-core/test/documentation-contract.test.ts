@@ -60,3 +60,29 @@ test('README does not present targets or host matrices as verified results', asy
   assert.doesNotMatch(readme, /Verified targets:/iu);
   assert.match(readme, /runtime-backed/iu);
 });
+
+test('active guidance does not teach the legacy v3 pipeline or unsupported rates', async () => {
+  const activeGuidancePaths = [
+    'skills/step-beyond/references/onboarding.md',
+    'skills/step-beyond/references/environment-scan.md',
+    'skills/step-beyond/references/subagents.md',
+    'skills/step-beyond/references/domains.md',
+    'examples/README.md',
+    'examples/chatgpt-agent-mode.md',
+    'examples/codebase-onboarding.md',
+    'examples/code-development.md',
+    'examples/content-creation.md',
+    'examples/image-generation.md',
+    'examples/memory-learning.md',
+    'examples/research-analysis.md',
+    'examples/self-improvement-loop.md',
+    'examples/web-development.md',
+  ];
+  const activeGuidance = await Promise.all(activeGuidancePaths.map(read));
+  for (const content of activeGuidance) {
+    assert.doesNotMatch(content, /RECALL\s*→\s*EXPAND\s*→\s*BUILD/iu);
+    assert.doesNotMatch(content, /Good \(Step Beyond v3\)/iu);
+    assert.doesNotMatch(content, /acceptance\s*[~≈]?\s*\d+%/iu);
+    assert.doesNotMatch(content, /CEILING:\s*5 total|5 additions across ALL agents/iu);
+  }
+});

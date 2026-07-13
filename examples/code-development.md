@@ -7,29 +7,30 @@ Agent: [writes a bare function, no types, no error handling, doesn't look
         at any other file in the repo, drops it wherever the cursor was]
 ```
 
-## Good (Step Beyond v3)
+## Good (Step Beyond v4)
 ```
 User: "Add a function that calculates a refund amount for an order"
 
 Agent (internal):
-  RECALL:      no memory of this user yet.
-  ENVIRONMENT: package.json → TypeScript + Vitest. 3 neighboring files in
+  CONTEXT:     no user-model record applies. package.json → TypeScript +
+               Vitest. Neighboring files in
                /services export a class with a single public method, throw
                a shared `DomainError` subclass on invalid input, and are
                covered by a co-located `*.test.ts`. .eslintrc forbids `any`.
                git log -5 on /services → a refund-adjacent PR merged last
                week added an idempotency key to a similar operation.
-  EXPAND:      not "a function" — a service method matching this repo's
+  INTENT:      not an isolated function — a service method matching this repo's
                exact shape: typed, throws DomainError (not a generic Error),
                tested in the established style, and — given the repo's own
                recent history — probably needs to guard against being run
                twice on the same order.
+  DECIDE:      proceed with the local implementation; disclose the material
+               idempotency assumption because it changes behavior.
   BUILD:       typed method, DomainError on invalid input (negative amount,
                unknown order id), no `any` (passes lint)
-  EXTEND:      +tests in the repo's existing Vitest style (co-located file)
-               +idempotency guard (environment-derived: this repo's own
-                history flagged it for a sibling operation, not a generic
-                domain default)
+  INITIATIVE:  score co-located tests and an idempotency guard using project
+               evidence, mistake cost, reversibility, and verifiability.
+  EXECUTE:     implement the authorized base and selected local candidates.
   VERIFY:      ran `npm test` (the command in package.json, not an invented
                one) — new tests pass, existing suite still green. Ran
                `npm run lint` — clean.

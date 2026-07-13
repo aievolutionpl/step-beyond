@@ -6,11 +6,16 @@ User: "Generate a woman in a red dress"
 Agent: [generates woman in red dress on plain white background]
 ```
 
-## Good (Step Beyond v3)
+## Good (Step Beyond v4)
 ```
 User: "Generate a woman in a red dress"
 Agent:
-  RECALL:  patterns.md → banned: 5-variant spam · reinforced: +1:1 crop for IG
+  CONTEXT: confirmed constraint: no variant spam; observed preference: 1:1 for IG
+  INTENT:  create a useful red-dress image rather than a context-free subject
+  DECIDE:  generate locally within the request; alternate formats remain optional
+  BUILD:   woman in a red dress, with a deliberate setting and composition
+  INITIATIVE: score one 1:1 crop because prior observable feedback supports it
+  EXECUTE: generate the base and the selected crop
   ✅ Generated woman in red dress (as requested)
   ➕ Placed her at golden hour on the Amalfi Coast terrace, cinematic depth of field,
      warm Mediterranean light, rule of thirds composition
@@ -21,7 +26,9 @@ Agent:
 
 ## Why
 
-The user said "woman in a red dress" but they didn't mean "in a void." A dress exists in a world — a context, a story, a light. The agent that understands this delivers 10x more value without the user having to spell out "put her somewhere beautiful with good lighting."
+The request leaves composition open. The agent may choose a reversible creative
+interpretation, but it should disclose a material assumption and avoid presenting
+an aesthetic choice as the user's established preference.
 
 ---
 

@@ -30,22 +30,28 @@ Why this is weak:
 Internal trace:
 
 ```text
-RECALL:
-The user wants Step Beyond to become a practical agent skill. Previous direction: recall, scan, infer, build, extend, verify, learn. Keep it universal but make ChatGPT usage simple.
+CONTEXT:
+The user wants Step Beyond to become a practical ChatGPT skill. Inspect the repo
+when browsing tools are actually available; otherwise disclose that limitation.
 
-SCAN:
+INTENT:
 Repo contains a universal `skills/step-beyond/SKILL.md`, references, templates, examples, README, and SPEC. Main skill already covers frameworks, memory, scan, verification, and self-improvement.
 
-EXPAND:
+DECIDE:
 The typed request says "przerób". The real intent is not another explanation. The repo needs a ChatGPT-ready adapter that can be pasted into Custom GPT, Project Instructions, or Agent Mode.
+
+Ask before creating a branch, pushing, or opening a pull request. Local draft files are reversible.
 
 BUILD:
 Create `skills/step-beyond-chatgpt/SKILL.md` with a compact ChatGPT behavior layer.
 
-EXTEND:
+INITIATIVE:
 +install guide
 +core template
 +agent-mode example
+
+EXECUTE:
+Create only the locally authorized files. Publishing remains a separate permission.
 
 VERIFY:
 Confirm files were created in a branch or provide a patch. Do not claim the PR is merged unless it is merged.
