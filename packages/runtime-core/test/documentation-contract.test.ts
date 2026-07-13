@@ -114,3 +114,13 @@ test('adapter guidance assigns one owner to host-native capabilities', async () 
     assert.match(adapters, new RegExp(term, 'iu'));
   }
 });
+
+test('slop reference defines detection and repair per domain', async () => {
+  const slop = await read('skills/step-beyond/references/slop.md');
+  for (const domain of ['Text', 'Code', 'Web / Design', 'Image', 'Data / Chart']) {
+    const section = slop.match(
+      new RegExp(`## \\d+\\. ${domain}(?<body>[\\s\\S]*?)(?=\\n## \\d+\\.|$)`, 'u'),
+    )?.groups?.body ?? '';
+    assert.match(section, /\| Pattern \| Detect \| Repair \|/u, `${domain} needs an operational table`);
+  }
+});
