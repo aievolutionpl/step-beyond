@@ -1,0 +1,24 @@
+{
+  "name": "step-beyond",
+  "version": "4.0.0-alpha.1",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "evals/runner"
+  ],
+  "scripts": {
+    "test": "tsx --test packages/*/test/*.test.ts evals/runner/test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "eval:runtime": "tsx evals/runner/src/cli.ts",
+    "validate": "npm run typecheck && npm test && npm run eval:runtime"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.8.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
