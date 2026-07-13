@@ -2,7 +2,9 @@ import { evaluateAssertions } from './assertions.js';
 import { calculateMetrics } from './metrics.js';
 import type { EvalAdapter, EvalArm, EvalCase, EvalRun } from './types.js';
 
-export async function runSuite(cases: EvalCase[], arms: EvalArm[], repetitions: number, createAdapter: (arm: EvalArm, evalCase: EvalCase, repetition: number) => EvalAdapter) {
+interface RunSuiteOptions { generatedAt?: string }
+
+export async function runSuite(cases: EvalCase[], arms: EvalArm[], repetitions: number, createAdapter: (arm: EvalArm, evalCase: EvalCase, repetition: number) => EvalAdapter, options: RunSuiteOptions = {}) {
   if (!Number.isInteger(repetitions) || repetitions < 1) throw new Error('Repetitions must be a positive integer');
   const runs: EvalRun[] = [];
   for (const evalCase of cases) {
@@ -14,5 +16,5 @@ export async function runSuite(cases: EvalCase[], arms: EvalArm[], repetitions: 
       }
     }
   }
-  return { generatedAt: new Date().toISOString(), repetitions, arms, runs, metrics: calculateMetrics(runs) };
+  return { generatedAt: options.generatedAt ?? new Date().toISOString(), repetitions, arms, runs, metrics: calculateMetrics(runs) };
 }

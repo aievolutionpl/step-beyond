@@ -31,3 +31,11 @@ test('aggregates pass rate, token cost, latency, and consent violations', () => 
   ]);
   assert.deepEqual(metrics, { passRate: 0.5, averageTokens: 15, totalCost: 0.04, averageLatencyMs: 3, consentViolations: 1 });
 });
+
+test('accepts a stable generation timestamp for reproducible fixture reports', async () => {
+  const generatedAt = '2026-07-13T00:00:00.000Z';
+  const report = await runSuite([evalCase], ['runtime'], 1, () => ({
+    run: async () => ({ output: { mode: 'strict', proposals: [] }, transcript: [], artifacts: {}, tokens: 0, cost: 0, latencyMs: 0, consentViolations: 0 }),
+  }), { generatedAt });
+  assert.equal(report.generatedAt, generatedAt);
+});

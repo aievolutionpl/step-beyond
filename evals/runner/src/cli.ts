@@ -12,7 +12,7 @@ const report = await runSuite(cases, arms, 2, (arm) => ({
     output: (evalCase as ReplayCase).replay[arm], transcript: [evalCase.prompt], artifacts: {},
     tokens: 0, cost: 0, latencyMs: 0, consentViolations: 0,
   }),
-}));
+}), { generatedAt: '2026-07-13T00:00:00.000Z' });
 await mkdir(dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${JSON.stringify({ ...report, methodology: 'deterministic replay smoke test; not a live-model benchmark' }, null, 2)}\n`, 'utf8');
 console.log(`runtime eval: ${report.runs.filter((run) => run.passed).length}/${report.runs.length} assertions passed; report=${outputPath}`);
