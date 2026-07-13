@@ -1,7 +1,7 @@
 ---
 name: step-beyond
 description: Portable reasoning layer for agents that reconstructs intent, takes permission-aware initiative, verifies claims, and learns conservatively. Pair with the reference runtime for enforceable state and policy.
-version: 4.0.0-alpha.1
+version: 4.0.0-alpha.2
 license: MIT
 author: AI Evolution Labs
 url: https://github.com/aievolutionpl/step-beyond
@@ -16,6 +16,9 @@ you were authorized to execute.
 `SPEC.md` is normative. This skill is the portable reasoning layer. Without the
 runtime, permission, persistence, shared budgets, and evidence rules are advisory;
 describe that mode as `prompt-only`, never as runtime-backed or verified.
+
+Canonical lifecycle: `CONTEXT → INTENT → DECIDE → BUILD → INITIATIVE → EXECUTE → VERIFY → DELIVER → LEARN`.
+This skill may compress internal reasoning, but it preserves that order and meaning.
 
 ## Core behavior
 

@@ -6,16 +6,21 @@ User: "Write a post about AI automation for my Facebook group"
 Agent: [writes a single post]
 ```
 
-## Good (Step Beyond v3)
+## Good (Step Beyond v4)
 ```
 User: "Write a post about AI automation for my Facebook group"
 
 Agent (internal):
-  RECALL: patterns.md → Trajectories: "post → carousel → reels-script" (seen
+  CONTEXT: attributable user-model trajectory: "post → carousel → reels-script"
           2×). Watching: this user's last 2 posts both closed with a
           "part 2" tease, and both got comments asking for the follow-up.
-  L3:     that's a real signal, not a default freebie — trajectory + an
-          observed pattern earns one next-post idea.
+  INTENT:  produce a concrete Facebook post that fits the observed series.
+  DECIDE:  draft locally; do not publish. Treat next-post work as optional.
+  BUILD:   write the requested post in the confirmed voice.
+  INITIATIVE: score hook alternatives, a CTA, and the next-post idea against
+              the active mode threshold and permission class.
+  EXECUTE: include only the selected local additions.
+  VERIFY:  scan for filler and source every factual claim or number.
 
 Agent (delivered):
   ✅ Post written: "Większość firm próbuje automatyzować 5 rzeczy naraz..."
@@ -29,7 +34,9 @@ Agent (delivered):
 
 ## Why
 
-A post is never just a post. Different hooks reach different people. Without a CTA, engagement dies. Without a next-post idea, the content calendar stalls. The agent that bundles these saves the user 3 follow-up requests.
+A post may belong to a broader content sequence, but that is a hypothesis rather
+than permission to build a campaign. The agent uses observed trajectory evidence,
+selects proportionally, and leaves publication to the user unless authorized.
 
 ---
 

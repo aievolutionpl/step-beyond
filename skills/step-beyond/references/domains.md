@@ -1,8 +1,12 @@
 # 🔬 Domain Decision Trees (Token-Optimized)
 
-> Match the request to a domain, execute the tree. Each tree: **TRIGGER** (pattern match) → **RECALL** (what to pull from memory or the live environment) → **L1/L2/L3** (the levels) → **VERIFY** (how this domain proves it works) → **NEVER** (hard constraints).
+> Match the request to a domain and use the tree as derived guidance. Each tree:
+> **TRIGGER** → **CONTEXT** → **BUILD** → **INITIATIVE CANDIDATES** → **VERIFY**
+> → **NEVER**. Candidates still require v4 permission classification and mode scoring.
 >
-> Memory beats these defaults: a user's Reinforced list replaces the generic L2 line; their Banned list filters everything. See `references/memory.md`. When memory hasn't seen a fact yet (a first session, a new repo), the live environment often has it — see `references/environment-scan.md`.
+> Confirmed user constraints filter these defaults. Project facts come from the
+> live environment, not user memory. See `references/memory.md` and
+> `references/environment-scan.md`.
 
 ---
 
@@ -10,10 +14,10 @@
 
 ```
 TRIGGER: image|photo|graphic|generate|render|visual|picture
-RECALL:  brand palette, banned styles, platform (IG? print?), past accepted crops
-L1: context, depth, light, brand colors — NEVER void, gradient, isometric
-L2: +alt crop (square/9:16), +social format variant
-L3: +Stories/Reels cut if Instagram context
+CONTEXT: brand palette, constraints, platform, and observed accepted crops
+BUILD: context, depth, light, brand colors — never a purposeless void
+INITIATIVE CANDIDATES: alternate crop or required platform format
+NEXT-SIGNAL CANDIDATES: Stories/Reels cut when the trajectory supports it
 VERIFY: inspect output — hands, text-in-image, artifacts, ratio, requested elements
 NEVER: void background, waxy skin, gibberish text, wrong finger count shipped
 ```
@@ -22,11 +26,11 @@ NEVER: void background, waxy skin, gibberish text, wrong finger count shipped
 
 ```
 TRIGGER: page|landing|website|site|build|create.*site
-RECALL:  stack, brand colors/fonts, hosting, past accepted (+dark-mode? +sitemap?)
+CONTEXT: stack, brand colors/fonts, hosting, and observed preferences
          — stack/hosting from environment scan if memory hasn't seen this repo yet
-L1: responsive, real fonts, semantic HTML, no design slop
-L2: +contact, +privacy, +favicon, +OG image, +404
-L3: +dark mode if brand=dark, +mobile menu, +sitemap
+BUILD: responsive, real fonts, semantic HTML, no design slop
+INITIATIVE CANDIDATES: contact, privacy, favicon, OG image, or 404 as request-specific candidates
+NEXT-SIGNAL CANDIDATES: dark mode, mobile menu, or sitemap when evidence supports the need
 VERIFY: open it, click every link, submit forms, 375px viewport, console clean
 NEVER: single file, no meta, generic fonts, missing favicon, "#" links, lorem ipsum
 ```
@@ -35,10 +39,10 @@ NEVER: single file, no meta, generic fonts, missing favicon, "#" links, lorem ip
 
 ```
 TRIGGER: post|content|carousel|write|article|newsletter|copy
-RECALL:  language, tone, banned words (emoji?), platform, past hook styles accepted
-L1: active voice, concrete numbers, no AI-slop words, varied rhythm
-L2: +3 hook variants, +CTA options, +visual brief
-L3: +next-post idea if series detected
+CONTEXT: language, tone, constraints, platform, and observed accepted hook styles
+BUILD: active voice, supported specifics, no filler, natural rhythm
+INITIATIVE CANDIDATES: hook alternatives, CTA options, or a visual brief
+NEXT-SIGNAL CANDIDATES: a next-post idea when a series is observed
 VERIFY: slop scan (hard), every number sourced, read-aloud rhythm check
 NEVER: "in today's", "let's dive", "game-changer", passive voice, em-dash chains
 ```
@@ -47,11 +51,11 @@ NEVER: "in today's", "let's dive", "game-changer", passive voice, em-dash chains
 
 ```
 TRIGGER: code|function|component|class|api|endpoint|script|program
-RECALL:  stack, conventions, test framework, past accepted (+tests? +docs?)
+CONTEXT: stack, conventions, test framework, and observed preferences
          — pull stack/conventions from environment scan when memory is silent
-L1: types, error handling, edge cases, input validation
-L2: +tests, +documentation, +type exports
-L3: +integration example, +Storybook story (UI), +deployment config
+BUILD: types, error handling, relevant edge cases, input validation
+INITIATIVE CANDIDATES: tests, documentation, or type exports when they advance this result
+NEXT-SIGNAL CANDIDATES: integration example, Storybook story, or deployment config when justified
 VERIFY: run it, run tests, feed it the edge case you claim to handle
 NEVER: bare functions, no types, silent failures, hardcoded secrets, dead code
 ```
@@ -60,10 +64,10 @@ NEVER: bare functions, no types, silent failures, hardcoded secrets, dead code
 
 ```
 TRIGGER: research|find|analyze|investigate|competitor|market|look into
-RECALL:  industry, what they did with past research, preferred output format
-L1: sources cited, quantitative data, no hallucination
-L2: +actionable recommendations, +competitive gaps, +priority matrix
-L3: +executive summary, +pitch-ready slide
+CONTEXT: industry, prior use of research, and preferred output format
+BUILD: sources cited, supported quantitative data, no fabricated claims
+INITIATIVE CANDIDATES: recommendations, competitive gaps, or priority matrix
+NEXT-SIGNAL CANDIDATES: executive summary or pitch-ready slide when the audience needs it
 VERIFY: every claim → a source you actually consulted; numbers cross-checked
 NEVER: unsourced claims, vague insights, "more research needed"
 ```
@@ -72,10 +76,10 @@ NEVER: unsourced claims, vague insights, "more research needed"
 
 ```
 TRIGGER: email|mailing|outreach|newsletter|campaign|draft
-RECALL:  sender voice, audience, past subject styles accepted, language
-L1: personal tone, no spam triggers, clear identity
-L2: +subject variants, +follow-up template, +preview text
-L3: +A/B test plan, +send time recommendation
+CONTEXT: sender voice, audience, observed subject preferences, language
+BUILD: personal tone, no spam triggers, clear identity
+INITIATIVE CANDIDATES: subject variants, follow-up template, or preview text
+NEXT-SIGNAL CANDIDATES: experiment plan or send-time analysis when evidence is available
 VERIFY: render check, links resolve, variables filled, spam-trigger scan
 NEVER: "hope this finds you well", all-caps subjects, spam words
 ```
@@ -84,11 +88,11 @@ NEVER: "hope this finds you well", all-caps subjects, spam words
 
 ```
 TRIGGER: cron|automation|script|workflow|deploy|pipeline|CI|CD
-RECALL:  infra, alerting stack, past accepted (+monitoring? +runbook?)
+CONTEXT: infrastructure, alerting stack, and observed preferences
          — infra/config detected via environment scan (CI/deploy files) when silent
-L1: errors, retries, validation, idempotency
-L2: +monitoring, +logging, +health check, +docs
-L3: +alert webhook, +dashboard, +runbook
+BUILD: errors, retries, validation, idempotency where required
+INITIATIVE CANDIDATES: monitoring, logging, health check, or documentation
+NEXT-SIGNAL CANDIDATES: alert webhook, dashboard, or runbook when justified
 VERIFY: run once end-to-end; kill mid-run — does it recover? logs written?
 NEVER: silent failures, no retry, hardcoded config, missing logs
 ```
@@ -97,10 +101,10 @@ NEVER: silent failures, no retry, hardcoded config, missing logs
 
 ```
 TRIGGER: video|reel|tiktok|shorts|clip|recording|edit
-RECALL:  platform, brand intro/outro, caption language, past accepted formats
-L1: correct aspect, compression, clean audio
-L2: +thumbnail, +captions (.srt/.vtt), +chapters
-L3: +teaser cut for social, +GIF preview
+CONTEXT: platform, brand intro/outro, caption language, observed formats
+BUILD: correct aspect, compression, clean audio
+INITIATIVE CANDIDATES: thumbnail, captions, or chapters
+NEXT-SIGNAL CANDIDATES: teaser cut or GIF preview when distribution calls for it
 VERIFY: play it — first 3s, audio sync, captions match speech, file size sane
 NEVER: wrong ratio, missing thumbnail, uncompressed output
 ```
@@ -109,10 +113,10 @@ NEVER: wrong ratio, missing thumbnail, uncompressed output
 
 ```
 TRIGGER: audio|podcast|voice|TTS|text-to-speech|voiceover|narration
-RECALL:  preferred voice, language, distribution channel
-L1: correct voice, language match, clean output
-L2: +transcript, +show notes, +intro/outro markers
-L3: +audiogram (waveform video) for social
+CONTEXT: preferred voice, language, distribution channel
+BUILD: correct voice, language match, clean output
+INITIATIVE CANDIDATES: transcript, show notes, or intro/outro markers
+NEXT-SIGNAL CANDIDATES: audiogram when a social distribution need is observed
 VERIFY: listen — pronunciation of names/brands, no clipping, correct language
 NEVER: wrong language model, uncompressed for chat platforms
 ```
@@ -121,11 +125,11 @@ NEVER: wrong language model, uncompressed for chat platforms
 
 ```
 TRIGGER: data|chart|graph|visualiz|dashboard|analyze.*data|plot
-RECALL:  BI tools, brand palette, audience (exec? analyst?), export prefs
+CONTEXT: BI tools, brand palette, audience, and export preferences
          — data source/schema from environment scan (files, pipeline config) when unknown
-L1: labeled axes, correct scale, legend, accessible colors
-L2: +alternative chart type, +CSV/PNG export, +summary stats
-L3: +interactive dashboard, +slide-ready version
+BUILD: labeled axes, correct scale, legend, accessible colors
+INITIATIVE CANDIDATES: alternate chart, export, or summary statistics
+NEXT-SIGNAL CANDIDATES: interactive dashboard or slide-ready version when justified
 VERIFY: numbers sum/reconcile with source, scale honest, chart type fits claim
 NEVER: misleading scale, missing labels, inaccessible palette, truncated y-axis
 ```
@@ -134,10 +138,10 @@ NEVER: misleading scale, missing labels, inaccessible palette, truncated y-axis
 
 ```
 TRIGGER: social|IG|FB|Instagram|Facebook|Twitter|LinkedIn|TikTok|post on
-RECALL:  platforms used, hashtag sets, posting times, banned (emoji? hashtag spam?)
-L1: platform-correct ratio, alt text, readable text size
-L2: +caption, +hashtags, +posting time, +alt text
-L3: +Stories version, +Reels cut, +cross-platform variant
+CONTEXT: platforms, observed hashtag preferences, timing evidence, and constraints
+BUILD: platform-correct ratio, alt text, readable text size
+INITIATIVE CANDIDATES: caption, hashtags, posting-time analysis, or alt text
+NEXT-SIGNAL CANDIDATES: Stories, Reels, or cross-platform variant when justified
 VERIFY: preview at platform size — text readable on mobile, ratio exact
 NEVER: wrong aspect ratio, missing alt text, illegible text
 ```
@@ -146,4 +150,8 @@ NEVER: wrong aspect ratio, missing alt text, illegible text
 
 ## No Match?
 
-Request fits no tree → run the generic pipeline: EXPAND hard (the intent brief does the work the tree would), L2 = "what would this user's Reinforced list suggest for adjacent domains", VERIFY = "exercise it the way the user will". Then note the new domain pattern in memory — two sessions of the same novel domain is a tree worth writing (add it to your pattern file's Profile).
+When no tree matches, use the canonical lifecycle directly. Build intent
+hypotheses from attributable context, classify permission before scoring optional
+candidates, and verify the result the way the user will exercise it. A new domain
+tree requires repeated observed need; one unfamiliar request is not enough to
+promote a guess into durable guidance.

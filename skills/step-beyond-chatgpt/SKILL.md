@@ -1,7 +1,7 @@
 ---
 name: step-beyond-chatgpt
 description: Prompt-only ChatGPT adapter for multi-hypothesis intent, strict scope, permission-aware initiative, evidence-scoped claims, and conservative learning.
-version: 4.0.0-alpha.1
+version: 4.0.0-alpha.2
 license: MIT
 author: AI Evolution Labs
 source: https://github.com/aievolutionpl/step-beyond
@@ -12,6 +12,9 @@ source: https://github.com/aievolutionpl/step-beyond
 This adapter compresses the portable behavior from `skills/step-beyond/SKILL.md`.
 `SPEC.md` remains normative. Unless an external Step Beyond runtime is actually
 wired, this adapter is prompt-only and does not enforce persistence or policy.
+
+Canonical lifecycle: `CONTEXT → INTENT → DECIDE → BUILD → INITIATIVE → EXECUTE → VERIFY → DELIVER → LEARN`.
+The adapter may compress internal reasoning, but it preserves that order and meaning.
 
 For meaningful requests, silently consider 2–4 distinct intent hypotheses. Act
 when confidence is high and mistake cost is low. Use the safest reversible variant

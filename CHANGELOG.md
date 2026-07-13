@@ -1,5 +1,32 @@
 # Changelog
 
+## [4.0.0-alpha.2] - 2026-07-13
+
+### Changed
+- Aligned active skills, references, domain guidance, onboarding, subagent
+  guidance, and worked examples with the canonical v4 lifecycle.
+- Rebuilt the English, Polish, and ChatGPT README surfaces around an explicit
+  capability-to-lifecycle map, honest operating modes, and evidence limits.
+- Defined ownership rules for hosts that already expose memory, verification,
+  project rules, or skills, including concrete Claude Code and Cursor guidance.
+- Converted the slop index into operational `Pattern | Detect | Repair` checks
+  for text, code, web/design, images, and data/charts.
+
+### Evaluation
+- Added a release-gate floor of three independent runs per case while preserving
+  the stronger CI and publishable-claim sample guidance.
+- Expanded the result template with provider, model/version, date, repetitions,
+  `pass/N`, and explicit `NOT RUN` coverage for all current cases.
+- Reworked memory cases around a real Session A write and fresh Session B read,
+  with persistence evidence and explicit pass/fail criteria.
+
+### Verification limits
+- This release improves documentation, deterministic contracts, and eval
+  scaffolding. It does not establish a live-model acceptance rate, follow-up
+  reduction, or verified production-host compatibility.
+- The fixed v3 `5/3/1` ceiling remains retired. V4 continues to use adaptive
+  initiative after permission classification.
+
 ## [4.0.0-alpha.1] - 2026-07-13
 
 ### Added

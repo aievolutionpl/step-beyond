@@ -12,11 +12,13 @@ How the same request gets better across three sessions, because the agent rememb
 User: "Zrób mi landing page dla mojego brandu"
 
 Agent (internal):
-  RECALL → no pattern file found. Domain defaults only.
-  EXPAND → "landing page for a brand" = hero, offer, CTA, contact path.
+  CONTEXT → no user-model store found; current prompt and project only.
+  INTENT  → "landing page for a brand" = hero, offer, CTA, contact path.
            Brand colors unknown → ask once, remember forever.
-  BUILD  → responsive landing, semantic HTML, real fonts (L1)
-  EXTEND → +contact, +favicon, +OG image (generic domain L2s)
+  DECIDE → proceed with a reversible local draft; ask before publication.
+  BUILD  → responsive landing, semantic HTML, real fonts.
+  INITIATIVE → score contact, favicon, and OG candidates for this request.
+  EXECUTE → build the base and selected AUTO local candidates.
   VERIFY → opened, clicked, 375px checked. Console clean.
 
 Agent (delivered): landing +contact, favicon, OG
@@ -35,10 +37,10 @@ LEARN → creates step-beyond/patterns.md:
 User: "Potrzebuję stronę z cennikiem"
 
 Agent (internal):
-  RECALL → Profile: navy+gold, PL. Watching: +contact liked, +OG ignored.
-  EXPAND → pricing page for the SAME brand → match existing site's
+  CONTEXT → confirmed navy+gold and PL; observed contact adoption; OG outcome unknown.
+  INTENT → pricing page for the same brand → match existing site's
            conventions, navy+gold applied silently (no re-asking!)
-  EXTEND → +FAQ section (pricing pages get questions) — new candidate
+  INITIATIVE → score an FAQ section as a new candidate
            +contact link in pricing CTA (Watching says they value contact)
            NOT +OG (one ignore — deprioritized, not dead yet)
   VERIFY → rendered, prices sum correctly vs. input, mobile checked
@@ -57,17 +59,16 @@ LEARN → patterns.md updated:
 User: "Dodaj sekcję z opiniami klientów"
 
 Agent (internal):
-  RECALL → Reinforced: contact-path. Trajectory: landing → pricing → ???
+  CONTEXT → confirmed contact-path preference. Observed trajectory: landing → pricing.
            This user is building out a full brand site, page by page.
-  EXPAND → testimonials section, navy+gold, PL copy, real-name placeholders
+  INTENT → testimonials section, navy+gold, PL copy, marked placeholders
            clearly marked (no fake social proof — that's slop)
-  L3     → trajectory says a brand site heading toward launch needs
-           analytics + SEO meta before deploy. Pre-build: +meta/OG audit
-           across ALL pages (~60s) — ONE L3, declared with cost.
+  INITIATIVE → treat a meta/SEO audit as a candidate, disclose its scope and
+               ask before expanding into all pages if that exceeds authority.
   VERIFY → section renders, carousel works on mobile, no fake data shipped
 
 Agent (delivered): "Sekcja opinii gotowa (placeholdery oznaczone do podmiany).
-                    +audyt meta/SEO wszystkich stron (~60s) — przed deployem."
+                    Proponuję audyt meta/SEO wszystkich stron przed deployem."
 
 User reaction: "o, super, właśnie miałem o to pytać"
 ```
@@ -81,14 +82,14 @@ User reaction: "o, super, właśnie miałem o to pytać"
 | Session 1 | Session 3 |
 |-----------|-----------|
 | Asks about brand colors | Applies them silently |
-| Generic domain L2s | This user's Reinforced list |
-| L3 skipped (no trajectory data) | L3 lands exactly one step ahead |
+| Generic domain candidates | Candidates informed by confirmed outcomes |
+| No trajectory evidence | A next-step proposal tied to observed trajectory |
 | Wrong language guess possible | PL from Profile |
-| ~60% addition acceptance | ~100% — every addition used |
+| Cold-start selection — not measured | Memory-informed selection — not measured |
 
 ## What the Agent Did NOT Do
 
-- Did not re-add +OG after it was ignored (deprioritized via Watching)
+- Did not classify silence about +OG as rejection; its outcome remained unknown
 - Did not store anything private — only work preferences
 - Did not write to memory every message — batched at session end
 - Did not let memory override words: had the user said "in English this time",

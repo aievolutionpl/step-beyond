@@ -9,7 +9,7 @@ Every file in this directory follows the same five sections, in order:
 | Section | What it contains |
 |---|---|
 | **Bad (literal agent)** | What an agent without Step Beyond does with the same request — the baseline you're improving on |
-| **Good (Step Beyond)** | The same request run through the pipeline: an internal trace (RECALL/ENVIRONMENT/EXPAND/BUILD/EXTEND/VERIFY where relevant) followed by what actually gets delivered |
+| **Good (Step Beyond)** | The request run through the v4 lifecycle, from attributable CONTEXT and INTENT through permission-aware EXECUTE, claim-scoped VERIFY, DELIVER, and conservative LEARN |
 | **Why** | One paragraph on the reasoning — why the additions are predictable, not arbitrary |
 | **More Examples** | A compressed table of similar request → outcome pairs, same domain |
 | **What Triggers Step Beyond Here** | The keyword/pattern list that matches this domain's tree in `references/domains.md` |
@@ -24,8 +24,8 @@ New examples should follow this shape. It keeps every file scannable in under a 
 | [`code-development.md`](code-development.md) | CODE | Environment scan as the flagship capability — reads conventions, lint config, and test framework before writing code |
 | [`codebase-onboarding.md`](codebase-onboarding.md) | cross-domain | Environment scan as its own capability, independent of any single domain: README, directory tree, git log, and CI read to produce a tour, verified run instructions, and a predicted first task |
 | [`image-generation.md`](image-generation.md) | IMAGE | Memory-driven context (banned/reinforced) applied before generation, plus baseline polish |
-| [`content-creation.md`](content-creation.md) | CONTENT | An L3 anticipation that's earned from an observed trajectory, not asserted for free |
-| [`research-analysis.md`](research-analysis.md) | RESEARCH | Claim audit (every statement traced to a consulted source) plus sourced anticipation of the next ask |
+| [`content-creation.md`](content-creation.md) | CONTENT | An initiative candidate earned from an observed trajectory and filtered through permission |
+| [`research-analysis.md`](research-analysis.md) | RESEARCH | Claim-scoped evidence plus an optional next step that remains permission-aware |
 | [`memory-learning.md`](memory-learning.md) | cross-cutting | The per-user **Memory** loop across three sessions — cold start to trajectory prediction |
 | [`self-improvement-loop.md`](self-improvement-loop.md) | cross-cutting | The per-agent **Self-Improvement** loop across three unrelated users — heuristic confidence rising/falling, independent of any one user's preferences |
 | [`chatgpt-agent-mode.md`](chatgpt-agent-mode.md) | ChatGPT / Agent Mode | Adapting the universal skill into a ChatGPT-ready instruction pack with install guide, core template, and bounded proactivity |
