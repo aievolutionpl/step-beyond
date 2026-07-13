@@ -85,3 +85,23 @@ export interface VerificationRecord extends VerificationInput {
   id: string;
   status: 'verified' | 'partially_verified' | 'unverified';
 }
+
+export type UserModelKind = 'fact' | 'preference' | 'constraint' | 'observation' | 'hypothesis' | 'trajectory' | 'open_loop' | 'negative_feedback';
+
+export interface UserModelEntry {
+  id: string;
+  kind: UserModelKind;
+  value: string;
+  source: string;
+  sourceRef: string;
+  createdAt: string;
+  updatedAt: string;
+  scope: string;
+  confidence: number;
+  confirmations: number;
+  lastUsedAt: string | null;
+  revalidateAt: string | null;
+  origin: 'explicit' | 'inferred';
+  sensitivity: 'normal' | 'sensitive';
+  status: 'active' | 'disputed' | 'expired' | 'deleted';
+}
