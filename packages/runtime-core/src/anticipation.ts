@@ -128,7 +128,12 @@ export function planNextMoves(
       place(item.id, 'hold', reasons, confidence);
       continue;
     }
-    if (permission.class === 'ASK') {
+    // `classifyAction` does not inspect reversibility, and separability only
+    // protects the requested result. An irreversible extra is never executed
+    // or staged on a prediction: it is offered, or dropped.
+    const irreversible = item.action.reversible === false;
+    if (permission.class === 'ASK' || irreversible) {
+      if (irreversible) reasons.push('irreversible_action');
       decision = confidence >= level.propose ? 'propose' : 'hold';
       reasons.push(decision === 'propose' ? 'requires_permission' : 'below_propose_threshold');
     } else if (confidence >= level.doAhead && item.separable && clamp(item.effort) <= level.maxEffort) {

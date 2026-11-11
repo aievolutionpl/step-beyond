@@ -33,6 +33,16 @@ test('no confidence lets a prediction bypass permission', () => {
   assert.deepEqual(plan.hold, ['leak']);
 });
 
+test('an irreversible local action is offered, never done ahead or staged', () => {
+  const plan = planNextMoves([
+    prediction({ id: 'purge', source: 'explicit', confidence: 1, action: { kind: 'execute_local', withinScope: true, reversible: false } }),
+  ], 'exploratory');
+  assert.deepEqual(plan.doAhead, []);
+  assert.deepEqual(plan.prepare, []);
+  assert.deepEqual(plan.propose, ['purge']);
+  assert.ok(plan.decisions.purge!.reasonCodes.includes('irreversible_action'));
+});
+
 test('large or inseparable predictions are staged instead of applied', () => {
   const plan = planNextMoves([
     prediction({ id: 'big', effort: 0.9 }),

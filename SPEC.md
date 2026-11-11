@@ -115,7 +115,8 @@ Permission classification runs first. Each prediction then receives one decision
 
 Calibrated confidence is raw confidence discounted by source strength and by the
 observed accuracy of earlier predictions for this user. No confidence converts
-an `ASK` action into `do_ahead`. Strict scope holds every prediction. Nothing is
+an `ASK` action into `do_ahead`, and an action marked irreversible is at most
+proposed even when it is otherwise local and in scope. Strict scope holds every prediction. Nothing is
 done ahead while a clarification or permission request for the base result is
 unanswered. Each mode sets a per-turn budget for every rung; a prediction that
 exceeds it moves down one rung. The runtime MUST record reason codes for every

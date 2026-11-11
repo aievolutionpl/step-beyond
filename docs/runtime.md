@@ -75,7 +75,8 @@ const plan = planNextMoves(
 ```
 
 `planNextMoves` classifies permission before anything else, so an `ASK` action
-is at most proposed and a `FORBIDDEN` one is held. Every decision carries reason
+is at most proposed and a `FORBIDDEN` one is held. An action with
+`reversible: false` is also at most proposed, whatever its class. Every decision carries reason
 codes and its calibrated confidence. Strict mode holds everything. Per-rung
 budgets are configurable through the third argument; overflow moves down one
 rung. `decideTurn` accepts optional `predictions` and `mode` and returns the plan
