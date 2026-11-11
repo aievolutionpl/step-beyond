@@ -1,7 +1,7 @@
 {
   "name": "step-beyond",
-  "description": "Proactive enhancement layer for AI agents — learns user patterns from any memory store, upgrades prompts into full intent, takes engineer-grade initiative that advances the goal instead of generic filler, predicts the next request, verifies everything before delivery, scans for AI slop, orchestrates subagents when available, onboards itself to any host on first run, and runs a self-improvement loop that sharpens its own heuristics. Universal adapter runs on Claude Code, Codex, Hermes, OpenClaw, opencode, Cursor, Gemini CLI, and custom loops.",
-  "version": "3.3.0",
+  "description": "Always-on working method for AI agents: rebuilds the brief behind a weak prompt, delivers to an expert bar, predicts the user's next request from the conversation and memory and does or stages it ahead, verifies claims, and learns which predictions land. Permission-aware and strict-scope safe. Installs into Claude Code, Codex, and Hermes.",
+  "version": "4.0.0-alpha.3",
   "author": {
     "name": "AI Evolution Labs",
     "url": "https://github.com/aievolutionpl"
@@ -12,14 +12,13 @@
   "keywords": [
     "proactive",
     "agents",
+    "anticipation",
+    "prompt-upgrade",
     "memory",
     "verification",
-    "anti-slop",
-    "behavioral-priming",
-    "subagents",
-    "self-improvement",
-    "agent-adapter",
     "initiative",
-    "onboarding"
+    "claude-code",
+    "codex",
+    "hermes"
   ]
 }

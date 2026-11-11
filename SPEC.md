@@ -95,6 +95,33 @@ Modes configure thresholds:
 
 The runtime MUST record reason codes for selection and rejection.
 
+### 6.1 Anticipation
+
+Implementations SHOULD predict the user's likely next requests and act on them
+within existing authority. A `NextMovePrediction` names a concrete action and
+carries its source, confidence, expected value, effort, separability, and
+evidence references. Sources, strongest first: `explicit`, `open_loop`,
+`trajectory`, `artifact_gap`, `session_arc`, `domain_prior`.
+
+Permission classification runs first. Each prediction then receives one decision:
+
+- `do_ahead`: the action is `AUTO` or `AUTO_WITH_DISCLOSURE`, calibrated
+  confidence meets the mode threshold, effort is small, and the work is
+  separable, meaning it can be dropped without changing the requested result.
+  It is executed, verified like base work, and disclosed with how to drop it;
+- `prepare`: likely but large or not separable. It is staged and not applied;
+- `propose`: plausible, or the action is `ASK`. It is offered once, concretely;
+- `hold`: weak evidence, `FORBIDDEN`, strict scope, or the budget is spent.
+
+Calibrated confidence is raw confidence discounted by source strength and by the
+observed accuracy of earlier predictions for this user. No confidence converts
+an `ASK` action into `do_ahead`, and an action marked irreversible is at most
+proposed even when it is otherwise local and in scope. Strict scope holds every prediction. Nothing is
+done ahead while a clarification or permission request for the base result is
+unanswered. Each mode sets a per-turn budget for every rung; a prediction that
+exceeds it moves down one rung. The runtime MUST record reason codes for every
+decision.
+
 ## 7. User model
 
 User-model kinds are `fact`, `preference`, `constraint`, `observation`,
@@ -134,7 +161,9 @@ Outcome values are `explicit_accept`, `explicit_reject`, `adopted`, `reverted`,
 `corrected`, `ignored`, and `unknown`.
 
 `unknown` is neutral. Silence or unobservable usage MUST NOT automatically become
-rejection or failure. User preferences, heuristic evaluation, verification-gap
+rejection or failure. Prediction accuracy counts `explicit_accept` and `adopted`
+as hits, `explicit_reject`, `reverted`, and `corrected` as misses, `ignored` as
+weak negative evidence, and `unknown` as no evidence. User preferences, heuristic evaluation, verification-gap
 learning, and slop-pattern learning are independent streams.
 
 Global heuristic revisions require multiple eligible events, contain no private
@@ -167,7 +196,8 @@ artifact checks, provider/model/prompt/runtime/adapter versions, parameters,
 tokens, cost, and latency. Comparison arms are baseline, current release, new
 prompt-only, runtime-backed, and appropriate ablations.
 
-Required metrics include intent accuracy, unnecessary clarifications, harmful
+Required metrics include intent accuracy, next-request prediction hit rate,
+done-ahead revert rate, unnecessary clarifications, harmful
 assumptions, proactive acceptance, strict-scope compliance, unsupported claims,
 memory precision, correction latency, follow-up reduction, cost, tokens, and
 actions performed without required consent.

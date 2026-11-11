@@ -129,7 +129,7 @@ test('README surfaces share version capabilities lifecycle and evidence limits',
   const files = await Promise.all(['README.md', 'README_PL.md', 'README_CHATGPT.md'].map(read));
   for (const content of files) {
     for (const term of [
-      '4.0.0-alpha.2',
+      '4.0.0-alpha.3',
       'RECALL',
       'SCAN',
       'EXPAND',
@@ -157,7 +157,7 @@ test('README surfaces share version capabilities lifecycle and evidence limits',
 });
 
 test('release metadata uses one version across packages and skills', async () => {
-  const expectedVersion = '4.0.0-alpha.2';
+  const expectedVersion = '4.0.0-alpha.3';
   const packagePaths = [
     'package.json',
     'packages/runtime-core/package.json',
@@ -169,13 +169,74 @@ test('release metadata uses one version across packages and skills', async () =>
     const manifest = JSON.parse(await read(path)) as { version?: string };
     assert.equal(manifest.version, expectedVersion, `${path} version drifted`);
   }
+  const plugin = JSON.parse(await read('.claude-plugin/plugin.json')) as { version?: string };
+  assert.equal(plugin.version, expectedVersion, 'plugin manifest version drifted');
   for (const path of [
     'skills/step-beyond/SKILL.md',
     'skills/step-beyond-chatgpt/SKILL.md',
     'skills/step-beyond-chatgpt/SKILL_PL.md',
   ]) {
-    assert.match(await read(path), /^version: 4\.0\.0-alpha\.2$/mu);
+    assert.match(await read(path), /^version: 4\.0\.0-alpha\.3$/mu);
   }
+});
+
+test('portable instructions carry the next-move ladder and prompt upgrade', async () => {
+  const [spec, skill, core, anticipation, upgrade] = await Promise.all([
+    read('SPEC.md'),
+    read('skills/step-beyond/SKILL.md'),
+    read('skills/step-beyond/templates/core-injection.txt'),
+    read('skills/step-beyond/references/anticipation.md'),
+    read('skills/step-beyond/references/prompt-upgrade.md'),
+  ]);
+  for (const rung of ['do_ahead', 'prepare', 'propose', 'hold']) {
+    assert.match(spec, new RegExp(`\`${rung}\``, 'u'), `SPEC.md must define ${rung}`);
+  }
+  for (const content of [skill, core, anticipation]) {
+    for (const rung of ['DO_AHEAD', 'PREPARE', 'PROPOSE']) assert.match(content, new RegExp(rung, 'u'));
+    assert.match(content, /permission/iu);
+  }
+  for (const source of ['explicit', 'open_loop', 'trajectory', 'artifact_gap', 'session_arc', 'domain_prior']) {
+    assert.match(spec, new RegExp(source, 'u'));
+    assert.match(anticipation, new RegExp(source, 'u'));
+  }
+  for (const slot of ['Goal', 'Audience', 'Deliverable', 'Quality bar', 'Constraints', 'Done-state']) {
+    assert.match(upgrade, new RegExp(`\\| ${slot} \\|`, 'u'));
+  }
+  assert.match(skill, /Step beyond:/u);
+});
+
+test('the portable skill is self-contained and every reference it names exists', async () => {
+  const skill = await read('skills/step-beyond/SKILL.md');
+  assert.doesNotMatch(skill, /\]\(\.\.\//u, 'skill must not link outside its own directory');
+  const named = [...skill.matchAll(/`(references\/[a-z-]+\.md)`/gu)].map((match) => match[1]!);
+  assert.ok(named.length >= 10);
+  for (const path of new Set(named)) await read(`skills/step-beyond/${path}`);
+});
+
+test('host guide and installer cover Claude Code, Codex, and Hermes', async () => {
+  const [hosts, installer, hook] = await Promise.all([
+    read('skills/step-beyond/references/hosts.md'),
+    read('scripts/install.sh'),
+    read('hooks/hooks.json'),
+  ]);
+  for (const term of ['## Claude Code', '## Codex', '## Hermes', '.claude/skills', '.agents/skills', '.hermes/skills', 'AGENTS.md', 'SOUL.md']) {
+    assert.ok(hosts.includes(term), `hosts.md must mention ${term}`);
+  }
+  for (const term of ['.claude/skills/step-beyond', '.agents/skills/step-beyond', '.hermes/skills/step-beyond', 'step-beyond:core:start']) {
+    assert.ok(installer.includes(term), `installer must handle ${term}`);
+  }
+  const parsed = JSON.parse(hook) as { hooks: { SessionStart: unknown[] } };
+  assert.equal(parsed.hooks.SessionStart.length, 1);
+  assert.match(hook, /core-injection\.txt/u);
+});
+
+test('eval catalog and template cover the prediction series', async () => {
+  const [cases, template] = await Promise.all([read('evals/cases.md'), read('evals/results/TEMPLATE.md')]);
+  for (const id of ['E1', 'E2', 'E3', 'E4', 'E5', 'E6']) {
+    assert.match(cases, new RegExp(`### ${id} ·`, 'u'));
+    assert.match(template, new RegExp(`\\| ${id} \\|`, 'u'));
+  }
+  assert.match(template, /prediction hit rate/iu);
 });
 
 test('README surfaces lead with the Step Beyond product promise and its boundary', async () => {

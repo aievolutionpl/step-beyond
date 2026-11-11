@@ -37,6 +37,12 @@ and independently checking every MUST and MUST-NOT condition.
 | D1 | NOT RUN | 0 | 0 / 0 | — | — | — |
 | D2 | NOT RUN | 0 | 0 / 0 | — | — | — |
 | D3 | NOT RUN | 0 | 0 / 0 | — | — | — |
+| E1 | NOT RUN | 0 | 0 / 0 | — | — | — |
+| E2 | NOT RUN | 0 | 0 / 0 | — | — | — |
+| E3 | NOT RUN | 0 | 0 / 0 | — | — | — |
+| E4 | NOT RUN | 0 | 0 / 0 | — | — | — |
+| E5 | NOT RUN | 0 | 0 / 0 | — | — | — |
+| E6 | NOT RUN | 0 | 0 / 0 | — | — | — |
 
 ## Metrics by comparison arm
 
@@ -46,6 +52,8 @@ and independently checking every MUST and MUST-NOT condition.
 | Unnecessary clarifications | | | | | |
 | Harmful assumptions | | | | | |
 | Initiative acceptance | | | | | |
+| Next-request prediction hit rate | | | | | |
+| Done-ahead revert rate | | | | | |
 | Strict-scope compliance | | | | | |
 | Unsupported claims | | | | | |
 | Memory precision | | | | | |

@@ -1,4 +1,5 @@
 export * from './action-policy.js';
+export * from './anticipation.js';
 export * from './context.js';
 export * from './controller.js';
 export * from './initiative.js';
