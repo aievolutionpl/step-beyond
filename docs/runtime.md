@@ -39,6 +39,53 @@ const permission = classifyAction({
 `selectInitiatives` classifies permission before applying the adaptive score.
 Strict mode returns no selected action and no proposal.
 
+## Next-move planning
+
+```ts
+import {
+  planNextMoves,
+  predictFromTrajectories,
+  predictionAccuracy,
+  updatePredictionAccuracy,
+} from '@step-beyond/runtime-core';
+
+const next = predictFromTrajectories(
+  ['landing page', 'og image'],                       // requests this session
+  [{ sequence: ['landing page', 'og image', 'deploy preview'], seen: 4 }],
+);
+// [{ step: 'deploy preview', confidence: 0.67, matched: 2, seen: 4 }]
+
+const plan = planNextMoves(
+  [
+    {
+      id: 'tests', description: 'Tests for the new parser', source: 'trajectory',
+      action: { kind: 'execute_local', withinScope: true, reversible: true },
+      confidence: 0.9, expectedValue: 0.8, effort: 0.1, separable: true,
+      historicalAccuracy: predictionAccuracy({ hits: 6, misses: 1 }),
+    },
+    {
+      id: 'deploy', description: 'Deploy the preview', source: 'explicit',
+      action: { kind: 'publish_external', withinScope: true },
+      confidence: 1, expectedValue: 0.9, effort: 0.2, separable: true,
+    },
+  ],
+  'standard',
+);
+// plan.doAhead = ['tests'], plan.propose = ['deploy']
+```
+
+`planNextMoves` classifies permission before anything else, so an `ASK` action
+is at most proposed and a `FORBIDDEN` one is held. Every decision carries reason
+codes and its calibrated confidence. Strict mode holds everything. Per-rung
+budgets are configurable through the third argument; overflow moves down one
+rung. `decideTurn` accepts optional `predictions` and `mode` and returns the plan
+as `nextMoves`; it holds all predictions while intent resolution is `clarify` or
+`ask_permission`.
+
+`updatePredictionAccuracy` applies an observed outcome; `unknown` changes
+nothing. The model still writes the predictions. The runtime only decides what
+may be done with them.
+
 ## Context and token budget
 
 `assembleContext` accepts `maxContextTokens`. Give entries a normalized

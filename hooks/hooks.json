@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat \"${CLAUDE_PLUGIN_ROOT}/skills/step-beyond/templates/core-injection.txt\""
+          }
+        ]
+      }
+    ]
+  }
+}

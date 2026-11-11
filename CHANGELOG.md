@@ -1,5 +1,45 @@
 # Changelog
 
+## [4.0.0-alpha.3] - 2026-11-11
+
+### Added
+- Next-move prediction: the agent predicts the user's likely next requests from
+  stated goals, open loops, observed request sequences, artifact gaps, the
+  session arc, and domain priors, then places each on a `DO_AHEAD` / `PREPARE` /
+  `PROPOSE` / `HOLD` ladder. Specified in `SPEC.md` section 6.1 and explained in
+  `references/anticipation.md`.
+- Prompt upgrade: `references/prompt-upgrade.md` describes how to rebuild the
+  brief behind a weak prompt and lists the expert gaps for code, design,
+  campaigns, research, and automation.
+- Runtime: `planNextMoves`, `predictFromTrajectories`, `predictionAccuracy`, and
+  `updatePredictionAccuracy` in `@step-beyond/runtime-core`; `decideTurn` accepts
+  `predictions` and `mode` and returns `nextMoves`.
+- Hosts: `references/hosts.md` with concrete Claude Code, Codex, and Hermes
+  bindings; `scripts/install.sh` installs the skill into each host idempotently
+  and can write a marked always-on instruction block; the Claude Code plugin
+  ships a `SessionStart` hook that injects the core instruction.
+- Evals: Series E (E1–E6) for prompt upgrade and next-move prediction, plus
+  prediction hit rate and done-ahead revert rate in the result template.
+
+### Changed
+- `SKILL.md` is reorganized around the nine lifecycle stages, with a fixed
+  three-line delivery footer (`Assumed:`, `Step beyond:`, `Next:`) and a
+  description written for implicit skill selection.
+- The skill no longer links outside its own directory, so a copied install has
+  no broken references.
+- The portable memory template records trajectories, hits, misses, open loops,
+  and hypotheses; the default location is `~/.step-beyond/user-patterns.md`.
+- Core injection and the ChatGPT adapter carry the prediction ladder.
+- Plugin manifests now report the same version as the packages.
+
+### Verification limits
+- The runtime ladder is covered by deterministic unit tests. No live-model run
+  of Series E exists yet, so prediction hit rate, done-ahead revert rate, and
+  follow-up reduction are unmeasured.
+- The installer was exercised against temporary home directories. It was not
+  run against live Claude Code, Codex, or Hermes installations, and the plugin
+  `SessionStart` hook was not observed in a live Claude Code session.
+
 ## [4.0.0-alpha.2] - 2026-07-13
 
 ### Changed

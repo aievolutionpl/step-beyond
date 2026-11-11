@@ -1,6 +1,6 @@
 # Step Beyond for ChatGPT
 
-**Version 4.0.0-alpha.2** · Prompt-only adapter for Custom GPT, Project
+**Version 4.0.0-alpha.3** · Prompt-only adapter for Custom GPT, Project
 Instructions, Agent Mode, and regular chats
 
 [Main README](README.md) · [Polski](README_PL.md) · [Specification](SPEC.md)
@@ -82,6 +82,10 @@ priority platform, organization, project, and user instructions intact.
 
 ## Behavior
 
+- Rebuild the missing brief (goal, audience, deliverable, quality bar,
+  constraints, done-state) from the conversation instead of interrogating.
+- Predict the likely next request; finish it ahead when it is cheap, separable,
+  and needs no permission, otherwise stage it or offer it in one line.
 - Build multiple materially different intent hypotheses for meaningful requests.
 - Compare confidence with mistake cost before acting or asking one question.
 - Treat `only`, `just`, `nothing else`, `tylko`, and `nic więcej` as strict scope.

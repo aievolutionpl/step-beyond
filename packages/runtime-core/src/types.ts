@@ -105,3 +105,40 @@ export interface UserModelEntry {
   sensitivity: 'normal' | 'sensitive';
   status: 'active' | 'disputed' | 'expired' | 'deleted';
 }
+
+export type PredictionSource = 'explicit' | 'open_loop' | 'trajectory' | 'artifact_gap' | 'session_arc' | 'domain_prior';
+
+/** One predicted next request, with the action that would satisfy it now. */
+export interface NextMovePrediction {
+  id: string;
+  description: string;
+  source: PredictionSource;
+  action: ProposedAction;
+  /** Probability that the user asks for this next, before calibration. */
+  confidence: number;
+  expectedValue: number;
+  /** Normalized cost of doing it now (time, tokens, review burden). */
+  effort: number;
+  /** True when it can be dropped without touching the requested base result. */
+  separable: boolean;
+  /** Share of earlier predictions of this kind the user took up; defaults to 1. */
+  historicalAccuracy?: number;
+  evidenceRefs?: string[];
+}
+
+export type NextMoveDecision = 'do_ahead' | 'prepare' | 'propose' | 'hold';
+
+export interface NextMoveBudget { doAhead: number; prepare: number; propose: number }
+
+export interface NextMovePlan {
+  doAhead: string[];
+  prepare: string[];
+  propose: string[];
+  hold: string[];
+  decisions: Record<string, { decision: NextMoveDecision; reasonCodes: string[]; calibratedConfidence: number }>;
+}
+
+/** An observed sequence of user requests, e.g. landing page → OG image → deploy. */
+export interface Trajectory { sequence: string[]; seen: number }
+
+export interface PredictionAccuracy { hits: number; misses: number }

@@ -10,7 +10,7 @@ Step Beyond daje agentowi stały instynkt rozumienia rezultatu ukrytego za
 poleceniem, domykania brakujących elementów, przewidywania następnego użytecznego
 kroku i weryfikowania wyniku przed oddaniem pracy.
 
-**Wersja 4.0.0-alpha.2** · Hybrydowa implementacja referencyjna: prompt + TypeScript
+**Wersja 4.0.0-alpha.3** · Hybrydowa implementacja referencyjna: prompt + TypeScript
 
 [English](README.md) · [Wersja ChatGPT](README_CHATGPT.md) · [Specyfikacja](SPEC.md) · [API runtime](docs/runtime.md)
 
@@ -150,16 +150,55 @@ Przykłady API, obsługa store i zasady degradacji są w
 
 ### Przenośny skill
 
-Skopiuj [`skills/step-beyond/`](skills/step-beyond/) do hosta obsługującego
-skille albo wstrzyknij
+```bash
+scripts/install.sh                 # każdy obsługiwany host znaleziony w $HOME
+scripts/install.sh --host codex    # claude | codex | hermes | all
+scripts/install.sh --always-on     # dopisuje też blok stałych instrukcji
+```
+
+| Host | Lokalizacja skilla | Stała instrukcja |
+|---|---|---|
+| Claude Code | `~/.claude/skills/step-beyond/` albo plugin | hook `SessionStart` pluginu albo blok w `CLAUDE.md` |
+| Codex | `~/.agents/skills/step-beyond/` | blok w `AGENTS.md` |
+| Hermes | `~/.hermes/skills/step-beyond/` | blok w `SOUL.md` |
+
+W Claude Code repozytorium instaluje się też jako plugin:
+`/plugin marketplace add aievolutionpl/step-beyond`. W innym hoście skopiuj
+[`skills/step-beyond/`](skills/step-beyond/) do katalogu skilli albo wstrzyknij
 [`skills/step-beyond/templates/core-injection.txt`](skills/step-beyond/templates/core-injection.txt)
-jako stałe instrukcje.
+jako stałe instrukcje. Zasady dla poszczególnych hostów opisuje
+[przewodnik po hostach](skills/step-beyond/references/hosts.md).
 
 Dla Custom GPT, Project Instructions i zwykłego czatu użyj
 [wersji ChatGPT](README_CHATGPT.md). Bez połączonego runtime działa ona w trybie
 prompt-only.
 
 ## Kontrakt działania
+
+### Ulepszanie promptu i przewidywanie kolejnego ruchu
+
+Większość promptów jest krótka, bo użytkownik nie wie, co doprecyzowałby
+specjalista. Agent sam odtwarza brakujący brief (cel, odbiorca, forma, poziom
+jakości, ograniczenia, kryterium ukończenia) z rozmowy, pamięci, projektu
+i eksperckich ustawień domyślnych. Zadaje najwyżej jedno pytanie.
+
+Przed oddaniem wyniku przewiduje, o co użytkownik poprosi za chwilę: na podstawie
+wypowiedzianych celów, otwartych wątków, zaobserwowanych sekwencji próśb, braków
+w wyniku i kierunku sesji. Każda prognoza trafia na jeden szczebel:
+
+| Szczebel | Kiedy | Co się dzieje |
+|---|---|---|
+| `DO_AHEAD` | Pewne, tanie, lokalne, odwracalne i oddzielne od zamówionego wyniku | Zrobione od razu, zweryfikowane, ujawnione jedną linią z informacją, jak to usunąć |
+| `PREPARE` | Prawdopodobne, ale duże albo zmieniające zamówiony wynik | Przygotowane, niezastosowane |
+| `PROPOSE` | Możliwe albo wymagające zgody | Jedna konkretna propozycja |
+| `HOLD` | Słabe przesłanki, ścisły zakres albo wyczerpany budżet tury | Nic |
+
+Trafienia i pudła są zapisywane na podstawie następnej wiadomości użytkownika
+i zmieniają to, jak daleko agent idzie następnym razem. Szczegóły:
+[anticipation](skills/step-beyond/references/anticipation.md) oraz
+[prompt upgrade](skills/step-beyond/references/prompt-upgrade.md). Skuteczność
+prognoz pozostaje niezmierzona do czasu uruchomienia przypadków serii E
+z [`evals/cases.md`](evals/cases.md).
 
 ### Intencja i ścisły zakres
 

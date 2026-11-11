@@ -10,7 +10,7 @@ Step Beyond gives your agent a standing instinct to understand the outcome
 behind the prompt, complete the missing pieces, predict the next useful move,
 and verify the result before delivery.
 
-**Version 4.0.0-alpha.2** · Hybrid prompt and TypeScript reference implementation
+**Version 4.0.0-alpha.3** · Hybrid prompt and TypeScript reference implementation
 
 [Polski](README_PL.md) · [ChatGPT edition](README_CHATGPT.md) · [Specification](SPEC.md) · [Runtime API](docs/runtime.md)
 
@@ -154,16 +154,55 @@ adapter wiring, and degradation behavior.
 
 ### Install the portable skill
 
-Copy [`skills/step-beyond/`](skills/step-beyond/) into a host that supports
-skills, or inject
+```bash
+scripts/install.sh                 # every supported host found in $HOME
+scripts/install.sh --host codex    # claude | codex | hermes | all
+scripts/install.sh --always-on     # also write the standing instruction block
+```
+
+| Host | Skill location | Always-on instruction |
+|---|---|---|
+| Claude Code | `~/.claude/skills/step-beyond/` or the plugin | plugin `SessionStart` hook or `CLAUDE.md` block |
+| Codex | `~/.agents/skills/step-beyond/` | `AGENTS.md` block |
+| Hermes | `~/.hermes/skills/step-beyond/` | `SOUL.md` block |
+
+In Claude Code the repository also installs as a plugin:
+`/plugin marketplace add aievolutionpl/step-beyond`. For any other host, copy
+[`skills/step-beyond/`](skills/step-beyond/) into its skill directory or inject
 [`skills/step-beyond/templates/core-injection.txt`](skills/step-beyond/templates/core-injection.txt)
-as standing instructions.
+as standing instructions. Per-host rules are in the
+[host guide](skills/step-beyond/references/hosts.md).
 
 Use the dedicated [ChatGPT instructions](README_CHATGPT.md) for Custom GPT,
 Project Instructions, or chat-based use. Without a connected runtime, those
 instructions remain prompt-only.
 
 ## The operating contract
+
+### Prompt upgrade and next-move prediction
+
+Most prompts are short because the user does not know what a specialist would
+specify. The agent rebuilds the missing brief (goal, audience, deliverable,
+quality bar, constraints, done-state) from the conversation, memory, the project,
+and expert defaults, and asks at most one question.
+
+Before delivery it predicts the user's likely next requests from stated goals,
+open loops, observed request sequences, gaps in the result, and the direction of
+the session. Each prediction lands on one rung:
+
+| Rung | When | What happens |
+|---|---|---|
+| `DO_AHEAD` | Confident, cheap, local, reversible, separable from the requested result | Done now, verified, disclosed in one line with how to drop it |
+| `PREPARE` | Likely but large, or it would change the requested result | Staged, not applied |
+| `PROPOSE` | Plausible, or the action needs permission | One concrete offer |
+| `HOLD` | Weak evidence, strict scope, or the per-turn budget is spent | Nothing |
+
+Hits and misses are recorded from the user's next message and adjust how far the
+agent goes next time. See the
+[anticipation](skills/step-beyond/references/anticipation.md) and
+[prompt upgrade](skills/step-beyond/references/prompt-upgrade.md) references.
+The prediction hit rate is unmeasured until the Series E cases in
+[`evals/cases.md`](evals/cases.md) are run.
 
 ### Intent and strict scope
 
@@ -255,6 +294,8 @@ packages/adapter-reference/          reference capability adapter
 evals/runner/                         repeatable evaluation harness
 evals/cases.md                        behavioral case catalog
 evals/results/                        templates and recorded reports
+scripts/install.sh                    installer for Claude Code, Codex, Hermes
+hooks/hooks.json                      Claude Code plugin SessionStart hook
 docs/runtime.md                       runtime API and degradation guide
 examples/                              worked v4 traces
 ```

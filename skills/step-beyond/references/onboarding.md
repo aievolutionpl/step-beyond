@@ -40,13 +40,13 @@ Run these in order at first adoption. Beats 1–4 are silent plumbing; beat 5 is
 
 ## 2. Per-Host Onboarding — What Wires, What Falls Back
 
-Detection (beat ①) picks a profile. These are the four hosts the skill is tuned hardest for; the rest follow the same shape via `references/adapters.md`.
+Detection (beat ①) picks a profile. These are the four hosts the skill is tuned hardest for; exact paths and per-host rules are in `references/hosts.md`, and the rest follow the same shape via `references/adapters.md`.
 
 | Host | Detect signal | Injection point | Native powers at onboarding | Falls back on |
 |------|---------------|-----------------|-----------------------------|---------------|
-| **Claude Code / Agent SDK** | `.claude/` dir, Task tool present | skill or `.claude/skills/` | project instructions, optional tools, local execution when exposed | persistence and verification guarantees depend on the actual adapter |
-| **Codex CLI** | `~/.codex/`, `AGENTS.md` | `config.toml` / `--custom-instructions` | memory (`AGENTS.md`/fs) · runtime (shell) | subagents → **solo + Fresh-Eyes Protocol** |
-| **Hermes** | `config.yaml` with `skills:` | `config.yaml` (list step-beyond **first**) | memory (fs/vault) · **subagents (skills-as-agents)** · runtime (shell) | — (skills-as-agents cover parallel roles) |
+| **Claude Code / Agent SDK** | `.claude/` dir, Task tool present | plugin `SessionStart` hook, `.claude/skills/`, or `CLAUDE.md` block | project instructions, optional tools, local execution when exposed | persistence and verification guarantees depend on the actual adapter |
+| **Codex CLI** | `~/.codex/`, `AGENTS.md` | `.agents/skills/` plus `AGENTS.md` marked core block | memory (portable file) · runtime (sandboxed shell) | subagents when exposed, else **solo + Fresh-Eyes Protocol** |
+| **Hermes** | `~/.hermes/` with `config.yaml` | `~/.hermes/skills/` plus `SOUL.md` marked core block | memory (`USER.md`/`MEMORY.md`) · delegation when exposed · runtime (shell) | solo when delegation is absent |
 | **OpenClaw** | `AGENTS.md` + system prompt | `AGENTS.md` marked core block | memory (`AGENTS.md`/fs) · runtime (shell) | subagents → solo unless native spawn present |
 
 **The onboarding invariant:** the *ritual* is identical on every host — detect, wire, seed, calibrate, announce, activate. Only the slot bindings differ, and every unbound slot has a documented fallback, so a leaner host is never a broken host. A Codex agent with no subagents runs the exact same pipeline as a Claude agent with them; it just verifies with fresh-eyes self-review instead of a spawned reviewer, and says so honestly.
