@@ -30,6 +30,8 @@ test('matchQuote restores source spelling only for an unambiguous case-only diff
   assert.deepEqual(matchQuote('System  działa', 'System działa'), { status: 'not_found' });
   assert.deepEqual(matchQuote('System dziala', 'System działa'), { status: 'not_found' });
   assert.deepEqual(matchQuote(' ', 'anything'), { status: 'not_found' });
+  // A length-changing character elsewhere in the source does not block restoration.
+  assert.deepEqual(matchQuote('linux', 'İstanbul office. System runs on Linux.'), { status: 'case_restored', quote: 'Linux' });
 });
 
 test('case 1: one quote under a compound statement is flagged, and ability is not consent', () => {
@@ -172,4 +174,49 @@ test('malformed model output is reported, not repaired', () => {
   assert.equal(parseExtraction('{"claims":[{"id":"a","kind":"fact","statement":"x"},{"id":"a","kind":"fact","statement":"y"}]}').ok, false);
   const invalidAction = parseExtraction('{"claims":[{"id":"a","kind":"proposal","statement":"x","action":{"kind":"rm_rf"}}]}');
   assert.ok(invalidAction.ok && invalidAction.ignoredFields[0]!.reasonCode === 'invalid_action_ignored');
+});
+
+test('a decision does not carry over to a changed action', () => {
+  const proposal = (kind: string) => ({
+    id: 'p', kind: 'proposal', validity: 'current', statement: 'Rozesłać harmonogram',
+    evidence: [{ sourceId: 'chat', quote: 'Harmonogram wyślę jutro' }], action: { kind, withinScope: true },
+  });
+  const local = review([proposal('execute_local')]).claims[0]!;
+  const decision = recordDecision({ claim: local, snapshot, decision: 'Prepare it locally', evidenceRef: 'user-message:7' });
+  assert.equal(review([proposal('execute_local')], {}, [decision]).claims[0]!.decision, 'settled');
+
+  const publish = review([proposal('publish_external')], {}, [decision]).claims[0]!;
+  assert.equal(publish.actionDecision?.class, 'ASK');
+  assert.equal(publish.decision, 'possibly_settled');
+  assert.ok(publish.requiredActions.includes('user_decision'));
+});
+
+test('a decision made without a cited source cannot be recorded or inherited', () => {
+  const claim = { id: 'm', kind: 'discrepancy', validity: 'current', statement: 'Spór o termin', evidence: [{ sourceId: 'later', quote: 'Termin: marzec' }] };
+  const unresolved = review([claim]).claims[0]!;
+  assert.throws(() => recordDecision({ claim: unresolved, snapshot, decision: 'Keep', evidenceRef: 'user-message:9' }), /without a snapshot: later/);
+
+  // A hand-built record with an incomplete digest map does not settle the claim either.
+  const withLater = [...sources, { id: 'later', text: 'Termin: marzec' }];
+  const forged = { id: 'r1', fingerprint: unresolved.fingerprint, evidenceKeys: unresolved.evidenceKeys, sourceDigests: {}, decision: 'Keep', evidenceRef: 'user-message:9', decidedAt: '2026-01-01T00:00:00.000Z' };
+  const next = reviewExtraction({ rawOutput: JSON.stringify({ claims: [claim] }), snapshot: snapshotSources(withLater), sources: withLater, decisions: [forged] }).claims[0]!;
+  assert.equal(next.evidence, 'supported');
+  assert.equal(next.decision, 'reopened');
+  assert.ok(next.requiredActions.includes('user_decision'));
+});
+
+test('a reopened or uncertain prior decision asks the user for any claim kind', () => {
+  const rule = { id: 'r', kind: 'decision', validity: 'current', statement: 'Wdrożenia w piątki', evidence: [{ sourceId: 'rules', quote: 'wdrożenia tylko w piątki' }] };
+  const first = review([rule]).claims[0]!;
+  assert.deepEqual(first.requiredActions, []);
+  const decision = recordDecision({ claim: first, snapshot, decision: 'Confirmed', evidenceRef: 'user-message:3' });
+
+  const amended = sources.map((source) => source.id === 'rules' ? { ...source, text: `${source.text} Wyjątek: święta.` } : source);
+  const reopened = reviewExtraction({ rawOutput: JSON.stringify({ claims: [rule] }), snapshot: snapshotSources(amended), sources: amended, decisions: [decision] }).claims[0]!;
+  assert.equal(reopened.decision, 'reopened');
+  assert.deepEqual(reopened.requiredActions, ['user_decision']);
+
+  const reworded = review([{ ...rule, statement: 'Wdrażamy wyłącznie w piątki' }], {}, [decision]).claims[0]!;
+  assert.equal(reworded.decision, 'possibly_settled');
+  assert.deepEqual(reworded.requiredActions, ['user_decision']);
 });

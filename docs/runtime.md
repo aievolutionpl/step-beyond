@@ -177,8 +177,10 @@ Rules the checks enforce:
   same; the change is listed in `review.corrections`. Whitespace, punctuation,
   and wording differences fail. `review.rawOutput` is never modified.
 - **Decisions.** `settled` requires a `DecisionRecord` whose fingerprint equals
-  the claim's (kind, normalized statement, cited quotes) and whose source
-  digests are unchanged. Changed sources give `reopened`. A reworded claim that
+  the claim's (kind, normalized statement, cited quotes, attached action) and
+  which pins an unchanged digest for every source the claim cites. Changed or
+  unpinned sources give `reopened`. `reopened` and `possibly_settled` add
+  `user_decision` for every claim kind. A reworded claim that
   shares a quote with a record, or names one in `priorDecisionRef`, gives
   `possibly_settled` and still asks the user. Rewording is not recognized
   semantically.

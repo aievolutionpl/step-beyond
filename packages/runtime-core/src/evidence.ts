@@ -150,12 +150,13 @@ export function changedSourceIds(before: SourceSnapshot[], now: SourceDocument[]
 export function matchQuote(quote: string, text: string): QuoteMatch {
   if (quote.trim() === '') return { status: 'not_found' };
   if (text.includes(quote)) return { status: 'exact', quote };
-  const lowerText = text.toLowerCase();
+  // Compare same-length windows of the original text, so a character elsewhere
+  // whose lowercase form changes length cannot shift offsets or block the match.
   const lowerQuote = quote.toLowerCase();
-  if (lowerText.length !== text.length || lowerQuote.length !== quote.length) return { status: 'not_found' };
   const spellings = new Set<string>();
-  for (let index = lowerText.indexOf(lowerQuote); index !== -1; index = lowerText.indexOf(lowerQuote, index + 1)) {
-    spellings.add(text.slice(index, index + quote.length));
+  for (let index = 0; index + quote.length <= text.length; index++) {
+    const candidate = text.slice(index, index + quote.length);
+    if (candidate.toLowerCase() === lowerQuote) spellings.add(candidate);
   }
   if (spellings.size === 0) return { status: 'not_found' };
   if (spellings.size > 1) return { status: 'ambiguous' };
@@ -251,16 +252,22 @@ export function parseExtraction(rawOutput: string): ParsedExtraction {
   return { ok: true, claims, ignoredFields };
 }
 
-function fingerprintOf(kind: ClaimKind, statement: string, evidenceKeys: string[]): string {
-  return sha256(JSON.stringify([kind, normalize(statement), evidenceKeys]));
+/** The attached action is part of the identity: a decision about one proposal does not cover another. */
+function fingerprintOf(kind: ClaimKind, statement: string, evidenceKeys: string[], action: ProposedAction | undefined): string {
+  const actionKey = action
+    ? [action.kind, action.withinScope ?? null, action.reversible ?? null, action.assumptionRequired ?? null, action.securitySensitive ?? null, action.estimatedCost ?? null]
+    : null;
+  return sha256(JSON.stringify([kind, normalize(statement), evidenceKeys, actionKey]));
 }
 
 function matchDecision(
-  claim: ExtractedClaim, fingerprint: string, evidenceKeys: string[], decisions: DecisionRecord[], digests: Map<string, string>,
+  claim: ExtractedClaim, fingerprint: string, evidenceKeys: string[], citedSources: string[], decisions: DecisionRecord[], digests: Map<string, string>,
 ): { status: DecisionStatus; refs: string[]; reasonCodes: string[] } {
   const exact = decisions.filter((record) => record.fingerprint === fingerprint && record.evidenceRef.trim() !== '');
   if (exact.length > 0) {
-    const valid = exact.filter((record) => Object.entries(record.sourceDigests).every(([id, digest]) => digests.get(id) === digest));
+    // Every source the claim cites now must have been pinned by the record, unchanged.
+    const valid = exact.filter((record) => citedSources.every((id) => digests.has(id) && record.sourceDigests[id] === digests.get(id))
+      && Object.entries(record.sourceDigests).every(([id, digest]) => digests.get(id) === digest));
     return valid.length > 0
       ? { status: 'settled', refs: valid.map((record) => record.id), reasonCodes: ['prior_decision_applies'] }
       : { status: 'reopened', refs: exact.map((record) => record.id), reasonCodes: ['decision_context_changed'] };
@@ -305,8 +312,9 @@ function reviewClaim(
   if (parts.some((part) => part.evidence.length === 0) && evidence !== 'not_applicable') reasonCodes.push('part_without_evidence');
 
   const evidenceKeys = [...new Set(parts.flatMap((part) => part.evidence.map((item) => evidenceKey(item.sourceId, item.resolvedQuote ?? item.quote))))].sort();
-  const fingerprint = fingerprintOf(claim.kind, claim.statement, evidenceKeys);
-  const decision = matchDecision(claim, fingerprint, evidenceKeys, decisions, digests);
+  const fingerprint = fingerprintOf(claim.kind, claim.statement, evidenceKeys, claim.action);
+  const citedSources = [...new Set(parts.flatMap((part) => part.evidence.map((item) => item.sourceId)))];
+  const decision = matchDecision(claim, fingerprint, evidenceKeys, citedSources, decisions, digests);
   reasonCodes.push(...decision.reasonCodes);
 
   const requiredActions: RequiredAction[] = [];
@@ -322,7 +330,9 @@ function reviewClaim(
     requiredActions.push('verify_before_use');
   }
   const needsDecision = claim.kind === 'discrepancy' || claim.kind === 'proposal' || claim.action !== undefined;
-  if (needsDecision && decision.status !== 'settled') requiredActions.push('user_decision');
+  // An uncertain or invalidated prior decision goes back to the user whatever the claim kind.
+  const priorDecisionOpen = decision.status === 'reopened' || decision.status === 'possibly_settled';
+  if ((needsDecision && decision.status !== 'settled') || priorDecisionOpen) requiredActions.push('user_decision');
 
   const actionDecision = claim.action ? classifyAction(claim.action) : null;
   if (actionDecision) reasonCodes.push('proposal_is_not_permission');
@@ -387,6 +397,8 @@ export function recordDecision(input: {
   const cited = new Set(input.claim.parts.flatMap((part) => part.evidence.map((item) => item.sourceId)));
   const sourceDigests: Record<string, string> = {};
   for (const snapshot of input.snapshot) if (cited.has(snapshot.id)) sourceDigests[snapshot.id] = snapshot.digest;
+  const missing = [...cited].filter((id) => !(id in sourceDigests));
+  if (missing.length > 0) throw new Error(`A decision cannot be recorded for a claim citing sources without a snapshot: ${missing.join(', ')}`);
   return {
     id: crypto.randomUUID(), fingerprint: input.claim.fingerprint, evidenceKeys: [...input.claim.evidenceKeys],
     sourceDigests, decision: input.decision, evidenceRef: input.evidenceRef,
