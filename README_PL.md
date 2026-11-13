@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="step%20beyond%20banner.png" alt="Step Beyond banner" width="100%">
+</p>
+
 # Step Beyond
 
 ## Każde zadanie. Jeden krok dalej.
@@ -12,42 +16,6 @@ pokazuje, co zrobił, jak to sprawdził i czego jeszcze nie udało się potwierd
 [English](README.md) · [Wersja ChatGPT](README_CHATGPT.md) · [Specyfikacja](SPEC.md) · [API runtime](docs/runtime.md)
 
 [Start](#szybki-start) · [Architektura](#architektura) · [Przykład](#przykład-dodaj-formularz-kontaktowy) · [Reguły działania](#kontrakt-działania) · [Ewaluacja](evals/README.md)
-
-![Architektura Step Beyond: model proponuje działania, runtime ocenia reguły, a adapter hosta zwraca dowody wykonania. Diagram po angielsku.](docs/assets/step-beyond-architecture-en.png)
-
-## Architektura
-
-Step Beyond łączy **skill z instrukcjami dla agenta** i **referencyjny runtime
-w TypeScript**. Model interpretuje polecenie i proponuje działania. Kontroler
-rozstrzyga ustrukturyzowane hipotezy intencji, klasyfikuje zgody przed oceną
-inicjatywy i zapisuje dowody weryfikacji. Adapter łączy te decyzje z narzędziami
-hosta, a store przechowuje stan i historię zmian.
-
-Komponenty wymagają integracji z agentem. Brak możliwości wykonania ogranicza
-weryfikację, a brak magazynu stanu wyklucza deklarowanie trwałej pamięci.
-[Przykłady API](docs/runtime.md) pokazują konkretne kontrakty tej integracji.
-
-Framework ma dwa jawne tryby:
-
-| Tryb | Co zapewnia | Czego nie gwarantuje |
-|---|---|---|
-| **prompt-only** | Przenośne rozumowanie, ścisły zakres, decyzje uwzględniające zgody i dyscyplinę twierdzeń | Egzekwowanej trwałości, wspólnego stanu, deterministycznych bramek zgód ani audytu |
-| **runtime-backed** | Warstwę promptową oraz kontroler polityk, store, kontrakt adaptera, ledger weryfikacji i runner evali | Poprawnego zachowania każdego modelu i hosta bez powtarzanych testów konkretnego adaptera |
-
-`verified` jest statusem dowodowym. Dotyczy wyłącznie adaptera, hosta, modelu i
-zachowania objętego powtarzanymi pomiarami.
-
-### Pakiety referencyjne
-
-| Pakiet | Odpowiedzialność |
-|---|---|
-| `@step-beyond/runtime-core` | Intencja, ścisły zakres, zgody, adaptacyjna inicjatywa, weryfikacja, uczenie i kontrola tury |
-| `@step-beyond/runtime-store` | Izolacja namespace, odrzucanie sekretów, atomowy stan JSON, audyt, korekta, usuwanie i rollback |
-| `@step-beyond/adapter-reference` | Wykrywanie możliwości, jawna degradacja oraz granica między wykonaniem lokalnym i publikacją |
-| `@step-beyond/eval-runner` | Świeże instancje adaptera, ramiona porównawcze, powtórzenia, surowe dowody i metryki |
-
-Pakiety runtime nie mają zależności produkcyjnych. Projekt korzysta z TypeScript,
-`node:test` i `tsx` podczas rozwoju.
 
 ## Szybki start
 
@@ -99,6 +67,26 @@ Dla Custom GPT, Project Instructions i zwykłego czatu użyj
 [wersji ChatGPT](README_CHATGPT.md). Bez połączonego runtime działa ona w trybie
 prompt-only.
 
+## Jak połączyć Step Beyond z agentem
+
+Najprostsza integracja polega na załadowaniu skilla do hosta agenta. Agent
+otrzymuje instrukcje pracy i korzysta ze swoich dotychczasowych narzędzi.
+Instalator skilla nie podłącza automatycznie bibliotek runtime.
+
+![Dwie ścieżki integracji: instrukcje dla istniejącego agenta albo runtime połączony z narzędziami przez adapter.](docs/assets/agent-integration-en.png)
+
+| Element | Co podłączasz | Za co odpowiada host |
+|---|---|---|
+| Skill | Instrukcje i potrzebne materiały referencyjne | Załadowanie kontekstu, model i narzędzia |
+| Runtime | Wywołania polityk, dane intencji i kandydatów działań | Przekazanie danych i respektowanie decyzji |
+| Adapter | Funkcje wykonania oraz wykrywanie możliwości | Faktyczne operacje i uprawnienia |
+| Store i weryfikacja | Rekordy stanu, kontrole i dowody | Miejsce zapisu oraz wyniki rzeczywiście wykonanych kontroli |
+
+Przy integracji runtime aplikacja przekazuje propozycje do kontrolera, obsługuje
+wynik decyzji, wywołuje dozwolone operacje przez adapter i zapisuje zwrócone
+dowody. Samo zainstalowanie zależności nie tworzy tego połączenia. Szczegóły:
+[API runtime](docs/runtime.md) i [przewodnik po hostach](skills/step-beyond/references/hosts.md).
+
 ## Przykład: „Dodaj formularz kontaktowy”
 
 | Moment | Co robi agent | Co otrzymujesz |
@@ -109,21 +97,6 @@ prompt-only.
 | Weryfikuje | Uruchamia dostępne kontrole i wskazuje braki | Wynik z dowodami, np. „walidacja sprawdzona; wysyłka e-mail nieprzetestowana” |
 
 To przykład zamierzonego sposobu pracy, a nie wynik benchmarku. [Polska infografika](docs/assets/step-beyond-explained-pl.png) pokazuje ten sam przykład krok po kroku. Model proponuje działania; skuteczność zależy od hosta, integracji i wykonanych kontroli.
-
-### Jak wybiera dodatkowy krok?
-
-```mermaid
-flowchart TD
-    A[Pomysł na dodatkowy krok] --> B{Ścisły zakres?}
-    B -->|Tak| H[HOLD: bez dodatków]
-    B -->|Nie| C{Klasyfikacja zgody}
-    C -->|FORBIDDEN| H
-    C -->|ASK| P[Co najwyżej PROPOSE]
-    C -->|AUTO / AUTO_WITH_DISCLOSURE| D[Oceń pewność, wartość, koszt i odwracalność]
-    D --> E[DO_AHEAD / PREPARE / PROPOSE / HOLD]
-```
-
-Zgoda jest sprawdzana przed wartością pomysłu. Dobry pomysł sam w sobie nie daje uprawnień do wykonania.
 
 ## ⚡ Co zyskuje Twój agent
 
@@ -161,6 +134,42 @@ CONTEXT → INTENT → DECIDE → BUILD → INITIATIVE → EXECUTE → VERIFY �
 `DELIVER` prowadzi od rezultatu i raportuje wyłącznie twierdzenia obsługiwane
 przez ledger weryfikacji. Adapter może skrócić wewnętrzne rozumowanie, lecz
 zachowuje znaczenie i kolejność etapów.
+
+## Architektura
+
+![Architektura Step Beyond: model proponuje działania, runtime ocenia reguły, a adapter hosta zwraca dowody wykonania. Diagram po angielsku.](docs/assets/step-beyond-architecture-en.png)
+
+Step Beyond łączy **skill z instrukcjami dla agenta** i **referencyjny runtime
+w TypeScript**. Model interpretuje polecenie i proponuje działania. Kontroler
+rozstrzyga ustrukturyzowane hipotezy intencji, klasyfikuje zgody przed oceną
+inicjatywy i zapisuje dowody weryfikacji. Adapter łączy te decyzje z narzędziami
+hosta, a store przechowuje stan i historię zmian.
+
+Komponenty wymagają integracji z agentem. Brak możliwości wykonania ogranicza
+weryfikację, a brak magazynu stanu wyklucza deklarowanie trwałej pamięci.
+[Przykłady API](docs/runtime.md) pokazują konkretne kontrakty tej integracji.
+
+Framework ma dwa jawne tryby:
+
+| Tryb | Co zapewnia | Czego nie gwarantuje |
+|---|---|---|
+| **prompt-only** | Przenośne rozumowanie, ścisły zakres, decyzje uwzględniające zgody i dyscyplinę twierdzeń | Egzekwowanej trwałości, wspólnego stanu, deterministycznych bramek zgód ani audytu |
+| **runtime-backed** | Warstwę promptową oraz kontroler polityk, store, kontrakt adaptera, ledger weryfikacji i runner evali | Poprawnego zachowania każdego modelu i hosta bez powtarzanych testów konkretnego adaptera |
+
+`verified` jest statusem dowodowym. Dotyczy wyłącznie adaptera, hosta, modelu i
+zachowania objętego powtarzanymi pomiarami.
+
+### Pakiety referencyjne
+
+| Pakiet | Odpowiedzialność |
+|---|---|
+| `@step-beyond/runtime-core` | Intencja, ścisły zakres, zgody, adaptacyjna inicjatywa, weryfikacja, uczenie i kontrola tury |
+| `@step-beyond/runtime-store` | Izolacja namespace, odrzucanie sekretów, atomowy stan JSON, audyt, korekta, usuwanie i rollback |
+| `@step-beyond/adapter-reference` | Wykrywanie możliwości, jawna degradacja oraz granica między wykonaniem lokalnym i publikacją |
+| `@step-beyond/eval-runner` | Świeże instancje adaptera, ramiona porównawcze, powtórzenia, surowe dowody i metryki |
+
+Pakiety runtime nie mają zależności produkcyjnych. Projekt korzysta z TypeScript,
+`node:test` i `tsx` podczas rozwoju.
 
 ## Kontrakt działania
 

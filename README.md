@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="step%20beyond%20banner.png" alt="Step Beyond banner" width="100%">
+</p>
+
 # Step Beyond
 
 ## Every task. One step further.
@@ -19,45 +23,6 @@ uncertain, and which follow-up actions require permission.
 [Polski](README_PL.md) · [ChatGPT edition](README_CHATGPT.md) · [Specification](SPEC.md) · [Runtime API](docs/runtime.md)
 
 [Quick start](#quick-start) · [Architecture](#architecture) · [Example](#example-add-a-contact-form) · [Operating contract](#the-operating-contract) · [Evaluations](evals/README.md)
-
-![Step Beyond architecture: model and skill submit proposals, the reference runtime evaluates policy, and the host adapter returns execution evidence.](docs/assets/step-beyond-architecture-en.png)
-
-## Architecture
-
-Step Beyond combines a **portable agent skill** with a **TypeScript reference
-runtime**. The model interprets the request and proposes actions. The controller
-resolves structured intent hypotheses, classifies permissions before scoring
-initiative, and records verification evidence. The host adapter connects these
-decisions to execution tools; the store persists scoped state and audit history.
-
-These components require integration with an agent. Missing execution capabilities
-limit verification; missing storage rules out durability claims. The
-[runtime API examples](docs/runtime.md) describe the concrete integration contracts.
-
-### Choose your integration level
-
-Use the skill to guide an existing agent, or integrate the runtime when you need
-explicit policy decisions and auditable state:
-
-| Mode | What you get | What you do not get |
-|---|---|---|
-| **prompt-only** | Portable reasoning, strict-scope instructions, permission-aware decisions, claim discipline | Enforced persistence, shared state, deterministic permission gates, or audit guarantees |
-| **runtime-backed** | The portable layer plus the reference policy controller, store, adapter contract, verification ledger, and eval runner | A claim that every model or host behaves correctly without adapter-specific behavioral evidence |
-
-`verified` is an evidence status, not a marketing label. It applies only to the
-adapter, host, model, and behavior covered by repeated recorded measurements.
-
-### Reference packages
-
-| Package | Responsibility |
-|---|---|
-| `@step-beyond/runtime-core` | Intent decisions, strict scope, permissions, adaptive initiative, verification, learning, and turn control |
-| `@step-beyond/runtime-store` | Namespace isolation, secret rejection, atomic JSON state, audit history, correction, deletion, and rollback |
-| `@step-beyond/adapter-reference` | Capability detection, explicit degradation, local execution, and publication permission boundaries |
-| `@step-beyond/eval-runner` | Fresh adapter instances, comparison arms, repetitions, raw evidence, and cost/token/latency/consent metrics |
-
-The runtime packages have no production dependencies. Development uses
-TypeScript, `node:test`, and `tsx`.
 
 ## Quick start
 
@@ -133,6 +98,27 @@ Use the dedicated [ChatGPT instructions](README_CHATGPT.md) for Custom GPT,
 Project Instructions, or chat-based use. Without a connected runtime, those
 instructions remain prompt-only.
 
+## How Step Beyond connects to your agent
+
+The simplest integration loads the skill into your agent’s host. The agent
+receives the workflow instructions and continues using its existing model and
+tools. The skill installer does not automatically wire up the runtime packages.
+
+![Two integration paths: instructions for an existing agent, or a runtime connected to host tools through an adapter.](docs/assets/agent-integration-en.png)
+
+| Component | What you connect | What the host provides |
+|---|---|---|
+| Skill | Instructions and relevant reference material | Context loading, model access and tools |
+| Runtime | Policy calls, intent hypotheses and action candidates | Structured inputs and handling of decisions |
+| Adapter | Execution callbacks and capability detection | Actual operations and host permissions |
+| Store and verification | State records, checks and evidence | Storage location and results of executed checks |
+
+For a runtime integration, your application passes proposals to the controller,
+handles its decisions, invokes permitted operations through the adapter, and
+records the returned evidence. Installing dependencies alone does not establish
+that connection. See the [runtime API](docs/runtime.md) and
+[host guide](skills/step-beyond/references/hosts.md) for the integration contracts.
+
 ## Example: “Add a contact form”
 
 | Moment | What the agent does | What you receive |
@@ -143,21 +129,6 @@ instructions remain prompt-only.
 | Verify | Runs available checks and names gaps | Evidence, such as “validation checked; email delivery untested” |
 
 This illustrates the intended workflow, not a benchmark result. The model proposes actions; effectiveness depends on the host, integration and checks actually performed.
-
-### How does it choose an extra step?
-
-```mermaid
-flowchart TD
-    A[Candidate next step] --> B{Strict scope?}
-    B -->|Yes| H[HOLD: no extras]
-    B -->|No| C{Permission classification}
-    C -->|FORBIDDEN| H
-    C -->|ASK| P[At most PROPOSE]
-    C -->|AUTO / AUTO_WITH_DISCLOSURE| D[Assess confidence, value, effort and reversibility]
-    D --> E[DO_AHEAD / PREPARE / PROPOSE / HOLD]
-```
-
-Permission is checked before the value of an idea. A useful suggestion does not grant authority to execute it.
 
 ## ⚡ What Your Agent Gains
 
@@ -195,6 +166,45 @@ CONTEXT → INTENT → DECIDE → BUILD → INITIATIVE → EXECUTE → VERIFY �
 `DELIVER` leads with the result and reports only claims supported by the
 verification ledger. Internal reasoning may be compressed, but derived skills and
 adapters preserve the lifecycle semantics and order.
+
+## Architecture
+
+![Step Beyond architecture: model and skill submit proposals, the reference runtime evaluates policy, and the host adapter returns execution evidence.](docs/assets/step-beyond-architecture-en.png)
+
+Step Beyond combines a **portable agent skill** with a **TypeScript reference
+runtime**. The model interprets the request and proposes actions. The controller
+resolves structured intent hypotheses, classifies permissions before scoring
+initiative, and records verification evidence. The host adapter connects these
+decisions to execution tools; the store persists scoped state and audit history.
+
+These components require integration with an agent. Missing execution capabilities
+limit verification; missing storage rules out durability claims. The
+[runtime API examples](docs/runtime.md) describe the concrete integration contracts.
+
+### Choose your integration level
+
+Use the skill to guide an existing agent, or integrate the runtime when you need
+explicit policy decisions and auditable state:
+
+| Mode | What you get | What you do not get |
+|---|---|---|
+| **prompt-only** | Portable reasoning, strict-scope instructions, permission-aware decisions, claim discipline | Enforced persistence, shared state, deterministic permission gates, or audit guarantees |
+| **runtime-backed** | The portable layer plus the reference policy controller, store, adapter contract, verification ledger, and eval runner | A claim that every model or host behaves correctly without adapter-specific behavioral evidence |
+
+`verified` is an evidence status, not a marketing label. It applies only to the
+adapter, host, model, and behavior covered by repeated recorded measurements.
+
+### Reference packages
+
+| Package | Responsibility |
+|---|---|
+| `@step-beyond/runtime-core` | Intent decisions, strict scope, permissions, adaptive initiative, verification, learning, and turn control |
+| `@step-beyond/runtime-store` | Namespace isolation, secret rejection, atomic JSON state, audit history, correction, deletion, and rollback |
+| `@step-beyond/adapter-reference` | Capability detection, explicit degradation, local execution, and publication permission boundaries |
+| `@step-beyond/eval-runner` | Fresh adapter instances, comparison arms, repetitions, raw evidence, and cost/token/latency/consent metrics |
+
+The runtime packages have no production dependencies. Development uses
+TypeScript, `node:test`, and `tsx`.
 
 ## The operating contract
 
