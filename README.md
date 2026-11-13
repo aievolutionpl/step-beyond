@@ -2,10 +2,17 @@
 
 ## Every task. One step further.
 
-Step Beyond helps an AI agent turn a short request into a complete, checked
-result. The agent reads the context, fills in the pieces needed to finish the
-task, and assesses whether a useful next step is warranted. It then reports
-what it did, how it checked the result, and what remains unconfirmed.
+**A portable skill and TypeScript reference runtime for AI agents that understand
+the goal, complete the task, and verify their work.**
+
+Step Beyond gives an agent a structured workflow: read the context, resolve
+intent, build the requested result, assess useful next steps, and report evidence.
+The skill guides the model’s reasoning. When integrated with a host, the runtime
+handles permission classification, initiative selection, verification records,
+and persistent state.
+
+**The result:** a deliverable with a clear account of what was checked, what remains
+uncertain, and which follow-up actions require permission.
 
 **Version 4.0.0-alpha.3** · Hybrid prompt and TypeScript reference implementation
 
@@ -27,7 +34,10 @@ These components require integration with an agent. Missing execution capabiliti
 limit verification; missing storage rules out durability claims. The
 [runtime API examples](docs/runtime.md) describe the concrete integration contracts.
 
-The framework has two honest operating modes:
+### Choose your integration level
+
+Use the skill to guide an existing agent, or integrate the runtime when you need
+explicit policy decisions and auditable state:
 
 | Mode | What you get | What you do not get |
 |---|---|---|
@@ -51,6 +61,14 @@ TypeScript, `node:test`, and `tsx`.
 
 ## Quick start
 
+Choose the path that matches your goal:
+
+| Goal | Start here |
+|---|---|
+| Add the workflow to an existing agent | [Install the portable skill](#install-the-portable-skill) |
+| Develop or integrate the TypeScript packages | [Run the reference runtime](#run-the-reference-runtime) |
+| Use the instructions in ChatGPT | [ChatGPT edition](README_CHATGPT.md) |
+
 ### Run the reference runtime
 
 Requirements: Node.js 20 or newer.
@@ -63,21 +81,34 @@ npm run validate
 ```
 
 `npm run validate` runs typechecking, the test suite, and the deterministic
-runtime replay.
+runtime replay. This validates the reference implementation; it does not start
+a chatbot, web server, or live-model benchmark.
+
+For example, from a TypeScript module in this workspace:
 
 ```ts
 import {
   classifyAction,
   detectStrictScope,
-  resolveIntent,
-  selectInitiatives,
 } from '@step-beyond/runtime-core';
+
+const scope = detectStrictScope('Fix only the typo, nothing else.');
+console.log(scope.active); // true: optional extras are suppressed
+
+const decision = classifyAction({
+  kind: 'publish_external',
+  withinScope: true,
+});
+console.log(decision.class); // ASK: intent alone does not authorize publication
 ```
 
 See [`docs/runtime.md`](docs/runtime.md) for API examples, store operations,
 adapter wiring, and degradation behavior.
 
 ### Install the portable skill
+
+Run from the cloned repository. Choose one command for your host; `--always-on`
+also writes standing instructions, so review the host guide before enabling it.
 
 ```bash
 scripts/install.sh                 # every supported host found in $HOME
