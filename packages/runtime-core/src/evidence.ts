@@ -147,16 +147,34 @@ export function changedSourceIds(before: SourceSnapshot[], now: SourceDocument[]
  * quote differs by letter case alone and every such occurrence is spelled the
  * same way. No whitespace, punctuation, or fuzzy matching: those change content.
  */
+/** `starts[i]` is the source offset where lowered unit `i` begins, or -1 inside an expanded character. */
+function lowerByCodePoint(value: string): { lowered: string; starts: number[] } {
+  const pieces: string[] = [];
+  const starts: number[] = [];
+  let offset = 0;
+  for (const character of value) {
+    const lower = character.toLowerCase();
+    pieces.push(lower);
+    for (let unit = 0; unit < lower.length; unit++) starts.push(unit === 0 ? offset : -1);
+    offset += character.length;
+  }
+  starts.push(offset);
+  return { lowered: pieces.join(''), starts };
+}
+
 export function matchQuote(quote: string, text: string): QuoteMatch {
   if (quote.trim() === '') return { status: 'not_found' };
   if (text.includes(quote)) return { status: 'exact', quote };
-  // Compare same-length windows of the original text, so a character elsewhere
-  // whose lowercase form changes length cannot shift offsets or block the match.
-  const lowerQuote = quote.toLowerCase();
+  // Lowercase code point by code point, remembering where each lowered unit
+  // came from, so one indexed search works even when lowercasing changes length.
+  const lowerQuote = lowerByCodePoint(quote).lowered;
+  const { lowered, starts } = lowerByCodePoint(text);
   const spellings = new Set<string>();
-  for (let index = 0; index + quote.length <= text.length; index++) {
-    const candidate = text.slice(index, index + quote.length);
-    if (candidate.toLowerCase() === lowerQuote) spellings.add(candidate);
+  for (let index = lowered.indexOf(lowerQuote); index !== -1; index = lowered.indexOf(lowerQuote, index + 1)) {
+    const from = starts[index];
+    const to = starts[index + lowerQuote.length];
+    // Both ends must fall on a source character boundary.
+    if (from !== undefined && to !== undefined && from >= 0 && to >= 0) spellings.add(text.slice(from, to));
   }
   if (spellings.size === 0) return { status: 'not_found' };
   if (spellings.size > 1) return { status: 'ambiguous' };
@@ -252,12 +270,12 @@ export function parseExtraction(rawOutput: string): ParsedExtraction {
   return { ok: true, claims, ignoredFields };
 }
 
-/** The attached action is part of the identity: a decision about one proposal does not cover another. */
-function fingerprintOf(kind: ClaimKind, statement: string, evidenceKeys: string[], action: ProposedAction | undefined): string {
+/** Parts and the attached action are part of the identity: a decision about one proposal does not cover another. */
+function fingerprintOf(kind: ClaimKind, statement: string, partKeys: Array<[string, string[]]>, action: ProposedAction | undefined): string {
   const actionKey = action
     ? [action.kind, action.withinScope ?? null, action.reversible ?? null, action.assumptionRequired ?? null, action.securitySensitive ?? null, action.estimatedCost ?? null]
     : null;
-  return sha256(JSON.stringify([kind, normalize(statement), evidenceKeys, actionKey]));
+  return sha256(JSON.stringify([kind, normalize(statement), partKeys, actionKey]));
 }
 
 function matchDecision(
@@ -312,7 +330,11 @@ function reviewClaim(
   if (parts.some((part) => part.evidence.length === 0) && evidence !== 'not_applicable') reasonCodes.push('part_without_evidence');
 
   const evidenceKeys = [...new Set(parts.flatMap((part) => part.evidence.map((item) => evidenceKey(item.sourceId, item.resolvedQuote ?? item.quote))))].sort();
-  const fingerprint = fingerprintOf(claim.kind, claim.statement, evidenceKeys, claim.action);
+  // Part texts and their own quotes are part of the identity, not just the headline statement.
+  const partKeys = parts.map((part): [string, string[]] => [
+    normalize(part.text), part.evidence.map((item) => evidenceKey(item.sourceId, item.resolvedQuote ?? item.quote)).sort(),
+  ]);
+  const fingerprint = fingerprintOf(claim.kind, claim.statement, partKeys, claim.action);
   const citedSources = [...new Set(parts.flatMap((part) => part.evidence.map((item) => item.sourceId)))];
   const decision = matchDecision(claim, fingerprint, evidenceKeys, citedSources, decisions, digests);
   reasonCodes.push(...decision.reasonCodes);

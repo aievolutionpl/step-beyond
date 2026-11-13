@@ -32,6 +32,11 @@ test('matchQuote restores source spelling only for an unambiguous case-only diff
   assert.deepEqual(matchQuote(' ', 'anything'), { status: 'not_found' });
   // A length-changing character elsewhere in the source does not block restoration.
   assert.deepEqual(matchQuote('linux', 'İstanbul office. System runs on Linux.'), { status: 'case_restored', quote: 'Linux' });
+  assert.deepEqual(matchQuote('i̇stanbul office', 'İstanbul office. System runs on Linux.'), { status: 'case_restored', quote: 'İstanbul office' });
+  // A long missing quote in a large source stays fast.
+  const started = Date.now();
+  assert.deepEqual(matchQuote('Q'.repeat(10_000), 'x'.repeat(1_000_000)), { status: 'not_found' });
+  assert.ok(Date.now() - started < 2_000);
 });
 
 test('case 1: one quote under a compound statement is flagged, and ability is not consent', () => {
@@ -219,4 +224,19 @@ test('a reopened or uncertain prior decision asks the user for any claim kind', 
   const reworded = review([{ ...rule, statement: 'Wdrażamy wyłącznie w piątki' }], {}, [decision]).claims[0]!;
   assert.equal(reworded.decision, 'possibly_settled');
   assert.deepEqual(reworded.requiredActions, ['user_decision']);
+});
+
+test('a decision does not carry over when a part of the claim changes', () => {
+  const schedule = (text: string, quote: string) => ({
+    id: 's', kind: 'proposal', validity: 'current', statement: 'Wybrać dzień wdrożeń',
+    parts: [{ text, evidence: [{ sourceId: 'rules', quote: 'wdrożenia tylko w piątki' }, { sourceId: 'old-note', quote }] }],
+  });
+  const quote = 'wdrożenia odbywają się w poniedziałki';
+  const fridays = review([schedule('Wdrażać w piątki', quote)]).claims[0]!;
+  const decision = recordDecision({ claim: fridays, snapshot, decision: 'Accepted', evidenceRef: 'user-message:11' });
+  assert.equal(review([schedule('Wdrażać w piątki', quote)], {}, [decision]).claims[0]!.decision, 'settled');
+
+  const mondays = review([schedule('Wdrażać w poniedziałki', quote)], {}, [decision]).claims[0]!;
+  assert.equal(mondays.decision, 'possibly_settled');
+  assert.ok(mondays.requiredActions.includes('user_decision'));
 });
