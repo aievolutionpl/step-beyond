@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+<title id="title">Od polecenia do wyniku</title><desc id="desc">Model rozumie cel. Runtime kontroluje decyzje. Host wykonuje działania.</desc>
+<rect width="1200" height="720" rx="24" fill="#101827"/>
+<g font-family="Arial, Helvetica, sans-serif">
+<text x="54" y="62" fill="#67e8c2" font-size="15" letter-spacing="3">STEP BEYOND / HOW IT WORKS</text>
+<text x="54" y="115" fill="#f8fafc" font-size="38" font-weight="700">Od polecenia do wyniku</text>
+<text x="54" y="155" fill="#b5c4d7" font-size="21">Model rozumie cel. Runtime kontroluje decyzje. Host wykonuje działania.</text>
+<rect x="54" y="190" width="1092" height="140" rx="14" fill="#1c293c"/>
+<text x="80" y="268" fill="#67e8c2" font-size="42" font-weight="700">01</text>
+<text x="172" y="221" fill="#67e8c2" font-size="16" letter-spacing="1">CONTEXT → INTENT → DECIDE</text>
+<text x="172" y="260" fill="#f8fafc" font-size="27" font-weight="700">Zrozum cel i granice zadania</text>
+<text x="172" y="298" fill="#b5c4d7" font-size="20">Kontekst, możliwe intencje, zakres i zgody.</text>
+<rect x="54" y="348" width="1092" height="140" rx="14" fill="#1c293c"/>
+<text x="80" y="426" fill="#67e8c2" font-size="42" font-weight="700">02</text>
+<text x="172" y="379" fill="#67e8c2" font-size="16" letter-spacing="1">BUILD → INITIATIVE → EXECUTE</text>
+<text x="172" y="418" fill="#f8fafc" font-size="27" font-weight="700">Wykonaj zadanie i oceń kolejny krok</text>
+<text x="172" y="456" fill="#b5c4d7" font-size="20">Najpierw wymagany rezultat. Dodatki tylko w dozwolonym zakresie.</text>
+<rect x="54" y="506" width="1092" height="140" rx="14" fill="#1c293c"/>
+<text x="80" y="584" fill="#67e8c2" font-size="42" font-weight="700">03</text>
+<text x="172" y="537" fill="#67e8c2" font-size="16" letter-spacing="1">VERIFY → DELIVER → LEARN</text>
+<text x="172" y="576" fill="#f8fafc" font-size="27" font-weight="700">Sprawdź, oddaj wynik, zapisz obserwacje</text>
+<text x="172" y="614" fill="#b5c4d7" font-size="20">Dowody określają siłę twierdzeń. Cisza pozostaje unknown.</text>
+</g></svg>

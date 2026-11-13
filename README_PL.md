@@ -1,37 +1,31 @@
-<p align="center">
-  <img src="step%20beyond%20banner.png" alt="Baner Step Beyond" width="100%">
-</p>
-
 # Step Beyond
 
 ## Każde zadanie. Jeden krok dalej.
 
-Step Beyond daje agentowi stały instynkt rozumienia rezultatu ukrytego za
-poleceniem, domykania brakujących elementów, przewidywania następnego użytecznego
-kroku i weryfikowania wyniku przed oddaniem pracy.
+Step Beyond pomaga agentowi AI przejść od krótkiego polecenia do kompletnego,
+sprawdzonego rezultatu. Agent poznaje kontekst, uzupełnia elementy potrzebne do
+wykonania zadania i ocenia, czy warto przygotować kolejny krok. Na koniec
+pokazuje, co zrobił, jak to sprawdził i czego jeszcze nie udało się potwierdzić.
 
 **Wersja 4.0.0-alpha.3** · Hybrydowa implementacja referencyjna: prompt + TypeScript
 
 [English](README.md) · [Wersja ChatGPT](README_CHATGPT.md) · [Specyfikacja](SPEC.md) · [API runtime](docs/runtime.md)
 
-Agent działa jak uważny współpracownik. Czyta zadanie w kontekście, rozpoznaje
-elementy potrzebne do ukończenia rezultatu i patrzy o jeden użyteczny krok
-naprzód.
+[Start](#szybki-start) · [Architektura](#architektura) · [Przykład](#przykład-dodaj-formularz-kontaktowy) · [Reguły działania](#kontrakt-działania) · [Ewaluacja](evals/README.md)
 
-## Instynkt Step Beyond
+![Architektura Step Beyond: model proponuje działania, runtime ocenia reguły, a adapter hosta zwraca dowody wykonania. Diagram po angielsku.](docs/assets/step-beyond-architecture-en.png)
 
-Przy każdym istotnym zadaniu agent sprawdza:
+## Architektura
 
-1. Jakiego rezultatu potrzebuje użytkownik?
-2. Jakiego koniecznego elementu brakuje w literalnym poleceniu?
-3. Czego użytkownik prawdopodobnie będzie potrzebował jako następnego kroku?
-4. Czy agent ma zgodę na takie działanie?
-5. Jaki dowód potwierdza rezultat?
+Step Beyond łączy **skill z instrukcjami dla agenta** i **referencyjny runtime
+w TypeScript**. Model interpretuje polecenie i proponuje działania. Kontroler
+rozstrzyga ustrukturyzowane hipotezy intencji, klasyfikuje zgody przed oceną
+inicjatywy i zapisuje dowody weryfikacji. Adapter łączy te decyzje z narzędziami
+hosta, a store przechowuje stan i historię zmian.
 
-**Każde zadanie korzysta z rozumowania Step Beyond. Dodatkowa praca powstaje tylko wtedy, gdy jest użyteczna, bezpieczna, dozwolona i możliwa do zweryfikowania.**
-
-Model interpretuje język i tworzy warianty intencji. Runtime odpowiada za
-polityki, zgody, stan, dowody i audyt, jeśli host udostępnia potrzebne możliwości.
+Komponenty wymagają integracji z agentem. Brak możliwości wykonania ogranicza
+weryfikację, a brak magazynu stanu wyklucza deklarowanie trwałej pamięci.
+[Przykłady API](docs/runtime.md) pokazują konkretne kontrakty tej integracji.
 
 Framework ma dwa jawne tryby:
 
@@ -42,74 +36,6 @@ Framework ma dwa jawne tryby:
 
 `verified` jest statusem dowodowym. Dotyczy wyłącznie adaptera, hosta, modelu i
 zachowania objętego powtarzanymi pomiarami.
-
-## ⚡ Co zyskuje Twój agent
-
-Poniższe nazwy opisują możliwości widoczne dla użytkownika. Nie zastępują
-kanonicznego lifecycle z [`SPEC.md`](SPEC.md).
-
-| | Superpower | Instynkt, który otrzymuje agent |
-|---|---|---|
-| 🧠 | **RECALL** | Korzysta z istotnego kontekstu użytkownika wraz ze źródłem, bez zamiany przypuszczeń w fakty |
-| 🔎 | **SCAN** | Czyta aktualny projekt: stack, historię, konwencje, reguły i ograniczenia |
-| 🔍 | **EXPAND** | Odtwarza oczekiwany rezultat zamiast wybierać najkrótszą literalną interpretację |
-| 🎨 | **POLISH** | Buduje kompletną, profesjonalną bazę w ramach zleconego zakresu |
-| ➕ | **EXTEND** | Wybiera działania opcjonalne według wartości, zgody, kosztu, ryzyka i możliwości weryfikacji |
-| 🔮 | **ANTICIPATE** | Rozpoznaje prawdopodobny następny krok bez samowolnego rozszerzania uprawnień |
-| ✅ | **VERIFY** | Łączy każde istotne twierdzenie z kontrolą i nazywa zakres bez weryfikacji |
-| 📈 | **SELF-IMPROVE** | Uczy się z obserwowalnych wyników przez audytowalne i odwracalne rekordy |
-
-### Jeden lifecycle, jedno źródło prawdy
-
-```text
-CONTEXT → INTENT → DECIDE → BUILD → INITIATIVE → EXECUTE → VERIFY → DELIVER → LEARN
-```
-
-| Nazwa możliwości | Etap lifecycle |
-|---|---|
-| RECALL | CONTEXT |
-| SCAN | CONTEXT |
-| EXPAND | INTENT + DECIDE |
-| POLISH | BUILD |
-| EXTEND | INITIATIVE + EXECUTE |
-| ANTICIPATE | INITIATIVE + DECIDE |
-| VERIFY | VERIFY |
-| SELF-IMPROVE | LEARN |
-
-`DELIVER` prowadzi od rezultatu i raportuje wyłącznie twierdzenia obsługiwane
-przez ledger weryfikacji. Adapter może skrócić wewnętrzne rozumowanie, lecz
-zachowuje znaczenie i kolejność etapów.
-
-## Od literalnego wykonania do kontrolowanej inicjatywy
-
-| Literalny agent | Step Beyond |
-|---|---|
-| Wybiera pierwszą interpretację | Tworzy różne hipotezy intencji i porównuje pewność z kosztem pomyłki |
-| Traktuje stan projektu jak preferencję użytkownika | Oddziela aktualne fakty projektowe od modelu użytkownika |
-| Dodaje generyczne bonusy | Ocenia kandydatów powiązanych z bieżącym zadaniem po klasyfikacji zgody |
-| Publikuje, bo odgadł cel | Oddziela rozumienie, propozycję, wykonanie lokalne i publikację |
-| Pisze „działa” po przeczytaniu kodu | Zapisuje kontrolę, dowód, sprawdzony zakres i braki |
-| Uczy się z ciszy | Traktuje `unknown` neutralnie i aktualizuje stan na podstawie obserwowalnego wyniku |
-
-## Dlaczego architektura hybrydowa
-
-Model językowy potrafi interpretować niepełne polecenie i tworzyć alternatywy.
-Sam prompt nie zagwarantuje wspólnego stanu, trwałej pamięci, egzekwowania zgód
-ani audytu. Step Beyond przekazuje te zadania małemu kontrolerowi.
-
-```text
-adapter hosta
-    ├─> składanie kontekstu
-    ├─> rozpoznanie intencji
-    ├─> bramka zgód
-    ├─> adaptacyjny scoring inicjatywy
-    ├─> wykonawca hosta
-    ├─> ledger weryfikacji
-    └─> aktualizacja uczenia
-```
-
-Normatywny kontrakt znajduje się w [`SPEC.md`](SPEC.md), a uzasadnienie decyzji
-w [projekcie hybrydowego runtime](docs/superpowers/specs/2026-07-13-hybrid-runtime-design.md).
 
 ### Pakiety referencyjne
 
@@ -130,7 +56,7 @@ Wymagany jest Node.js 20 lub nowszy.
 ```bash
 git clone https://github.com/aievolutionpl/step-beyond.git
 cd step-beyond
-npm install
+npm ci
 npm run validate
 ```
 
@@ -172,6 +98,69 @@ jako stałe instrukcje. Zasady dla poszczególnych hostów opisuje
 Dla Custom GPT, Project Instructions i zwykłego czatu użyj
 [wersji ChatGPT](README_CHATGPT.md). Bez połączonego runtime działa ona w trybie
 prompt-only.
+
+## Przykład: „Dodaj formularz kontaktowy”
+
+| Moment | Co robi agent | Co otrzymujesz |
+|---|---|---|
+| Rozumie | Sprawdza istniejący projekt i wymagania formularza | Rozwiązanie dopasowane do aplikacji |
+| Buduje | Przygotowuje pola, walidację i obsługę stanów | Kompletny formularz w uzgodnionym zakresie |
+| Ocenia następny krok | Rozważa testy i wdrożenie; sprawdza uprawnienia | Lokalną weryfikację i osobną decyzję o publikacji |
+| Weryfikuje | Uruchamia dostępne kontrole i wskazuje braki | Wynik z dowodami, np. „walidacja sprawdzona; wysyłka e-mail nieprzetestowana” |
+
+To przykład zamierzonego sposobu pracy, a nie wynik benchmarku. [Polska infografika](docs/assets/step-beyond-explained-pl.png) pokazuje ten sam przykład krok po kroku. Model proponuje działania; skuteczność zależy od hosta, integracji i wykonanych kontroli.
+
+### Jak wybiera dodatkowy krok?
+
+```mermaid
+flowchart TD
+    A[Pomysł na dodatkowy krok] --> B{Ścisły zakres?}
+    B -->|Tak| H[HOLD: bez dodatków]
+    B -->|Nie| C{Klasyfikacja zgody}
+    C -->|FORBIDDEN| H
+    C -->|ASK| P[Co najwyżej PROPOSE]
+    C -->|AUTO / AUTO_WITH_DISCLOSURE| D[Oceń pewność, wartość, koszt i odwracalność]
+    D --> E[DO_AHEAD / PREPARE / PROPOSE / HOLD]
+```
+
+Zgoda jest sprawdzana przed wartością pomysłu. Dobry pomysł sam w sobie nie daje uprawnień do wykonania.
+
+## ⚡ Co zyskuje Twój agent
+
+Poniższe nazwy opisują możliwości widoczne dla użytkownika. Nie zastępują
+kanonicznego lifecycle z [`SPEC.md`](SPEC.md).
+
+| | Superpower | Instynkt, który otrzymuje agent |
+|---|---|---|
+| 🧠 | **RECALL** | Korzysta z istotnego kontekstu użytkownika wraz ze źródłem, bez zamiany przypuszczeń w fakty |
+| 🔎 | **SCAN** | Czyta aktualny projekt: stack, historię, konwencje, reguły i ograniczenia |
+| 🔍 | **EXPAND** | Odtwarza oczekiwany rezultat zamiast wybierać najkrótszą literalną interpretację |
+| 🎨 | **POLISH** | Buduje kompletną, profesjonalną bazę w ramach zleconego zakresu |
+| ➕ | **EXTEND** | Wybiera działania opcjonalne według wartości, zgody, kosztu, ryzyka i możliwości weryfikacji |
+| 🔮 | **ANTICIPATE** | Rozpoznaje prawdopodobny następny krok bez samowolnego rozszerzania uprawnień |
+| ✅ | **VERIFY** | Łączy każde istotne twierdzenie z kontrolą i nazywa zakres bez weryfikacji |
+| 📈 | **SELF-IMPROVE** | Uczy się z obserwowalnych wyników przez audytowalne i odwracalne rekordy |
+
+### Jeden lifecycle, jedno źródło prawdy
+
+```text
+CONTEXT → INTENT → DECIDE → BUILD → INITIATIVE → EXECUTE → VERIFY → DELIVER → LEARN
+```
+
+| Nazwa możliwości | Etap lifecycle |
+|---|---|
+| RECALL | CONTEXT |
+| SCAN | CONTEXT |
+| EXPAND | INTENT + DECIDE |
+| POLISH | BUILD |
+| EXTEND | INITIATIVE + EXECUTE |
+| ANTICIPATE | INITIATIVE + DECIDE |
+| VERIFY | VERIFY |
+| SELF-IMPROVE | LEARN |
+
+`DELIVER` prowadzi od rezultatu i raportuje wyłącznie twierdzenia obsługiwane
+przez ledger weryfikacji. Adapter może skrócić wewnętrzne rozumowanie, lecz
+zachowuje znaczenie i kolejność etapów.
 
 ## Kontrakt działania
 

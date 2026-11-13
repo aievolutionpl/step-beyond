@@ -1,37 +1,31 @@
-<p align="center">
-  <img src="step%20beyond%20banner.png" alt="Step Beyond banner" width="100%">
-</p>
-
 # Step Beyond
 
 ## Every task. One step further.
 
-Step Beyond gives your agent a standing instinct to understand the outcome
-behind the prompt, complete the missing pieces, predict the next useful move,
-and verify the result before delivery.
+Step Beyond helps an AI agent turn a short request into a complete, checked
+result. The agent reads the context, fills in the pieces needed to finish the
+task, and assesses whether a useful next step is warranted. It then reports
+what it did, how it checked the result, and what remains unconfirmed.
 
 **Version 4.0.0-alpha.3** · Hybrid prompt and TypeScript reference implementation
 
 [Polski](README_PL.md) · [ChatGPT edition](README_CHATGPT.md) · [Specification](SPEC.md) · [Runtime API](docs/runtime.md)
 
-The agent acts as a thoughtful collaborator. It reads the task in context,
-notices what the finished outcome needs, and looks one useful step ahead.
+[Quick start](#quick-start) · [Architecture](#architecture) · [Example](#example-add-a-contact-form) · [Operating contract](#the-operating-contract) · [Evaluations](evals/README.md)
 
-## The Step Beyond instinct
+![Step Beyond architecture: model and skill submit proposals, the reference runtime evaluates policy, and the host adapter returns execution evidence.](docs/assets/step-beyond-architecture-en.png)
 
-For every meaningful task, the agent asks:
+## Architecture
 
-1. What outcome does the user need?
-2. What necessary piece is missing from the literal request?
-3. What will the user probably need next?
-4. Am I authorized to act on it?
-5. What evidence proves the result?
+Step Beyond combines a **portable agent skill** with a **TypeScript reference
+runtime**. The model interprets the request and proposes actions. The controller
+resolves structured intent hypotheses, classifies permissions before scoring
+initiative, and records verification evidence. The host adapter connects these
+decisions to execution tools; the store persists scoped state and audit history.
 
-**Every task gets Step Beyond reasoning. Extra work happens only when it is useful, safe, permitted, and verifiable.**
-
-The model interprets language and proposes alternatives. The runtime handles
-policy, permission, state, evidence, and audit records when the host exposes the
-required capabilities.
+These components require integration with an agent. Missing execution capabilities
+limit verification; missing storage rules out durability claims. The
+[runtime API examples](docs/runtime.md) describe the concrete integration contracts.
 
 The framework has two honest operating modes:
 
@@ -42,75 +36,6 @@ The framework has two honest operating modes:
 
 `verified` is an evidence status, not a marketing label. It applies only to the
 adapter, host, model, and behavior covered by repeated recorded measurements.
-
-## ⚡ What Your Agent Gains
-
-These names describe user-facing capabilities. They do not replace the canonical
-v4 lifecycle in [`SPEC.md`](SPEC.md).
-
-| | Superpower | The instinct it installs |
-|---|---|---|
-| 🧠 | **RECALL** | Uses relevant, attributable user context without turning guesses into facts |
-| 🔎 | **SCAN** | Reads the live project: stack, history, conventions, rules, and current constraints |
-| 🔍 | **EXPAND** | Reconstructs the intended outcome instead of following the shortest literal interpretation |
-| 🎨 | **POLISH** | Builds a complete professional baseline inside the requested scope |
-| ➕ | **EXTEND** | Selects optional actions by value, permission, cost, risk, and verifiability |
-| 🔮 | **ANTICIPATE** | Recognizes likely next needs without silently exceeding the user's authority |
-| ✅ | **VERIFY** | Connects each material claim to a check and names anything left unverified |
-| 📈 | **SELF-IMPROVE** | Learns from observable outcomes through auditable, reversible records |
-
-### One lifecycle, one source of truth
-
-```text
-CONTEXT → INTENT → DECIDE → BUILD → INITIATIVE → EXECUTE → VERIFY → DELIVER → LEARN
-```
-
-| Capability label | Canonical lifecycle stage |
-|---|---|
-| RECALL | CONTEXT |
-| SCAN | CONTEXT |
-| EXPAND | INTENT + DECIDE |
-| POLISH | BUILD |
-| EXTEND | INITIATIVE + EXECUTE |
-| ANTICIPATE | INITIATIVE + DECIDE |
-| VERIFY | VERIFY |
-| SELF-IMPROVE | LEARN |
-
-`DELIVER` leads with the result and reports only claims supported by the
-verification ledger. Internal reasoning may be compressed, but derived skills and
-adapters preserve the lifecycle semantics and order.
-
-## From literal execution to controlled initiative
-
-| Literal agent behavior | Step Beyond behavior |
-|---|---|
-| Picks the first interpretation | Builds materially different intent hypotheses and weighs confidence against mistake cost |
-| Treats project state as user preference | Keeps current project facts separate from the user model |
-| Adds generic extras | Scores request-specific candidates after permission classification |
-| Publishes because it inferred the goal | Separates understanding, proposing, local execution, and publication authority |
-| Says “works” after reading the code | Records the check, evidence, scope, and remaining gaps |
-| Learns from silence | Records `unknown` as neutral and updates state from observable outcomes |
-
-## Why the hybrid architecture
-
-Language models can interpret an incomplete request and generate alternatives.
-They cannot guarantee shared counters, durable state, permission enforcement, or
-an audit trail through prompt wording alone. Step Beyond assigns those jobs to a
-small controller.
-
-```text
-host adapter
-    ├─> context assembler
-    ├─> intent resolver
-    ├─> permission gate
-    ├─> adaptive initiative scorer
-    ├─> host executor
-    ├─> verification ledger
-    └─> learning updater
-```
-
-The normative contract lives in [`SPEC.md`](SPEC.md). The architecture rationale
-lives in the [hybrid runtime design](docs/superpowers/specs/2026-07-13-hybrid-runtime-design.md).
 
 ### Reference packages
 
@@ -133,7 +58,7 @@ Requirements: Node.js 20 or newer.
 ```bash
 git clone https://github.com/aievolutionpl/step-beyond.git
 cd step-beyond
-npm install
+npm ci
 npm run validate
 ```
 
@@ -176,6 +101,69 @@ as standing instructions. Per-host rules are in the
 Use the dedicated [ChatGPT instructions](README_CHATGPT.md) for Custom GPT,
 Project Instructions, or chat-based use. Without a connected runtime, those
 instructions remain prompt-only.
+
+## Example: “Add a contact form”
+
+| Moment | What the agent does | What you receive |
+|---|---|---|
+| Understand | Inspects the existing project and form requirements | A solution that fits the application |
+| Build | Implements fields, validation and state handling | A complete form within the agreed scope |
+| Assess the next step | Considers tests and deployment; checks authority | Local verification and a separate publication decision |
+| Verify | Runs available checks and names gaps | Evidence, such as “validation checked; email delivery untested” |
+
+This illustrates the intended workflow, not a benchmark result. The model proposes actions; effectiveness depends on the host, integration and checks actually performed.
+
+### How does it choose an extra step?
+
+```mermaid
+flowchart TD
+    A[Candidate next step] --> B{Strict scope?}
+    B -->|Yes| H[HOLD: no extras]
+    B -->|No| C{Permission classification}
+    C -->|FORBIDDEN| H
+    C -->|ASK| P[At most PROPOSE]
+    C -->|AUTO / AUTO_WITH_DISCLOSURE| D[Assess confidence, value, effort and reversibility]
+    D --> E[DO_AHEAD / PREPARE / PROPOSE / HOLD]
+```
+
+Permission is checked before the value of an idea. A useful suggestion does not grant authority to execute it.
+
+## ⚡ What Your Agent Gains
+
+These names describe user-facing capabilities. They do not replace the canonical
+v4 lifecycle in [`SPEC.md`](SPEC.md).
+
+| | Superpower | The instinct it installs |
+|---|---|---|
+| 🧠 | **RECALL** | Uses relevant, attributable user context without turning guesses into facts |
+| 🔎 | **SCAN** | Reads the live project: stack, history, conventions, rules, and current constraints |
+| 🔍 | **EXPAND** | Reconstructs the intended outcome instead of following the shortest literal interpretation |
+| 🎨 | **POLISH** | Builds a complete professional baseline inside the requested scope |
+| ➕ | **EXTEND** | Selects optional actions by value, permission, cost, risk, and verifiability |
+| 🔮 | **ANTICIPATE** | Recognizes likely next needs without silently exceeding the user's authority |
+| ✅ | **VERIFY** | Connects each material claim to a check and names anything left unverified |
+| 📈 | **SELF-IMPROVE** | Learns from observable outcomes through auditable, reversible records |
+
+### One lifecycle, one source of truth
+
+```text
+CONTEXT → INTENT → DECIDE → BUILD → INITIATIVE → EXECUTE → VERIFY → DELIVER → LEARN
+```
+
+| Capability label | Canonical lifecycle stage |
+|---|---|
+| RECALL | CONTEXT |
+| SCAN | CONTEXT |
+| EXPAND | INTENT + DECIDE |
+| POLISH | BUILD |
+| EXTEND | INITIATIVE + EXECUTE |
+| ANTICIPATE | INITIATIVE + DECIDE |
+| VERIFY | VERIFY |
+| SELF-IMPROVE | LEARN |
+
+`DELIVER` leads with the result and reports only claims supported by the
+verification ledger. Internal reasoning may be compressed, but derived skills and
+adapters preserve the lifecycle semantics and order.
 
 ## The operating contract
 
