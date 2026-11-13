@@ -8,3 +8,4 @@ export * from './learning.js';
 export * from './strict-scope.js';
 export * from './types.js';
 export * from './verification.js';
+export * from './evidence.js';

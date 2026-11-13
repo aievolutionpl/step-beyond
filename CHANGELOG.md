@@ -1,5 +1,28 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Evidence review in `@step-beyond/runtime-core` (`reviewExtraction`,
+  `parseExtraction`, `matchQuote`, `snapshotSources`, `changedSourceIds`,
+  `recordDecision`): deterministic checks on a model's extraction of claims
+  from source documents. Evidence support, time validity, prior user decision,
+  and required action are separate fields on every claim.
+- `runEvidenceReview` in `@step-beyond/adapter-reference`: a reference flow
+  from the model call to a report for a human, with run metadata (model,
+  parameters, usage, duration) and no write, execute, or publish path.
+- Regression tests for the five synthetic cases proposed in issue #19:
+  compound statement under one quote, a decision already made, `approved: true`
+  in model output, sources changing during analysis, and a reworded matter.
+
+### Verification limits
+- The checks are structural. Whether a quote semantically covers its claim is
+  not checked and is listed as unchecked on every verification record.
+- A reworded claim is matched to an earlier decision only through shared
+  quotes or an explicit reference, and then only as `possibly_settled`.
+- Tests use a stubbed model call. No live-model run of this flow exists, and
+  no comparison against a flow without Step Beyond was made.
+
 ## [4.0.0-alpha.3] - 2026-11-11
 
 ### Added
