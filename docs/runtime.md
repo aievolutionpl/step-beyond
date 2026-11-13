@@ -128,6 +128,79 @@ const record = createVerificationRecord({
 Artifacts and claims remain separate. An unverified claim is omitted or narrowed;
 the artifact is preserved when useful.
 
+## Evidence review
+
+A reference flow for reviewing what a model extracted from a conversation and
+its documents. It ends at a report for a human and has no write, execute, or
+publish path.
+
+```ts
+import { runEvidenceReview } from '@step-beyond/adapter-reference';
+import { recordDecision } from '@step-beyond/runtime-core';
+
+const { review, run, snapshot } = await runEvidenceReview({
+  readSources: async () => [{ id: 'chat', text }, { id: 'rules', text: rules }],
+  callModel: async ({ instruction, sources }) => {
+    const reply = await host.model(instruction, sources);   // your model call
+    return { rawOutput: reply.text, model: reply.model, parameters: reply.params, usage: reply.usage };
+  },
+  decisions,                                                // history kept by the host
+});
+// review.status: 'ready_for_review' | 'stale_sources' | 'invalid_output'
+// review.executionAuthorized: false — always
+
+// After the user rules on a claim, the host records it with a reference to
+// the user's own message, and passes it back in `decisions` next time.
+decisions.push(recordDecision({
+  claim: review.claims[0], snapshot, decision: 'Keep the current rule', evidenceRef: 'user-message:42',
+}));
+```
+
+The flow is: read sources → snapshot → call the model → re-read sources →
+validate → stop. Each reviewed claim keeps four things apart:
+
+| Field | Values | Meaning |
+|---|---|---|
+| `evidence` | `supported`, `partially_supported`, `unsupported`, `not_applicable` | Whether every part of the claim cites a quote found in its source |
+| `validity` | `current`, `historical`, `unknown` | The model's time label; missing means `unknown` |
+| `decision` | `none`, `settled`, `possibly_settled`, `reopened` | What the host's decision history says |
+| `requiredActions` | `fix_evidence`, `split_or_map_evidence`, `verify_before_use`, `user_decision`, `confirm_gap` | What the reviewer still has to do |
+
+Rules the checks enforce:
+
+- **Claims and evidence.** A claim may split into `parts`, each with its own
+  quotes. A part is supported only when all its quotes resolve. A single-part
+  statement that joins clauses (`and`, `i`, `oraz`, `;`, …) is flagged
+  `possible_compound_statement`. This is a word-level hint, not semantic analysis.
+- **Quotes.** Matching is exact. The source spelling is restored only when the
+  quote differs by letter case alone and all such occurrences are spelled the
+  same; the change is listed in `review.corrections`. Whitespace, punctuation,
+  and wording differences fail. `review.rawOutput` is never modified.
+- **Decisions.** `settled` requires a `DecisionRecord` whose fingerprint equals
+  the claim's (kind, normalized statement, cited quotes) and whose source
+  digests are unchanged. Changed sources give `reopened`. A reworded claim that
+  shares a quote with a record, or names one in `priorDecisionRef`, gives
+  `possibly_settled` and still asks the user. Rewording is not recognized
+  semantically.
+- **Authority.** Only declared claim fields are read. `approved`, `permission`,
+  and similar fields are dropped and listed in `review.ignoredFields`. An
+  attached `action` is classified by `classifyAction` for information; the class
+  is not a permission.
+- **Time.** `historical` or `unknown` adds `verify_before_use`, also on a
+  settled claim. A prior decision does not confirm a fact.
+- **Integrity.** If any source differs from the pre-call snapshot, the status is
+  `stale_sources` and no claim is evaluated.
+- **Verification.** Each claim gets a `VerificationRecord`. Quote presence is
+  the only executed check, so the best status is `partially_verified`;
+  semantic coverage is always listed as unchecked.
+
+`run` records the model identifier, parameters, token usage, start time, and
+duration, and lists what was not recorded under `limitations`.
+
+The lower-level functions `snapshotSources`, `changedSourceIds`, `matchQuote`,
+`parseExtraction`, `reviewExtraction`, and `recordDecision` are exported from
+`@step-beyond/runtime-core`.
+
 ## User-model store
 
 ```ts
