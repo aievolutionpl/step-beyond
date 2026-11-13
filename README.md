@@ -6,17 +6,28 @@
 
 ## Every task. One step further.
 
-**A portable skill and TypeScript reference runtime for AI agents that understand
-the goal, complete the task, and verify their work.**
+**An AI agent that takes your work one useful step further — guided by your goals,
+the context of your project, and what it can learn from working with you.**
 
-Step Beyond gives an agent a structured workflow: read the context, resolve
-intent, build the requested result, assess useful next steps, and report evidence.
-The skill guides the model’s reasoning. When integrated with a host, the runtime
-handles permission classification, initiative selection, verification records,
-and persistent state.
+Step Beyond helps an agent see what a task needs beyond the words of a prompt.
+It draws on available knowledge, project context, your stated preferences, and
+observable outcomes from earlier work to complete missing pieces and anticipate
+a useful next step. That might mean catching an overlooked edge case, preparing
+a follow-up artifact, or checking a result before handing it back.
 
-**The result:** a deliverable with a clear account of what was checked, what remains
-uncertain, and which follow-up actions require permission.
+As feedback and previous decisions become available, the agent can use them to
+better judge what helps you, what you prefer, and when to stop. It takes extra
+action when it is useful, within scope, and authorized; otherwise, it prepares
+or proposes the next step. “Only this” keeps the work focused on your request.
+
+**The goal: more complete work, fewer avoidable follow-ups, and initiative that
+fits the way you work.** Each result comes with an account of what was checked
+and what remains uncertain.
+
+The project combines a portable agent skill with a TypeScript reference runtime.
+Learning across sessions depends on the history or memory your host makes
+available and the integration you configure. The agent uses observable feedback;
+it does not treat silence as approval or assumptions as established preferences.
 
 **Version 4.0.0-alpha.3** · Hybrid prompt and TypeScript reference implementation
 

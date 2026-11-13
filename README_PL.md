@@ -6,10 +6,30 @@
 
 ## Każde zadanie. Jeden krok dalej.
 
-Step Beyond pomaga agentowi AI przejść od krótkiego polecenia do kompletnego,
-sprawdzonego rezultatu. Agent poznaje kontekst, uzupełnia elementy potrzebne do
-wykonania zadania i ocenia, czy warto przygotować kolejny krok. Na koniec
-pokazuje, co zrobił, jak to sprawdził i czego jeszcze nie udało się potwierdzić.
+**Agent AI, który robi w Twojej pracy jeden użyteczny krok dalej — korzystając
+z Twoich celów, kontekstu projektu i doświadczeń ze współpracy z Tobą.**
+
+Step Beyond pomaga agentowi dostrzec, czego zadanie potrzebuje poza samą treścią
+polecenia. Korzysta z dostępnej wiedzy, kontekstu projektu, Twoich zadeklarowanych
+preferencji i obserwowalnych wyników wcześniejszej pracy, aby domknąć brakujące
+elementy i przewidzieć przydatny następny krok. Może to oznaczać wychwycenie
+pominiętego przypadku, przygotowanie materiału do kolejnego etapu albo sprawdzenie
+rezultatu przed oddaniem go Tobie.
+
+Gdy agent ma dostęp do Twoich uwag i wcześniejszych decyzji, może trafniej oceniać,
+co Ci pomaga, jaki sposób pracy preferujesz i kiedy należy się zatrzymać.
+Działa dodatkowo wtedy, gdy ma to sens, mieści się w zakresie i jest dozwolone;
+w pozostałych przypadkach przygotowuje lub proponuje następny krok. Polecenie
+„tylko to” skupia pracę na zamówionym rezultacie.
+
+**Cel: pełniej wykonana praca, mniej zbędnych dopowiedzeń i inicjatywa dopasowana
+do Twojego sposobu działania.** Przy wyniku agent wskazuje, co sprawdził i czego
+jeszcze nie udało się potwierdzić.
+
+Projekt łączy przenośny skill z referencyjnym runtime w TypeScript. Uczenie między
+sesjami zależy od historii lub pamięci udostępnianej przez hosta i skonfigurowanej
+integracji. Agent korzysta z obserwowalnego feedbacku; nie traktuje ciszy jako
+zgody ani przypuszczeń jako ustalonych preferencji.
 
 **Wersja 4.0.0-alpha.3** · Hybrydowa implementacja referencyjna: prompt + TypeScript
 
